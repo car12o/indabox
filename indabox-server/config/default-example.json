@@ -1,0 +1,10 @@
+{
+    "port": 8080,
+    "database": {
+        "host": "0.0.0.0",
+        "port": 27017,
+        "name": "indabox-server",
+        "user": "user_indabox",
+        "password": "password_indabox"
+    }
+}
