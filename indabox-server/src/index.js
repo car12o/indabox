@@ -3,7 +3,8 @@ const helmet = require('helmet');
 const cors = require('cors');
 const morgan = require('morgan');
 const logger = require('./services/logging');
-// const db = require('./services/database');
+const { mongo, redis } = require('./services/database');
+const Auth = require('./middleware/auth');
 const router = require('./router');
 const { port, database } = require('../config/default.json');
 
@@ -12,13 +13,18 @@ app.use(helmet());
 app.use(cors());
 
 // Logging ...
-global.log = logger;
+log = logger;
 app.use(morgan('dev'));
 
 // Database ...
-// db.connect(database)
-//     .then(() => log.info('Successfully connected to mongo'))
-//     .catch(e => log.error(e));
+mongo.connect(database.mongo)
+    .then(() => log.info('Successfully connected to mongo'))
+    .catch(e => log.error(e));
+
+redis.connect(database.redis);
+
+// Middleware
+app.use(Auth.handleToken);
 
 // Routes ...
 app.use(router);

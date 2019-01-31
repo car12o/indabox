@@ -3,30 +3,94 @@ const User = require('../models/user');
 class UsersController {
     /**
      * get ...
-     * @param {Object} req
-     * @param {Object} res
+     * @param {object} req
+     * @param {object} res
      */
     static async get(req, res) {
-        return res.send('Hello wordl!');
-        // try {
-        //     const result = await category.find({});
-        //     return res.send(result);
-        // } catch (e) {
-        //     log.error(e);
-        //     return res.status(500).send(e);
-        // }
+        const { id } = req.params;
+        let query = {};
+        if (id) {
+            query = Object.assign({}, query, { _id: id });
+        }
+
+        try {
+            const user = await User.find(query);
+            return res.send(user);
+        } catch (e) {
+            log.error(e);
+            return res.status(500).send(e);
+        }
     }
 
     /**
      * store ...
-     * @param {*} res
-     * @param {*} req
+     * @param {object} req
+     * @param {object} res
      */
-    static async store(res, req) {
-        const result = new User();
-        result.save
+    static async store(req, res) {
+        const {
+            email, nif, password, firstName, lastName,
+        } = req.body;
 
-        return res.send('Hello wordl!');
+        try {
+            const user = await new User({
+                email,
+                nif,
+                password,
+                firstName,
+                lastName,
+            }).save();
+
+            return res.send(user);
+        } catch (e) {
+            log.error(e);
+            return res.status(500).send(e);
+        }
+    }
+
+    /**
+     * update ...
+     * @param {object} req
+     * @param {object} res
+     */
+    static async update(req, res) {
+        const { id } = req.params;
+        const {
+            email, nif, password, firstName, lastName,
+        } = req.body;
+
+        try {
+            const user = await User.updateOne({ _id: id }, {
+                email,
+                nif,
+                password,
+                firstName,
+                lastName,
+            });
+
+            return res.send(user);
+        } catch (e) {
+            log.error(e);
+            return res.status(500).send(e);
+        }
+    }
+
+    /**
+     * delete ...
+     * @param {object} req
+     * @param {object} res
+     */
+    static async delete(req, res) {
+        const { id } = req.params;
+
+        try {
+            const user = await User.deleteOne({ _id: id });
+
+            return res.send(user);
+        } catch (e) {
+            log.error(e);
+            return res.status(500).send(e);
+        }
     }
 }
 

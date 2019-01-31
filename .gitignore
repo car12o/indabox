@@ -1,5 +1,8 @@
 node_modules
 .vscode
-indabox-server/logs/*
 !.gitkeep
+_data
+
+# server
+indabox-server/logs/*
 default.json

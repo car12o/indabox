@@ -1,10 +1,16 @@
 {
     "port": 8080,
     "database": {
-        "host": "0.0.0.0",
-        "port": 27017,
-        "name": "indabox-server",
-        "user": "user_indabox",
-        "password": "password_indabox"
+        "mongo": {
+            "host": "indabox-mongo",
+            "port": 27017,
+            "name": "calendar-server",
+            "user": "user_example",
+            "password": "password_example"
+        },
+        "redis": {
+            "host": "indabox-redis",
+            "port": 6379
+        }
     }
 }
