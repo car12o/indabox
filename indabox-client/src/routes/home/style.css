@@ -1,0 +1,33 @@
+.container {
+	width: 380px;
+	margin: 0 auto;
+	padding: 25px 55px;
+	margin-top: 15vh;
+}
+
+.container>.input, .container>.button, .container>.label, .container>.logo {
+	margin: 10px 0px;
+}
+
+.logo {
+	display: block;
+}
+
+.label {
+	display: inline-block;
+	font-size: 12px;
+	font-weight: bold;
+}
+
+.input {
+	width: 100%;
+}
+
+.input > * {
+	color: var(--mdc-theme-primary) !important;
+	border-color: var(--mdc-theme-primary) !important;
+}
+
+.button {
+	height: 45px;
+}

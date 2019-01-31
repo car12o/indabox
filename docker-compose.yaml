@@ -36,13 +36,13 @@ services:
     working_dir: /var/www
     command: sh -c "npm i && npm run dev"
 
-  # indabox-client:
-  #   image: node:11.8-alpine
-  #   container_name: indabox-client
-  #   restart: always
-  #   ports:
-  #     - 80:3000
-  #   volumes:
-  #     - ./indabox-client:/var/www
-  #   working_dir: /var/www
-  #   command: sh -c "npm i && npm run start"
+  indabox-client:
+    image: node:11.8-alpine
+    container_name: indabox-client
+    restart: always
+    ports:
+      - 80:8080
+    volumes:
+      - ./indabox-client:/var/www
+    working_dir: /var/www
+    command: sh -c "npm i && npm run start"

@@ -6,3 +6,8 @@ _data
 # server
 indabox-server/logs/*
 default.json
+
+# client
+indabox-client/build
+indabox-client/*.log
+*.lock
