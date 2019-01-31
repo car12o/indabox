@@ -7,12 +7,12 @@ class GeneralController {
      * @param {object} res
      */
     static async login(req, res) {
-        const { nif, password } = req.body;
+        const { email, password } = req.body;
 
         try {
-            const user = await User.findOne({ nif });
+            const user = await User.findOne({ email });
             if (!user) {
-                return res.status(401).send({ err: 'Invalid nif!' });
+                return res.status(401).send({ err: 'Invalid email or nif!' });
             }
 
             if (user.password !== password) {

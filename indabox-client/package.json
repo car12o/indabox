@@ -9,7 +9,7 @@
     "start:development": "npm run -s dev",
     "build": "preact build",
     "serve": "preact build && preact serve",
-    "dev": "preact watch",
+    "dev": "preact watch -p 3000",
     "lint": "eslint src"
   },
   "eslintConfig": {
@@ -30,6 +30,9 @@
   "dependencies": {
     "preact": "^8.2.6",
     "preact-compat": "^3.17.0",
-    "preact-router": "^2.5.7"
+    "preact-redux": "^2.0.3",
+    "preact-router": "^2.5.7",
+    "redux": "^4.0.1",
+    "redux-thunk": "^2.3.0"
   }
 }

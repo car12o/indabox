@@ -28,6 +28,10 @@
 	border-color: var(--mdc-theme-primary) !important;
 }
 
+.input > input {
+	color: black !important;
+}
+
 .button {
 	height: 45px;
 }

@@ -1,16 +1,16 @@
 import { h } from 'preact';
 import { Router } from 'preact-router';
-// import { createStore, applyMiddleware } from 'redux';
-// import thunkMiddleware from 'redux-thunk';
+import { createStore, applyMiddleware } from 'redux';
+import thunkMiddleware from 'redux-thunk';
 // import Auth from './middleware/auth';
 // import request from './services/request';
-// import reducers from './store/reducers';
+import reducers from './store/reducers';
 import './style';
 
 // routes
 import Home from './routes/home';
 
-// const store = createStore(reducers, applyMiddleware(thunkMiddleware));
+const store = createStore(reducers, applyMiddleware(thunkMiddleware));
 // request({
 //     type: 'INITIAL-STATE',
 //     url: '/state',
@@ -20,7 +20,7 @@ import Home from './routes/home';
 const App = () => (
 	<div id="app">
 		<Router>
-			<Home path="/" />
+			<Home path="/" store={store} />
 		</Router>
 	</div>
 );

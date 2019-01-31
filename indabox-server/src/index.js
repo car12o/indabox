@@ -1,6 +1,7 @@
 const app = require('express')();
 const helmet = require('helmet');
 const cors = require('cors');
+const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const logger = require('./services/logging');
 const { mongo, redis } = require('./services/database');
@@ -11,6 +12,9 @@ const { port, database } = require('../config/default.json');
 // Security ...
 app.use(helmet());
 app.use(cors());
+
+// BodyParser ...
+app.use(bodyParser.json());
 
 // Logging ...
 log = logger;
