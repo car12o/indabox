@@ -1,28 +1,45 @@
-import { h } from 'preact';
-import { Router } from 'preact-router';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { createStore, applyMiddleware } from 'redux';
 import thunkMiddleware from 'redux-thunk';
-// import Auth from './middleware/auth';
-// import request from './services/request';
+import { Provider } from "react-redux";
+import './index.css';
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+// import * as serviceWorker from './serviceWorker';
 import reducers from './store/reducers';
-import './style';
 
-// routes
+// Routes
 import Home from './routes/home';
+import Login from './routes/login';
+
+const theme = createMuiTheme({
+    palette: {
+        primary: { main: '#DA2155' },
+        secondary: { main: '#525F7E' },
+        text: {
+            primary: '#323C4E',
+            secondary: '#DA2155',
+        },
+    },
+    typography: {
+        useNextVariants: true,
+    },
+});
 
 const store = createStore(reducers, applyMiddleware(thunkMiddleware));
-// request({
-//     type: 'INITIAL-STATE',
-//     url: '/state',
-//     method: 'GET'
-// })(response => store.dispatch(response));
 
-const App = () => (
-	<div id="app">
-		<Router>
-			<Home path="/" store={store} />
-		</Router>
-	</div>
-);
+ReactDOM.render((
+    <Provider store={store}>
+        <Router>
+            <MuiThemeProvider theme={theme}>
+                <Switch>
+                    <Route path="/" exact component={Home} />
+                    <Route path="/login" component={Login} />
+                </Switch>
+            </MuiThemeProvider>
+        </Router>
+    </Provider>
+), document.getElementById('root'));
 
-export default App;
+// serviceWorker.unregister();

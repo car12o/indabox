@@ -2,6 +2,15 @@ const User = require('../models/user');
 
 class GeneralController {
     /**
+     * state ...
+     * @param {object} req
+     * @param {object} res
+     */
+    static async state(req, res) {
+        return res.json(Object.assign(req.session, { logged: true }));
+    }
+
+    /**
      * login ...
      * @param {object} req
      * @param {object} res

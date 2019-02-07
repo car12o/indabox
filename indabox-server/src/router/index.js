@@ -17,6 +17,7 @@ users.delete('/:id', UsersController.delete);
  * router ...
  */
 router.use('/users', Auth.authorization, users);
+router.use('/state', GeneralController.state);
 router.use('/login', GeneralController.login);
 
 module.exports = router;

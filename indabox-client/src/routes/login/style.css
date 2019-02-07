@@ -1,0 +1,11 @@
+:local(.container) {
+	width: 400px;
+	margin: 0 auto;
+	padding: 25px;
+	margin-top: 15vh;
+}
+
+:local(.logo) {
+	width: 60%;
+	margin-bottom: 15px;
+}
