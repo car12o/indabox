@@ -4,14 +4,15 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { createStore, applyMiddleware } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import { Provider } from "react-redux";
-import './index.css';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import CssBaseline from '@material-ui/core/CssBaseline';
 // import * as serviceWorker from './serviceWorker';
 import reducers from './store/reducers';
+import PrivateRoute from './components/PrivateRoute';
 
 // Routes
-import Home from './routes/home';
-import Login from './routes/login';
+import Home from './routes/Home';
+import Login from './routes/Login';
 
 const theme = createMuiTheme({
     palette: {
@@ -20,6 +21,9 @@ const theme = createMuiTheme({
         text: {
             primary: '#323C4E',
             secondary: '#DA2155',
+        },
+        background: {
+            default: "#F0F2F4"
         },
     },
     typography: {
@@ -33,9 +37,10 @@ ReactDOM.render((
     <Provider store={store}>
         <Router>
             <MuiThemeProvider theme={theme}>
+                <CssBaseline />
                 <Switch>
-                    <Route path="/" exact component={Home} />
                     <Route path="/login" component={Login} />
+                    <PrivateRoute path="/" component={Home} store={store} />
                 </Switch>
             </MuiThemeProvider>
         </Router>
