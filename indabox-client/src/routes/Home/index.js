@@ -16,9 +16,10 @@ import ArrowForward from '@material-ui/icons/ArrowForward';
 
 // Routes ...
 import Partners from '../Partners';
+import Partner from '../Partner';
 import Test from '../Test';
 
-const drawerWidth = 240
+const drawerWidth = 240;
 const styles = theme => ({
 	root: {
 		display: 'flex',
@@ -26,34 +27,53 @@ const styles = theme => ({
 	drawer: {
 		width: drawerWidth,
 		flexShrink: 0,
+		whiteSpace: 'nowrap',
 	},
-	drawerPaper: {
+	drawerOpen: {
 		width: drawerWidth,
+		transition: theme.transitions.create('width', {
+			easing: theme.transitions.easing.sharp,
+			duration: theme.transitions.duration.enteringScreen,
+		}),
+	},
+	drawerClose: {
+		transition: theme.transitions.create('width', {
+			easing: theme.transitions.easing.sharp,
+			duration: theme.transitions.duration.leavingScreen,
+		}),
+		overflowX: 'hidden',
+		width: theme.spacing.unit * 7 + 1,
+		[theme.breakpoints.up('sm')]: {
+			width: theme.spacing.unit * 9 + 1,
+		},
 	},
 	drawerHeader: {
 		display: 'flex',
 		justifyContent: 'center',
 		padding: '30px 0',
+		transition: "padding 0.2s ease",
 	},
-	drawerShow: {
-		display: 'none',
+	drawerHeaderClose: {
+		padding: "30px 6px",
+		justifyContent: 'normal',
 	},
-	drawerhide: {
+	drawerIconContainer: {
 		display: 'flex',
 		alignSelf: 'flex-end',
 		flexGrow: 2,
 	},
-	drawerhideIconBack: {
+	drawerIcon: {
 		alignSelf: 'flex-end',
 		margin: '20px',
 		color: theme.palette.primary.main,
-	},
-	drawerhideIconForward: {
-		alignSelf: 'flex-end',
-		color: theme.palette.primary.main,
+		cursor: 'pointer',
 	},
 	listItem: {
 		padding: '18px 30px',
+		transition: "padding 0.2s ease",
+	},
+	listItemClosed: {
+		padding: '18px 24px',
 	},
 	selected: {
 		color: theme.palette.primary.main,
@@ -61,23 +81,11 @@ const styles = theme => ({
 	content: {
 		flexGrow: 1,
 		padding: theme.spacing.unit * 3,
-		transition: theme.transitions.create('margin', {
-			easing: theme.transitions.easing.sharp,
-			duration: theme.transitions.duration.leavingScreen,
-		}),
-		marginLeft: -drawerWidth,
-	},
-	contentShift: {
-		transition: theme.transitions.create('margin', {
-			easing: theme.transitions.easing.easeOut,
-			duration: theme.transitions.duration.enteringScreen,
-		}),
-		marginLeft: 0,
 	},
 	link: {
 		textDecoration: 'none',
 	},
-})
+});
 
 class Home extends Component {
 	state = {
@@ -86,26 +94,23 @@ class Home extends Component {
 			{
 				label: 'Sócios',
 				icon: <PeopleIcon />,
-				selected: true,
-				link: '/'
+				link: '/partners'
 			},
 			{
 				label: 'A minha conta',
 				icon: <PersonIcon />,
-				selected: false,
 				link: '/profile'
 			},
 			{
 				label: 'Sair',
 				icon: <ExitToAppIcon />,
-				selected: false,
 				link: '/logout'
 			}
 		]
 	};
 
-	handleMenuClick = (label) => {
-		const menus = this.state.menus.map(menu => menu.label === label
+	handleMenuClick = (link) => {
+		const menus = this.state.menus.map(menu => menu.link === link
 			? Object.assign({}, menu, { selected: true })
 			: Object.assign({}, menu, { selected: false })
 		);
@@ -121,48 +126,62 @@ class Home extends Component {
 	};
 
 	render() {
-		const { classes } = this.props;
+		const { classes, location } = this.props;
 		const { open, menus } = this.state;
 
 		return (
 			<div className={classes.root}>
 				<Drawer
-					className={classes.drawer}
-					variant="persistent"
-					anchor="left"
-					open={open}
+					variant="permanent"
+					className={classNames(classes.drawer, {
+						[classes.drawerOpen]: open,
+						[classes.drawerClose]: !open,
+					})}
 					classes={{
-						paper: classes.drawerPaper,
+						paper: classNames({
+							[classes.drawerOpen]: open,
+							[classes.drawerClose]: !open,
+						}),
 					}}
+					open={open}
 				>
-					<div className={classes.drawerHeader}>
+					<div className={classNames(classes.drawerHeader, {
+						[classes.drawerHeaderClose]: !open
+					})}>
 						<img src="/assets/logo.png" alt="" />
 					</div>
 					<List>
 						{menus.map(menu => (
 							<Link className={classes.link} to={menu.link} key={menu.label}>
-								<ListItem className={classes.listItem} button
-									onClick={() => this.handleMenuClick(menu.label)}
+								<ListItem className={classNames(classes.listItem, {
+									[classes.listItemClosed]: !open
+								})} button
+									onClick={() => this.handleMenuClick(menu.link)}
 								>
-									<ListItemIcon className={menu.selected ? classes.selected : ''} >
+									<ListItemIcon
+										className={location.pathname === menu.link ? classes.selected : ''} >
 										{menu.icon}
 									</ListItemIcon>
-									<ListItemText classes={{ primary: menu.selected ? classes.selected : '' }} primary={menu.label} />
+									<ListItemText
+										classes={{ primary: location.pathname === menu.link ? classes.selected : '' }}
+										primary={menu.label}
+									/>
 								</ListItem>
 							</Link>
 						))}
 					</List>
-					<div className={classes.drawerhide}>
-						<ArrowBackIcon className={classes.drawerhideIconBack} fontSize="large" onClick={() => this.handleDrawerClose()} />
+					<div className={classes.drawerIconContainer}>
+						{open
+							? <ArrowBackIcon className={classes.drawerIcon} fontSize="large" onClick={() => this.handleDrawerClose()} />
+							: <ArrowForward className={classes.drawerIcon} fontSize="large" onClick={() => this.handleDrawerOpen()} />
+						}
 					</div>
 				</Drawer>
 				<main className={classNames(classes.content, {
 					[classes.contentShift]: open,
 				})}>
-					<div className={classNames({[classes.drawerShow]: open })}>
-						<ArrowForward className={classes.drawerhideIconForward} fontSize="large" onClick={() => this.handleDrawerOpen()} />
-					</div>
-					<Route path="//" component={Partners} />
+					<Route path="/partners" exact component={Partners} />
+					<Route path="/partners/:id" component={Partner} />
 					<Route path="/profile" component={Test} />
 				</main>
 			</div>

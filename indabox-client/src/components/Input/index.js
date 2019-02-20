@@ -15,7 +15,7 @@ const styles = {
 
 class Input extends Component {
 	render() {
-		const { classes, label, type, value, onChange, error } = this.props;
+		const { classes, label, type, value, onChange, error, disabled } = this.props;
 
 		return (
 			<FormControl className={classes.root} variant="outlined" error={error ? true : false}>
@@ -27,7 +27,9 @@ class Input extends Component {
 					type={type ? type : 'text'}
 					onChange={e => onChange(e.target.value)}
 					labelWidth={this.InputRef ? this.InputRef.offsetWidth : 0}
-				/>
+					disabled={disabled}
+				>
+				</OutlinedInput>
 				<FormHelperText id="component-error-text">{error}</FormHelperText>
 			</FormControl>
 		);

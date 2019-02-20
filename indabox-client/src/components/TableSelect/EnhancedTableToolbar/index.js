@@ -47,11 +47,11 @@ class EnhancedTableToolbar extends React.Component {
                     {numSelected > 0 ? (
                         <Typography color="inherit" variant="subtitle1">
                             {numSelected} selecionado
-              </Typography>
+                        </Typography>
                     ) : (
                             <Typography variant="h6" id="tableTitle">
                                 Sócios
-              </Typography>
+                            </Typography>
                         )}
                 </div>
                 <div className={classes.spacer} />

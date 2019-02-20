@@ -17,7 +17,7 @@ import Login from './routes/Login';
 const theme = createMuiTheme({
     palette: {
         primary: { main: '#DA2155' },
-        secondary: { main: '#525F7E' },
+        secondary: { main: '#525F7E', light: '#E5E5E5' },
         text: {
             primary: '#323C4E',
             secondary: '#DA2155',

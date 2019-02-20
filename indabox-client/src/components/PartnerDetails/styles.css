@@ -1,0 +1,8 @@
+#partner-details::after {
+    content: '';
+    position: absolute;
+    height: 40px;
+    width: 100%;
+    background-image: linear-gradient(to right, #DA2155, #6000AC);
+    z-index: -1;
+}

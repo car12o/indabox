@@ -6,7 +6,6 @@ import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-
 import Input from '../../components/Input';
 
 const styles = {
@@ -66,7 +65,6 @@ const mapDispatchToProps = dispatch => ({
 	setEmail: (email) => dispatch(userAc.setEmail(email)),
 	setPassword: (password) => dispatch(userAc.setPassword(password)),
 	login: (email, password) => dispatch(userAc.login(email, password)),
-	// getState: () => dispatch(userAc.getState())
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Home));
