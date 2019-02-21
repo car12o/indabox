@@ -23,24 +23,24 @@ const styles = (theme) => ({
 
 class Stamps extends Component {
 	render() {
-		const { classes, addedBy, addedWhen } = this.props;
+		const { classes, firstLabel, firstValue, secoundLabel, secoundValue } = this.props;
 
 		return (
 			<div className={classes.root}>
 				<div className={classes.stamps}>
 					<Typography className={classes.label} component="p">
-						Adicionado por
+						{firstLabel}
 					</Typography>
 					<Typography className={classes.label} component="p">
-						em
+						{secoundLabel}
 					</Typography>
 				</div>
 				<div className={classes.stamps}>
 					<Typography className={classes.text} component="p">
-						{addedBy}
+						{firstValue}
 					</Typography>
 					<Typography className={classes.text} component="p">
-						{addedWhen}
+						{secoundValue}
 					</Typography>
 				</div>
 			</div>

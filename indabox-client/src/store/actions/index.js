@@ -1,3 +1,4 @@
 import userAc from './user';
+import partnersAc from './partners';
 
-export { userAc };
+export { userAc, partnersAc };

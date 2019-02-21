@@ -23,6 +23,9 @@ class TextArea extends Component {
 					InputLabelProps={{
 						style: { color: theme.palette.primary.main }
 					}}
+					InputProps={{
+						style: { color: theme.palette.secondary.main }
+					}}
 					rows="12"
 					rowsMax="25"
 					value={value}

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+import { withTheme } from '@material-ui/core/styles';
 import { withStyles } from '@material-ui/core/styles';
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
@@ -10,12 +11,12 @@ const styles = {
 	root: {
 		width: '100%',
 		marginTop: '10px',
-	}
+	},
 }
 
 class Input extends Component {
 	render() {
-		const { classes, label, type, value, onChange, error, disabled } = this.props;
+		const { classes, theme, label, type, value, onChange, error, disabled } = this.props;
 
 		return (
 			<FormControl className={classes.root} variant="outlined" error={error ? true : false}>
@@ -23,6 +24,9 @@ class Input extends Component {
 					{label}
 				</InputLabel>
 				<OutlinedInput
+					inputProps={{
+						style: { color: theme.palette.secondary.main }
+					}}
 					value={value}
 					type={type ? type : 'text'}
 					onChange={e => onChange(e.target.value)}
@@ -36,4 +40,4 @@ class Input extends Component {
 	}
 }
 
-export default withStyles(styles)(Input);
+export default withTheme()(withStyles(styles)(Input));

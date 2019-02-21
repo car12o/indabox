@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
@@ -9,6 +10,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Stamps from '../../components/Stamps';
 import PartnerDetails from '../../components/PartnerDetails';
+import { partnersAc } from '../../store/actions';
 
 function TabContainer({ children, dir }) {
 	return (
@@ -58,6 +60,13 @@ class Partner extends Component {
 		value: 1,
 	};
 
+	componentDidMount() {
+		const { partners, match, history, setPartner } = this.props;
+		if (partners.selected.isEmpty) {
+			setPartner(parseInt(match.params.id, 10), history);
+		}
+	}
+
 	handleChange = (event, value) => {
 		this.setState({ value });
 	};
@@ -67,7 +76,8 @@ class Partner extends Component {
 	};
 
 	render() {
-		const { classes } = this.props;
+		const { classes, partners } = this.props;
+		const partner = partners.selected.value;
 
 		const theme = {
 			direction: 'ltl',
@@ -77,11 +87,23 @@ class Partner extends Component {
 			<div>
 				<Paper className={classes.root} elevation={1}>
 					<Typography className={classes.breadcrum} variant="h6" id="tableTitle">
-						Sócios <ArrowForwardIcon className={classes.breadcrumIcon} /> Joao
-              		</Typography>
+						Sócios <ArrowForwardIcon className={classes.breadcrumIcon} />
+						{`${partner.firstName.value} ${partner.lastName.value}`}
+					</Typography>
 					<div className={classes.stampsContainer}>
-						<Stamps addedBy={'Diogo Melo'} addedWhen={'2016-01-20 12:23:42'} />
-						<Stamps classes={{ root: classes.stampsLast }} addedBy={'Diogo Melo'} addedWhen={'2016-01-20 12:23:42'} />
+						<Stamps
+							firstLabel="Adicionado por"
+							firstValue={partner.createdBy}
+							secoundLabel="em"
+							secoundValue={partner.createdAt}
+						/>
+						<Stamps
+							classes={{ root: classes.stampsLast }}
+							firstLabel="Actualizado por"
+							firstValue={partner.updatedBy}
+							secoundLabel="em"
+							secoundValue={partner.updatedAt}
+						/>
 					</div>
 				</Paper>
 
@@ -106,7 +128,7 @@ class Partner extends Component {
 							Item One
 						</TabContainer>
 						<TabContainer dir={theme.direction}>
-							<PartnerDetails />
+							<PartnerDetails partner={partner} />
 						</TabContainer>
 					</SwipeableViews>
 				</div>
@@ -115,4 +137,12 @@ class Partner extends Component {
 	}
 }
 
-export default withStyles(styles)(Partner);
+const mapStateToProps = state => ({
+	partners: state.partners
+});
+
+const mapDispatchToProps = dispatch => ({
+	setPartner: (partner, history) => dispatch(partnersAc.setSelected(partner, history)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Partner));

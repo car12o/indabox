@@ -48,7 +48,7 @@ const styles = (theme) => ({
 
 class PartnerDetails extends Component {
 	render() {
-		const { classes } = this.props;
+		const { classes, partner } = this.props;
 
 		return (
 			<div id="partner-details" className={classes.root}>
@@ -56,56 +56,64 @@ class PartnerDetails extends Component {
 					<span className={classes.title}>INDENTIFICAÇÃO</span>
 					<Input
 						type="text"
-						label="Nome"
+						label={partner.firstName.label}
 						disabled
-					// value={user.password.value}
-					// onChange={setPassword}
-					// error={user.password.error}
+						value={partner.firstName.value}
+						// onChange={setPassword}
+						error={partner.firstName.error}
 					/>
 					<Input
 						type="text"
-						label="Apelido"
+						label={partner.lastName.label}
 						disabled
-					// value={user.password.value}
-					// onChange={setPassword}
-					// error={user.password.error}
+						value={partner.lastName.value}
+						// onChange={setPassword}
+						error={partner.lastName.error}
 					/>
 					<Input
 						type="text"
-						label="NIF"
+						label={partner.nif.label}
 						disabled
-					// value={user.password.value}
-					// onChange={setPassword}
-					// error={user.password.error}
+						value={partner.nif.value}
+						// onChange={setPassword}
+						error={partner.nif.error}
 					/>
 					<Input
 						type="text"
-						label="Endereço de email"
+						label={partner.email.label}
 						disabled
-					// value={user.password.value}
-					// onChange={setPassword}
-					// error={user.password.error}
+						value={partner.email.value}
+						// onChange={setPassword}
+						error={partner.email.error}
 					/>
 					<div className={classes.checkBoxContainer}>
-						<CheckBox label="Receber alertas" />
-						<CheckBox label="Receber newsletters" />
+						<CheckBox
+							label={partner.alerts.label}
+							value={partner.alerts.value}
+							disabled
+						/>
+						<CheckBox
+							label={partner.newsletter.label}
+							value={partner.newsletter.value}
+							disabled
+						/>
 					</div>
 					<Input
-						type="text"
+						type={partner.phone.label}
 						label="Telefone"
 						disabled
-					// value={user.password.value}
-					// onChange={setPassword}
-					// error={user.password.error}
+						value={partner.phone.value}
+						// onChange={setPassword}
+						error={partner.phone.error}
 					/>
 					<div className={classes.checkBoxContainer}>
 						<div className={classes.bottomLabels}>
 							<span className={classes.label}>Nº de sócio</span>
-							<p>178</p>
+							<p>{partner.number}</p>
 						</div>
 						<div>
 							<span className={classes.label}>Tipo de sócio</span>
-							<p>Sócio Titular</p>
+							<p>{partner.type}</p>
 						</div>
 					</div>
 				</div>
@@ -113,31 +121,31 @@ class PartnerDetails extends Component {
 					<span className={classes.title}>DADOS DE FATURAÇÃO</span>
 					<Input
 						type="text"
-						label="Morada"
+						label={partner.address.label}
 						disabled
-					// value={user.password.value}
-					// onChange={setPassword}
-					// error={user.password.error}
+						value={partner.address.value}
+						// onChange={setPassword}
+						error={partner.address.error}
 					/>
 					<Input
 						type="text"
-						label="Codigo postal"
+						label={partner.postCode.label}
 						disabled
-					// value={user.password.value}
-					// onChange={setPassword}
-					// error={user.password.error}
+						value={partner.postCode.value}
+						// onChange={setPassword}
+						error={partner.postCode.error}
 					/>
 					<Input
 						type="text"
-						label="Localidade"
+						label={partner.city.label}
 						disabled
-						value=""
-					// onChange={setPassword}
-					// error={user.password.error}
+						value={partner.city.value}
+						// onChange={setPassword}
+						error={partner.city.error}
 					/>
 					<DropDown
-						label="Pais"
-						value=""
+						label={partner.country.label}
+						value={partner.country.value}
 						disabled
 						options={[
 							{
@@ -158,8 +166,10 @@ class PartnerDetails extends Component {
 				<div className={classNames(classes.titleContainer, classes.titleContainerLast)}>
 					<span className={classes.title}>ADMINISTRAÇÃO</span>
 					<TextArea
-						label="Notas"
+						label={partner.notes.label}
 						disabled
+						value={partner.notes.value}
+						error={partner.notes.error}
 					/>
 				</div>
 			</div>

@@ -22,6 +22,9 @@ class DropDown extends Component {
 					InputLabelProps={{
 						style: { color: theme.palette.primary.main }
 					}}
+					InputProps={{
+						style: { color: theme.palette.secondary.main }
+					}}
 					variant="outlined"
 					label={label}
 					value={value}

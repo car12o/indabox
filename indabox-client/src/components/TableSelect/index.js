@@ -11,10 +11,6 @@ import Checkbox from '@material-ui/core/Checkbox';
 import EnhancedTableHead from './EnhancedTableHead';
 import EnhancedTableToolbar from './EnhancedTableToolbar';
 
-function createData(id, number, firstName, lastName, debt, type) {
-	return { id, number, firstName, lastName, debt, type };
-}
-
 function desc(a, b, orderBy) {
 	if (b[orderBy] < a[orderBy]) {
 		return -1;
@@ -39,7 +35,7 @@ function getSorting(order, orderBy) {
 	return order === 'desc' ? (a, b) => desc(a, b, orderBy) : (a, b) => -desc(a, b, orderBy);
 }
 
-const styles = theme => ({
+const styles = {
 	root: {
 		width: '100%',
 	},
@@ -52,25 +48,13 @@ const styles = theme => ({
 	tableRow: {
 		cursor: 'pointer',
 	}
-});
+};
 
 class Partners extends React.Component {
 	state = {
 		order: 'asc',
 		orderBy: 'number',
 		selected: [],
-		data: [
-			createData(1, 1, 'Joao', 'Cardoso', 120, 'Titular'),
-			createData(2, 2, 'Ricardo', 'Ferreira', 120, 'Titular'),
-			createData(3, 3, 'Andreia', 'Magalhaes', 120, 'Titular'),
-			createData(4, 4, 'Diogo', 'Melo', 120, 'Titular'),
-			createData(5, 5, 'Ricardo', 'Coelho', 120, 'Titular'),
-			createData(6, 6, 'Miguel', 'Matos', 120, 'Titular'),
-			createData(7, 7, 'Antonio', 'Castro', 120, 'Titular'),
-			createData(10, 10, 'Helder', 'Pereira', 120, 'Titular'),
-			createData(8, 8, 'Paulo', 'Goncalves', 120, 'Titular'),
-			createData(9, 9, 'Lucas', 'Monteverde', 120, 'Titular'),
-		],
 		page: 0,
 		rowsPerPage: 12,
 	};
@@ -88,7 +72,7 @@ class Partners extends React.Component {
 
 	handleSelectAllClick = event => {
 		if (event.target.checked) {
-			this.setState(state => ({ selected: state.data.map(n => n.number) }));
+			this.setState(() => ({ selected: this.props.data.map(n => n.number) }));
 			return;
 		}
 		this.setState({ selected: [] });
@@ -127,8 +111,8 @@ class Partners extends React.Component {
 	isSelected = id => this.state.selected.indexOf(id) !== -1;
 
 	render() {
-		const { classes, history } = this.props;
-		const { data, order, orderBy, selected, rowsPerPage, page } = this.state;
+		const { classes, data, onClick, rows } = this.props;
+		const { order, orderBy, selected, rowsPerPage, page } = this.state;
 		const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
 
 		return (
@@ -137,6 +121,7 @@ class Partners extends React.Component {
 				<div className={classes.tableWrapper}>
 					<Table className={classes.table} aria-labelledby="tableTitle">
 						<EnhancedTableHead
+							rows={rows}
 							numSelected={selected.length}
 							order={order}
 							orderBy={orderBy}
@@ -149,10 +134,11 @@ class Partners extends React.Component {
 								.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
 								.map(n => {
 									const isSelected = this.isSelected(n.number);
+
 									return (
 										<TableRow className={classes.tableRow}
 											hover
-											onClick={() => history.push(`/partners/${n.id}`)}
+											onClick={() => onClick(n)}
 											role="checkbox"
 											aria-checked={isSelected}
 											tabIndex={-1}
@@ -162,14 +148,17 @@ class Partners extends React.Component {
 											<TableCell padding="checkbox">
 												<Checkbox checked={isSelected} onClick={event => this.handleClick(event, n.number)} />
 											</TableCell>
-											<TableCell align="right" padding="none">{n.number}</TableCell>
-											<TableCell align="left" component="th" scope="row">{n.firstName}</TableCell>
-											<TableCell align="left" component="th" scope="row">{n.lastName}</TableCell>
-											<TableCell align="right">{n.debt}</TableCell>
-											<TableCell align="left">{n.type}</TableCell>
+											{rows.map((row, i) => (
+												<TableCell
+													key={i}
+													align={i === 0 ? 'right' : 'left'} >
+													{`${n[row.id].value ? n[row.id].value : n[row.id]}`}
+												</TableCell>
+											))}
 										</TableRow>
-									);
-								})}
+									)
+								})
+							}
 							{emptyRows > 0 && (
 								<TableRow style={{ height: 49 * emptyRows }}>
 									<TableCell colSpan={6} />
