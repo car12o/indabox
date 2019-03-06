@@ -17,7 +17,7 @@ import ArrowForward from '@material-ui/icons/ArrowForward';
 // Routes ...
 import Partners from '../Partners';
 import Partner from '../Partner';
-import Test from '../Test';
+import Profile from '../Profile';
 
 const drawerWidth = 240;
 const styles = theme => ({
@@ -182,7 +182,7 @@ class Home extends Component {
 				})}>
 					<Route path="/partners" exact component={Partners} />
 					<Route path="/partners/:id" component={Partner} />
-					<Route path="/profile" component={Test} />
+					<Route path="/profile" component={Profile} />
 				</main>
 			</div>
 		);

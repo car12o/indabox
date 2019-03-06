@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import classNames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
-import Input from '../Input';
-import CheckBox from '../CheckBox';
-import DropDown from '../DropDown';
-import TextArea from '../TextArea';
+import Input from '../../Input';
+import CheckBox from '../../CheckBox';
+import DropDown from '../../DropDown';
+import TextArea from '../../TextArea';
 import './styles.css'
 
 
