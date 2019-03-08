@@ -28,7 +28,7 @@ const styles = (theme) => ({
 		padding: '0 4% 0 30px',
 	},
 	title: {
-		padding: '10px 10px',
+		padding: '18px 10px',
 		fontSize: '14px',
 		marginBottom: '10px',
 		color: 'white',

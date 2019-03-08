@@ -35,7 +35,7 @@ function getSorting(order, orderBy) {
 	return order === 'desc' ? (a, b) => desc(a, b, orderBy) : (a, b) => -desc(a, b, orderBy);
 }
 
-const styles = {
+const styles = (theme) => ({
 	root: {
 		width: '100%',
 	},
@@ -47,8 +47,11 @@ const styles = {
 	},
 	tableRow: {
 		cursor: 'pointer',
-	}
-};
+	},
+	tableCheckbox: {
+        color: `${theme.palette.primary.main} !important`,
+    }
+});
 
 class Partners extends React.Component {
 	state = {
@@ -146,7 +149,11 @@ class Partners extends React.Component {
 											selected={isSelected}
 										>
 											<TableCell padding="checkbox">
-												<Checkbox checked={isSelected} onClick={event => this.handleClick(event, n.number)} />
+												<Checkbox
+													classes={{ root: classes.tableCheckbox }}
+													checked={isSelected}
+													onClick={event => this.handleClick(event, n.number)}
+												/>
 											</TableCell>
 											{rows.map((row, i) => (
 												<TableCell

@@ -9,6 +9,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Stamps from '../../components/Stamps';
 import PartnerDetails from './PartnerDetails';
+import Quotas from './Quotas';
 
 function TabContainer({ children, dir }) {
 	return (
@@ -66,6 +67,9 @@ const styles = theme => ({
 	},
 	tab: {
 		color: theme.palette.secondary.main,
+	},
+	tabSelected: {
+		fontWeight: 'bold',
 	}
 });
 
@@ -108,8 +112,14 @@ class Partner extends Component {
 							indicatorColor="primary"
 							textColor="primary"
 						>
-							<Tab classes={{ root: classes.tab }} label="Quotas" />
-							<Tab classes={{ root: classes.tab }} label="Dados pessoais" />
+							<Tab
+								classes={{ textColorPrimary: classes.tab, selected: classes.tabSelected }}
+								label="Quotas"
+							/>
+							<Tab
+								classes={{ textColorPrimary: classes.tab, selected: classes.tabSelected }}
+								label="Dados pessoais"
+							/>
 						</Tabs>
 					</AppBar>
 					<SwipeableViews
@@ -117,7 +127,7 @@ class Partner extends Component {
 						index={tab}
 					>
 						<TabContainer dir={theme.direction}>
-							Item One
+							<Quotas data={partner.quotas} />
 						</TabContainer>
 						<TabContainer dir={theme.direction}>
 							<PartnerDetails partner={partner} />

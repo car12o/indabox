@@ -13,6 +13,7 @@ import PersonIcon from '@material-ui/icons/Person';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import ArrowForward from '@material-ui/icons/ArrowForward';
+import HomeIcon from '@material-ui/icons/Home';
 
 // Routes ...
 import Partners from '../Partners';
@@ -91,6 +92,11 @@ class Home extends Component {
 	state = {
 		open: true,
 		menus: [
+			{
+				label: 'Início',
+				icon: <HomeIcon />,
+				link: '/'
+			},
 			{
 				label: 'Sócios',
 				icon: <PeopleIcon />,
