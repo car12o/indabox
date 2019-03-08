@@ -5,7 +5,7 @@ import PartnerComponent from '../../components/Partner';
 
 class Partner extends Component {
 	state = {
-		tab: 1,
+		tab: 0,
 	};
 
 	componentDidMount() {

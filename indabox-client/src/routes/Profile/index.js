@@ -5,7 +5,7 @@ import PartnerComponent from '../../components/Partner';
 
 class Profile extends Component {
 	state = {
-		tab: 1,
+		tab: 0,
 	};
 
 	handleChange = (event, tab) => {
