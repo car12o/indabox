@@ -8,10 +8,10 @@ const UsersController = require('../controllers/users');
  * users ...
  */
 users.get('', UsersController.get);
-users.get('/:id', UsersController.get);
+users.get('/:userId', UsersController.get);
 users.post('', UsersController.store);
-users.patch('/:id', UsersController.update);
-users.delete('/:id', UsersController.delete);
+users.patch('/:userId', UsersController.update);
+// users.delete('/:userId', UsersController.delete);
 
 /**
  * router ...

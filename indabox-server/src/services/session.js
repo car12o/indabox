@@ -9,17 +9,32 @@ class Session {
     async init(authToken = '') {
         try {
             const value = await redis.get(authToken);
-            const { token, logged, user } = JSON.parse(value);
-            this.token = token;
-            this.logged = logged;
-            this.user = user;
+            this.build(value);
             return this;
         } catch (e) {
-            this.token = uuidv4();
-            this.logged = false;
-            redis.set(this.token, JSON.stringify(this));
+            this.create();
             return this;
         }
+    }
+
+    /**
+     * create ...
+     */
+    create() {
+        this.token = uuidv4();
+        this.logged = false;
+        redis.set(this.token, JSON.stringify(this));
+    }
+
+    /**
+     * build ...
+     * @param {string} value
+     */
+    build(value) {
+        const { token, logged, user } = JSON.parse(value);
+        this.token = token;
+        this.logged = logged;
+        this.user = user;
     }
 
     /**
@@ -38,6 +53,16 @@ class Session {
     setUser(value) {
         this.user = value;
         redis.set(this.token, JSON.stringify(this));
+    }
+
+    /**
+     * json ...
+     */
+    json() {
+        return {
+            logged: this.logged,
+            user: this.user,
+        };
     }
 }
 

@@ -12,7 +12,6 @@ class Auth {
         req.session = await new Session().init(token);
         res.set('Token', req.session.token);
         res.set('Access-Control-Expose-Headers', 'Content-Type, Token, X-Requested-With');
-
         return next();
     }
 
@@ -24,6 +23,11 @@ class Auth {
      */
     static authorization(req, res, next) {
         if (!req.session.logged) {
+            return res.status(401).send({ err: 'Unauthorized!' });
+        }
+
+        const { userId } = req.params;
+        if (userId && (userId !== req.session.user.id || req.session.user.role > 0)) {
             return res.status(401).send({ err: 'Unauthorized!' });
         }
 

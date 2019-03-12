@@ -7,7 +7,18 @@ class GeneralController {
      * @param {object} res
      */
     static async state(req, res) {
-        return res.json(Object.assign(req.session, { logged: true }));
+        try {
+            const { user } = req.session;
+            if (user) {
+                const result = await User.findOne({ _id: user.id });
+                req.session.setUser(result);
+            }
+
+            return res.send(req.session.json());
+        } catch (e) {
+            log.error(e);
+            return res.status(500).send(e);
+        }
     }
 
     /**
@@ -21,16 +32,16 @@ class GeneralController {
         try {
             const user = await User.findOne({ email });
             if (!user) {
-                return res.status(401).send({ err: 'Invalid email or nif!' });
+                return res.status(401).send({ err: 'Invalid email' });
             }
 
             if (user.password !== password) {
-                return res.status(401).send({ err: 'Invalid password!' });
+                return res.status(401).send({ err: 'Invalid password' });
             }
 
             req.session.setLogged(true);
             req.session.setUser(user);
-            return res.send(req.session);
+            return res.send(req.session.json());
         } catch (e) {
             log.error(e);
             return res.status(500).send(e);

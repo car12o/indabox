@@ -1,10 +1,11 @@
 {
+    "name": "indabox-server",
     "port": 8080,
     "database": {
         "mongo": {
             "host": "indabox-mongo",
             "port": 27017,
-            "name": "calendar-server",
+            "name": "indabox-server",
             "user": "user_example",
             "password": "password_example"
         },
