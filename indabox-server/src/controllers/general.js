@@ -1,4 +1,6 @@
 const User = require('../models/user');
+const { verifyHash } = require('../services/crypto');
+const APIError = require('../services/error');
 
 class GeneralController {
     /**
@@ -6,7 +8,7 @@ class GeneralController {
      * @param {object} req
      * @param {object} res
      */
-    static async state(req, res) {
+    static async state(req, res, next) {
         try {
             const { user } = req.session;
             if (user) {
@@ -16,8 +18,7 @@ class GeneralController {
 
             return res.send(req.session.json());
         } catch (e) {
-            log.error(e);
-            return res.status(500).send(e);
+            return next(new APIError(e));
         }
     }
 
@@ -26,25 +27,23 @@ class GeneralController {
      * @param {object} req
      * @param {object} res
      */
-    static async login(req, res) {
-        const { email, password } = req.body;
-
+    static async login(req, res, next) {
         try {
+            const { email, password } = req.body;
             const user = await User.findOne({ email });
             if (!user) {
-                return res.status(401).send({ err: 'Invalid email' });
+                return next(new APIError('Invalid email', { status: 400 }));
             }
 
-            if (user.password !== password) {
-                return res.status(401).send({ err: 'Invalid password' });
+            if (!verifyHash(password, user.password)) {
+                return next(new APIError('Invalid password', { status: 400 }));
             }
 
             req.session.setLogged(true);
             req.session.setUser(user);
             return res.send(req.session.json());
         } catch (e) {
-            log.error(e);
-            return res.status(500).send(e);
+            return next(new APIError(e));
         }
     }
 }

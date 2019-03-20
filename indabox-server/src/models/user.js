@@ -17,18 +17,10 @@ const User = mongoose.Schema({
     city: { type: String, default: '' },
     country: { type: String, default: '' },
     notes: { type: String, default: '' },
-    createdBy: {
-        userId: { type: String, default: null },
-        userFirstname: { type: String, default: 'imported' },
-    },
-    updatedBy: {
-        userId: { type: String, default: null },
-        userFirstname: { type: String, default: 'imported' },
-    },
-    deletedBy: {
-        userId: { type: String, default: null },
-        userFirstname: { type: String, default: 'imported' },
-    },
+    quotas: [{ type: mongoose.Schema.Types.ObjectId, ref: 'quotas', default: null }],
+    createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'users', default: null },
+    updatedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'users', default: null },
+    deletedBy: { type: String, default: null },
     deletedAt: { type: Date, default: null },
 }, { timestamps: true });
 

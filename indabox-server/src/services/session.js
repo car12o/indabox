@@ -51,7 +51,9 @@ class Session {
      * @param {object} value
      */
     setUser(value) {
-        this.user = value;
+        // eslint-disable-next-line no-underscore-dangle
+        const { _id, __v, ...user } = value.toObject();
+        this.user = Object.assign({}, user, { id: value.id });
         redis.set(this.token, JSON.stringify(this));
     }
 
@@ -59,10 +61,35 @@ class Session {
      * json ...
      */
     json() {
-        return {
+        const result = {
             logged: this.logged,
-            user: this.user,
         };
+
+        if (this.user) {
+            result.user = {
+                id: this.user.id,
+                role: this.user.role,
+                type: this.user.type,
+                firstName: this.user.firstName,
+                lastName: this.user.lastName,
+                email: this.user.email,
+                nif: this.user.nif,
+                phone: this.user.phone,
+                address: this.user.address,
+                postCode: this.user.postCode,
+                city: this.user.city,
+                country: this.user.country,
+                notes: this.user.notes,
+                alerts: this.user.alerts,
+                newsletter: this.user.newsletter,
+                createdBy: this.user.createdBy || 'Imported',
+                createdAt: this.user.createdAt,
+                updatedBy: this.user.updatedBy || 'Imported',
+                updatedAt: this.user.updatedAt,
+            };
+        }
+
+        return result;
     }
 }
 
