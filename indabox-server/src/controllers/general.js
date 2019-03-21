@@ -35,6 +35,10 @@ class GeneralController {
                 return next(new APIError('Invalid email', { status: 400 }));
             }
 
+            if (user.role >= 0) {
+                return next(new APIError('Unauthorized', { status: 401 }));
+            }
+
             if (!verifyHash(password, user.password)) {
                 return next(new APIError('Invalid password', { status: 400 }));
             }
@@ -45,6 +49,17 @@ class GeneralController {
         } catch (e) {
             return next(new APIError(e));
         }
+    }
+
+    /**
+     * logout ...
+     * @param {object} req
+     * @param {object} res
+     */
+    static async logout(req, res) {
+        req.session.setLogged(false);
+        req.session.setUser(null);
+        return res.send(req.session.json());
     }
 }
 

@@ -18,8 +18,9 @@ users.patch('/:userId', UsersController.update);
  * router ...
  */
 router.use('/users', Auth.authorization, users);
-router.use('/state', GeneralController.state);
-router.use('/login', GeneralController.login);
+router.get('/state', GeneralController.state);
+router.post('/login', GeneralController.login);
+router.get('/logout', GeneralController.logout);
 
 router.use((req, res, next) => {
     const err = new APIError('Not Found', { status: 404 });

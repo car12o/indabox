@@ -52,8 +52,11 @@ class Session {
      */
     setUser(value) {
         // eslint-disable-next-line no-underscore-dangle
-        const { _id, __v, ...user } = value.toObject();
-        this.user = Object.assign({}, user, { id: value.id });
+        this.user = value;
+        if (value) {
+            const { _id, __v, ...user } = value.toObject();
+            this.user = Object.assign({}, user, { id: value.id });
+        }
         redis.set(this.token, JSON.stringify(this));
     }
 

@@ -1,4 +1,5 @@
 const User = require('../models/user');
+require('../models/quota');
 const { hashPassword } = require('../services/crypto');
 const APIError = require('../services/error');
 
@@ -16,8 +17,10 @@ class UsersController {
                 query = Object.assign({}, query, { _id: userId });
             }
 
-            const user = await User.find(query);
-            return res.send(user);
+            const user = await User.find(query)
+                .select('-password')
+                .populate('quotas', '-user');
+            return res.send(userId ? user[0] : user);
         } catch (e) {
             return next(new APIError(e));
         }
