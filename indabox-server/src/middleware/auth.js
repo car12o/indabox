@@ -1,4 +1,5 @@
 const Session = require('../services/session');
+const APIError = require('../services/error');
 
 class Auth {
     /**
@@ -23,12 +24,12 @@ class Auth {
      */
     static authorization(req, res, next) {
         if (!req.session.logged) {
-            return res.status(401).send({ err: 'Unauthorized!' });
+            return next(new APIError('Unauthorized!', { status: 401 }));
         }
 
         const { userId } = req.params;
         if (userId && (userId !== req.session.user.id || req.session.user.role > 0)) {
-            return res.status(401).send({ err: 'Unauthorized!' });
+            return next(new APIError('Unauthorized!', { status: 401 }));
         }
 
         return next();

@@ -12,7 +12,7 @@ const Quota = mongoose.Schema({
     invoiceEmited: { type: Boolean, default: false },
 }, { timestamps: true });
 
-const QuotaSchema = Joi.object().keys({
+const quotaSchema = Joi.object().keys({
     year: Joi.number().min(2015),
     state: Joi.object().keys({
         value: Joi.string(),
@@ -23,5 +23,7 @@ const QuotaSchema = Joi.object().keys({
     invoiceEmited: Joi.boolean(),
 });
 
-module.exports = mongoose.model('quotas', Quota);
-module.exports.QuotaSchema = QuotaSchema;
+module.exports = {
+    Quota: mongoose.model('quotas', Quota),
+    quotaSchema,
+};

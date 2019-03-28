@@ -1,4 +1,8 @@
-export default function request(req) {
+/**
+ * request ...
+ * @param {object} req
+ */
+export default (req) => {
 	return async dispatch => {
 		try {
 			const options = {

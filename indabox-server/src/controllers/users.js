@@ -1,4 +1,4 @@
-const User = require('../models/user');
+const { User } = require('../models/user');
 require('../models/quota');
 const { hashPassword } = require('../services/crypto');
 const APIError = require('../services/error');

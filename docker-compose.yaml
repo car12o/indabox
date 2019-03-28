@@ -7,7 +7,7 @@ services:
   indabox-mongo:
     image: mongo:4.1.7
     container_name: indabox-mongo
-    restart: always
+    restart: unless-stopped
     ports:
       - 27017:27017
     volumes:
@@ -19,7 +19,8 @@ services:
   indabox-redis:
     image: redis:5.0.3
     container_name: indabox-redis
-    restart: always
+    restart: unless-stopped
+    command: redis-server --appendonly yes --requirepass password_example
     ports:
       - 6379:6379
     volumes:
@@ -28,18 +29,21 @@ services:
   indabox-server:
     image: node:11.8-alpine
     container_name: indabox-server
-    restart: always
+    restart: unless-stopped
+    depends_on:
+      - indabox-redis
+      - indabox-mongo
     ports:
       - 8080:8080
     volumes:
       - ./indabox-server:/var/www
     working_dir: /var/www
-    command: sh -c "npm i && npm run dev"
+    command: sh -c "npm i && npm run start"
 
   indabox-client:
     image: node:11.8-alpine
     container_name: indabox-client
-    restart: always
+    restart: unless-stopped
     ports:
       - 80:3000
     volumes:

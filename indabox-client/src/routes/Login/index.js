@@ -12,24 +12,43 @@ const styles = {
 	label: {
 		margin: '20px 0',
 	},
+	button: {
+		marginTop: '15px',
+	}
 };
 
-class Home extends Component {
+class Login extends Component {
+	enterEventListener(event) {
+		const { keyCode } = event;
+		if (keyCode === 13) {
+			const { user, login } = this.props;
+			login(user.email.value, user.password.value);
+		}
+	}
+
+	componentWillMount() {
+		const { user, history } = this.props;
+		if (user.logged) {
+			return history.push('/');
+		}
+	}
+
 	componentDidMount() {
 		this.forceUpdate();
 	}
 
 	componentWillUpdate(props) {
-		// if (props.user.logged) {
-		// 	return route('/', true);
-		// }
+		const { user, history } = props;
+		if (user.logged) {
+			return history.push('/');
+		}
 	}
 
 	render() {
 		const { classes, user, setEmail, setPassword, login } = this.props;
 
 		return (
-			<Paper className={s.container} elevation={1}>
+			<Paper className={s.container} elevation={1} onKeyUp={e => this.enterEventListener(e)}>
 				<img className={s.logo} src="/assets/logo.png" alt="" />
 				<Typography className={classes.label} color="secondary" variant="subtitle1">
 					INICIAR SESSÃO
@@ -47,7 +66,7 @@ class Home extends Component {
 					onChange={setPassword}
 					error={user.password.error}
 				/>
-				<Button color="primary" size="large" variant="contained"
+				<Button classes={{ contained: classes.button }} color="primary" size="large" variant="contained"
 					onClick={() => login(user.email.value, user.password.value)}>
 					Iniciar sessão
 				</Button>
@@ -67,4 +86,4 @@ const mapDispatchToProps = dispatch => ({
 	login: (email, password) => dispatch(userAc.login(email, password)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Home));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Login));

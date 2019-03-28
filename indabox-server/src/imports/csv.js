@@ -2,8 +2,8 @@ const fs = require('fs');
 const readline = require('readline');
 const { mongo } = require('../services/database');
 const { database } = require('../../config/default.json');
-const User = require('../models/user');
-const Quota = require('../models/quota');
+const { User } = require('../models/user');
+const { Quota } = require('../models/quota');
 
 const parseQuotaValue = (value) => {
     const parsed = parseFloat(value);

@@ -1,4 +1,4 @@
-const User = require('../models/user');
+const { User } = require('../models/user');
 const { verifyHash } = require('../services/crypto');
 const APIError = require('../services/error');
 
@@ -32,15 +32,33 @@ class GeneralController {
             const { email, password } = req.body;
             const user = await User.findOne({ email });
             if (!user) {
-                return next(new APIError('Invalid email', { status: 400 }));
+                return next(new APIError('ValidationError', {
+                    status: 400,
+                    payload: [{
+                        key: 'email',
+                        err: 'Invalid email',
+                    }],
+                }));
             }
 
-            if (user.role >= 0) {
-                return next(new APIError('Unauthorized', { status: 401 }));
+            if (user.role > 0) {
+                return next(new APIError('ValidationError', {
+                    status: 400,
+                    payload: [{
+                        key: 'email',
+                        err: 'Unauthorized',
+                    }],
+                }));
             }
 
             if (!verifyHash(password, user.password)) {
-                return next(new APIError('Invalid password', { status: 400 }));
+                return next(new APIError('ValidationError', {
+                    status: 400,
+                    payload: [{
+                        key: 'password',
+                        err: 'Invalid password',
+                    }],
+                }));
             }
 
             req.session.setLogged(true);

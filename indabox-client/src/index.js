@@ -1,14 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import { createStore, applyMiddleware } from 'redux';
-import thunkMiddleware from 'redux-thunk';
 import { Provider } from "react-redux";
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
-// import * as serviceWorker from './serviceWorker';
-import reducers from './store/reducers';
+import request from './services/request';
+import createStore from './store';
 import PrivateRoute from './components/PrivateRoute';
+// import * as serviceWorker from './serviceWorker';
 
 // Routes
 import Home from './routes/Home';
@@ -31,20 +30,27 @@ const theme = createMuiTheme({
     },
 });
 
-const store = createStore(reducers, applyMiddleware(thunkMiddleware));
+request({
+    type: 'INITIAL-STATE',
+    method: 'GET',
+    url: '/state',
+    body: null,
+})(res => {
+    const store = createStore(res);
 
-ReactDOM.render((
-    <Provider store={store}>
-        <Router>
-            <MuiThemeProvider theme={theme}>
-                <CssBaseline />
-                <Switch>
-                    <Route path="/login" component={Login} />
-                    <PrivateRoute path="/" component={Home} store={store} />
-                </Switch>
-            </MuiThemeProvider>
-        </Router>
-    </Provider>
-), document.getElementById('root'));
+    ReactDOM.render((
+        <Provider store={store}>
+            <Router>
+                <MuiThemeProvider theme={theme}>
+                    <CssBaseline />
+                    <Switch>
+                        <Route path="/login" component={Login} />
+                        <PrivateRoute path="/" component={Home} store={store} />
+                    </Switch>
+                </MuiThemeProvider>
+            </Router>
+        </Provider>
+    ), document.getElementById('root'));
+});
 
 // serviceWorker.unregister();

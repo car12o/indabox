@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Joi = require('joi');
 const { hashPassword } = require('../services/crypto');
 
 const User = mongoose.Schema({
@@ -29,4 +30,31 @@ const User = mongoose.Schema({
     deletedAt: { type: Date, default: null },
 }, { timestamps: true });
 
-module.exports = mongoose.model('users', User);
+const userSchema = Joi.object().keys({
+    number: Joi.number().min(0),
+    role: Joi.number().min(10),
+    type: Joi.string().min(5, 'UTF-8'),
+    alerts: Joi.boolean(),
+    newsletter: Joi.boolean(),
+    firstName: Joi.string().min(5, 'UTF-8'),
+    lastName: Joi.string().min(5, 'UTF-8'),
+    nif: Joi.string().min(9, 'UTF-8').max(9, 'UTF-8'),
+    email: Joi.string().email({ minDomainAtoms: 2 }),
+    password: Joi.string().min(9, 'UTF-8'),
+    phone1: Joi.string().min(9, 'UTF-8'),
+    phone2: Joi.string().min(9, 'UTF-8'),
+    mobile: Joi.string().min(9, 'UTF-8'),
+    address: Joi.string().min(9, 'UTF-8'),
+    postCode: Joi.string().min(4, 'UTF-8'),
+    city: Joi.string().min(5, 'UTF-8'),
+    country: Joi.string().min(5, 'UTF-8'),
+    ballotNumber: Joi.string().min(9, 'UTF-8'),
+    specialty: Joi.string().min(9, 'UTF-8'),
+    notes: Joi.string(),
+    quotas: Joi.array().items(Joi.string()),
+});
+
+module.exports = {
+    User: mongoose.model('users', User),
+    userSchema,
+};

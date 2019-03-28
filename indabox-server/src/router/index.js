@@ -4,6 +4,8 @@ const Auth = require('../middleware/auth');
 const GeneralController = require('../controllers/general');
 const UsersController = require('../controllers/users');
 const APIError = require('../services/error');
+const { userSchema } = require('../models/user');
+const validation = require('../middleware/validation');
 
 /**
  * users ...
@@ -19,7 +21,7 @@ users.patch('/:userId', UsersController.update);
  */
 router.use('/users', Auth.authorization, users);
 router.get('/state', GeneralController.state);
-router.post('/login', GeneralController.login);
+router.post('/login', validation(userSchema), GeneralController.login);
 router.get('/logout', GeneralController.logout);
 
 router.use((req, res, next) => {

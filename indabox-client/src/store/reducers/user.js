@@ -1,37 +1,120 @@
 import _ from 'lodash/fp';
-import { createPartner } from '../../services/data';
 
-const initialState = Object.assign({}, {
-	logged: false
-}, createPartner({
-	id: 3, number: 3, type: 'Sócio Titular', alerts: false, newsletter: false, firstName: 'Ze',
-	lastName: 'Manel', nif: '33967045', email: 'ze.manel@gmail.com', phone: '914092645', address: 'Rua de cima',
-	postCode: '0000-000', city: 'Porto', country: 'Portugal', notes: 'nota de test', createdBy: 'Marco Silva',
-	createdAt: '2016-01-20 12:23:42', updatedBy: 'Marco Silva', updatedAt: '2016-01-20 12:23:42'
-}));
+/**
+ * createUser ...
+ * @param {object} user 
+ */
+const createUser = user => ({
+	logged: _.getOr(false, 'logged', user),
+	id: user.id || '',
+	number: _.getOr(0, 'number', user),
+	type: user.type || '',
+	alerts: {
+		label: 'Receber alertas',
+		value: _.getOr(false, 'alerts', user),
+	},
+	newsletter: {
+		label: 'Receber newsletters',
+		value: _.getOr(false, 'newsletter', user),
+	},
+	firstName: {
+		label: 'Nome',
+		value: user.firstName || '',
+		error: null
+	},
+	lastName: {
+		label: 'Apelido',
+		value: user.lastName || '',
+		error: null
+	},
+	nif: {
+		label: 'NIF',
+		value: user.nif || '',
+		error: null
+	},
+	email: {
+		label: 'Endereço de email',
+		value: user.email || '',
+		error: null
+	},
+	password: {
+		label: 'Palavra chave',
+		value: user.password || '',
+		error: null
+	},
+	phone: {
+		label: 'Telefone',
+		value: user.phone || '',
+		error: null
+	},
+	address: {
+		label: 'Morada',
+		value: user.address || '',
+		error: null
+	},
+	postCode: {
+		label: 'Código de Postal',
+		value: user.postCode || '',
+		error: null
+	},
+	city: {
+		label: 'Localidade',
+		value: user.city || '',
+		error: null
+	},
+	country: {
+		label: 'Pais',
+		value: user.country || '',
+		error: null
+	},
+	notes: {
+		label: 'Notas',
+		value: user.notes || '',
+		error: null
+	},
+	createdBy: user.createdBy || '',
+	createdAt: user.createdAt || '',
+	updatedBy: user.updatedBy || '',
+	updatedAt: user.updatedAt || '',
+	quotas: [],
+});
 
-const user = (state = initialState, action) => {
+/**
+ * setUserErrors ...
+ * @param {object} state
+ * @param {object} errors
+ */
+const setUserErrors = (state, errors) => errors.reduce((accm, e) => {
+	const { key, err } = e;
+	if (_.has(`${key}.value`, accm)) {
+		const prop = Object.assign({}, accm[key], { error: err });
+		return Object.assign({}, accm, { [key]: prop });
+	}
+	return accm;
+}, Object.assign({}, state));
+
+/**
+ * user ...
+ * @param {object} state
+ * @param {object} action
+ */
+const user = (state = {}, action) => {
 	switch (action.type) {
-		// case 'INITIAL-STATE':
-		// 	return _.set('logged', action.body.logged, state);
 		case 'SET-EMAIL':
-			return _.set('email.value', action.email, state);
+			return _.set('email',
+				Object.assign(state.email, { value: action.email, error: null }), state);
 		case 'SET-PASSWORD':
-			return _.set('password.value', action.password, state);
+			return _.set('password',
+				Object.assign(state.password, { value: action.password, error: null }), state);
 		case 'SUBMIT-LOGIN':
 			if (action.status !== 200) {
-				// eslint-disable-next-line no-alert
-				alert(action.body.err);
-				return state;
+				return setUserErrors(state, action.body.payload)
 			}
-
-			console.log('action', action);
-
-			return state;
+			const { logged, user } = action.body;
+			return createUser({ logged, ...user });
 		default:
 			return state;
 	}
 };
 
-export default user;
-
+export { user, createUser, setUserErrors };
