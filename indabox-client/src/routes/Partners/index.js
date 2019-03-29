@@ -4,6 +4,10 @@ import TableSelect from '../../components/TableSelect';
 import { partnersAc } from '../../store/actions';
 
 class Partners extends React.Component {
+	componentWillMount() {
+		this.props.getPartners();
+	}
+
 	render() {
 		const { history, partners, setPartner } = this.props;
 		const onClick = n => setPartner(n.id, history);
@@ -20,7 +24,7 @@ class Partners extends React.Component {
 		return (
 			<TableSelect
 				rows={rows}
-				data={partners.data}
+				data={partners.list}
 				onClick={onClick}
 			/>
 		);
@@ -32,6 +36,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+	getPartners: () => dispatch(partnersAc.getPartners()),
 	setPartner: (id, history) => dispatch(partnersAc.setSelected(id, history)),
 });
 

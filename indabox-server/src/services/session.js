@@ -85,9 +85,9 @@ class Session {
                 notes: this.user.notes,
                 alerts: this.user.alerts,
                 newsletter: this.user.newsletter,
-                createdBy: this.user.createdBy || 'Imported',
+                createdBy: this.user.createdBy,
                 createdAt: this.user.createdAt,
-                updatedBy: this.user.updatedBy || 'Imported',
+                updatedBy: this.user.updatedBy,
                 updatedAt: this.user.updatedAt,
             };
         }

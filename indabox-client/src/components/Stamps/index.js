@@ -37,7 +37,7 @@ class Stamps extends Component {
 				</div>
 				<div className={classes.stamps}>
 					<Typography className={classes.text} component="p">
-						{firstValue}
+						{firstValue || 'Imported'}
 					</Typography>
 					<Typography className={classes.text} component="p">
 						{secoundValue}

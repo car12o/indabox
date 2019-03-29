@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
+import _ from 'lodash/fp';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -49,8 +50,8 @@ const styles = (theme) => ({
 		cursor: 'pointer',
 	},
 	tableCheckbox: {
-        color: `${theme.palette.primary.main} !important`,
-    }
+		color: `${theme.palette.primary.main} !important`,
+	}
 });
 
 class Partners extends React.Component {
@@ -159,7 +160,7 @@ class Partners extends React.Component {
 												<TableCell
 													key={i}
 													align={i === 0 ? 'right' : 'left'} >
-													{`${n[row.id].value ? n[row.id].value : n[row.id]}`}
+													{_.has('value', n[row.id]) ? n[row.id].value : n[row.id]}
 												</TableCell>
 											))}
 										</TableRow>

@@ -1,7 +1,7 @@
 import { createStore, applyMiddleware } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import reducers from './reducers';
-import { createUser } from './reducers/user';
+import { createUser } from '../services/transform';
 
 export default (res) => {
     const { user, logged } = res.body;

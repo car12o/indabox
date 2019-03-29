@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import _ from 'lodash/fp';
 import { partnersAc } from '../../store/actions';
 import PartnerComponent from '../../components/Partner';
 
@@ -9,9 +10,9 @@ class Partner extends Component {
 	};
 
 	componentDidMount() {
-		const { partners, match, history, setPartner } = this.props;
-		if (partners.selected.isEmpty) {
-			setPartner(parseInt(match.params.id, 10), history);
+		const { partners, match, getPartner } = this.props;
+		if (_.isEmpty(partners.selected.id)) {
+			getPartner(match.params.id);
 		}
 	}
 
@@ -20,12 +21,11 @@ class Partner extends Component {
 	};
 
 	render() {
-		const { partners } = this.props;
-		const partner = partners.selected.value;
+		const { selected } = this.props.partners;
 
 		return (
 			<PartnerComponent
-				partner={partner}
+				partner={selected}
 				tab={this.state.tab}
 				handleChange={this.handleChange}
 			/>
@@ -38,6 +38,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+	getPartner: (id) => dispatch(partnersAc.getPartner(id)),
 	setPartner: (partner, history) => dispatch(partnersAc.setSelected(partner, history)),
 });
 

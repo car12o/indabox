@@ -25,7 +25,12 @@ module.exports = {
             }
         },
         hasAdmin: ({ email }) => User.findOne({ email }),
-        createAdmin: ({ email, password }) => User.create({ email, password: hashPassword(password), role: 0 }),
+        createAdmin: ({ email, password }) => User.create({
+            email,
+            password: hashPassword(password),
+            role: 0,
+            type: 'Admin',
+        }),
     },
     redis: {
         client: undefined,

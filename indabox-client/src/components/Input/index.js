@@ -11,7 +11,11 @@ const styles = {
 	root: {
 		width: '100%',
 		marginTop: '10px',
+		padding: '0 30px'
 	},
+	margin: {
+		margin: '0 0px 0 30px'
+	}
 }
 
 class Input extends Component {
@@ -20,7 +24,7 @@ class Input extends Component {
 
 		return (
 			<FormControl className={classes.root} variant="outlined" error={error ? true : false}>
-				<InputLabel ref={ref => this.InputRef = ReactDOM.findDOMNode(ref)}>
+				<InputLabel className={classes.margin}  ref={ref => this.InputRef = ReactDOM.findDOMNode(ref)}>
 					{label}
 				</InputLabel>
 				<OutlinedInput

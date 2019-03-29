@@ -14,6 +14,7 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import ArrowForward from '@material-ui/icons/ArrowForward';
 import HomeIcon from '@material-ui/icons/Home';
+import Test from '../../components/Test';
 
 // Routes ...
 import Partners from '../Partners';
@@ -186,6 +187,7 @@ class Home extends Component {
 				<main className={classNames(classes.content, {
 					[classes.contentShift]: open,
 				})}>
+					<Route path="/" exact component={Test} />
 					<Route path="/partners" exact component={Partners} />
 					<Route path="/partners/:id" component={Partner} />
 					<Route path="/profile" component={Profile} />

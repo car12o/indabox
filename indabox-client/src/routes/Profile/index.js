@@ -5,7 +5,7 @@ import PartnerComponent from '../../components/Partner';
 
 class Profile extends Component {
 	state = {
-		tab: 0,
+		tab: 1,
 	};
 
 	handleChange = (event, tab) => {
@@ -30,8 +30,4 @@ const mapStateToProps = state => ({
 	user: state.user
 });
 
-const mapDispatchToProps = dispatch => ({
-	// setPartner: (partner, history) => dispatch(partnersAc.setSelected(partner, history)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Profile);
+export default connect(mapStateToProps)(Profile);

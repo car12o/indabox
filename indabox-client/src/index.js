@@ -12,6 +12,7 @@ import PrivateRoute from './components/PrivateRoute';
 // Routes
 import Home from './routes/Home';
 import Login from './routes/Login';
+import Logout from './routes/Logout';
 
 const theme = createMuiTheme({
     palette: {
@@ -45,6 +46,7 @@ request({
                     <CssBaseline />
                     <Switch>
                         <Route path="/login" component={Login} />
+                        <PrivateRoute path="/logout" component={Logout} store={store} />
                         <PrivateRoute path="/" component={Home} store={store} />
                     </Switch>
                 </MuiThemeProvider>

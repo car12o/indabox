@@ -13,11 +13,10 @@ const styles = (theme) => ({
 		display: 'flex',
 	},
 	titleContainer: {
-		width: '37%',
 		display: 'flex',
 		flexDirection: 'column',
 		borderTop: `1px solid ${theme.palette.secondary.light}`,
-		padding: '0 10% 0 30px',
+		width: '37%',
 	},
 	titleContainerCenter: {
 		borderLeft: `1px solid ${theme.palette.secondary.light}`,
@@ -25,10 +24,9 @@ const styles = (theme) => ({
 	},
 	titleContainerLast: {
 		width: '26%',
-		padding: '0 4% 0 30px',
 	},
 	title: {
-		padding: '18px 10px',
+		padding: '18px 30px',
 		fontSize: '14px',
 		marginBottom: '10px',
 		color: 'white',
@@ -37,6 +35,9 @@ const styles = (theme) => ({
 		display: 'flex',
 		flexDirection: 'row',
 		marginBottom: '10px',
+	},
+	checkBoxContainerPadding: {
+		padding: '0 30px',
 	},
 	label: {
 		color: theme.palette.primary.main
@@ -106,7 +107,7 @@ class PartnerDetails extends Component {
 						// onChange={setPassword}
 						error={partner.phone.error}
 					/>
-					<div className={classes.checkBoxContainer}>
+					<div className={classNames(classes.checkBoxContainer, classes.checkBoxContainerPadding)}>
 						<div className={classes.bottomLabels}>
 							<span className={classes.label}>Nº de sócio</span>
 							<p>{partner.number}</p>

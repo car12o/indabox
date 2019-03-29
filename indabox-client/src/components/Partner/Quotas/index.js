@@ -17,9 +17,6 @@ const styles = {
 		overflowX: 'auto',
 		boxShadow: 'none',
 	},
-	table: {
-		minWidth: 700,
-	},
 	tableHead: {
 		color: 'white',
 		fontSize: '14px',
@@ -35,7 +32,7 @@ class Quotas extends Component {
 
 		return (
 			<Paper id="quotas-component" className={classes.root}>
-				<Table className={classes.table}>
+				<Table>
 					<TableHead>
 						<TableRow>
 							<TableCell classes={{ root: classes.tableHead }} align="right">ID</TableCell>
@@ -53,8 +50,8 @@ class Quotas extends Component {
 									{row.id}
 								</TableCell>
 								<TableCell align="right">{row.year}</TableCell>
-								<TableCell align="right">{row.state}</TableCell>
-								<TableCell align="right">{row.value.label}</TableCell>
+								<TableCell align="right">{row.status}</TableCell>
+								<TableCell align="right">{row.value}€</TableCell>
 								<TableCell align="right">{row.invoiceEmitted ? 'Emitida' : 'Nao emitida'}</TableCell>
 								<TableCell classes={{ root: classes.lastCell }} align="right"><PlayCircleFilled /></TableCell>
 							</TableRow>
