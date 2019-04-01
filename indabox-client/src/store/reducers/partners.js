@@ -1,5 +1,5 @@
 import _ from 'lodash/fp';
-import { createUser } from '../../services/transform';
+import { createUser, setUserErrors } from '../../services/transform';
 
 /**
  * find ...
@@ -25,6 +25,64 @@ const partners = (state = initialState, action) => {
 				Object.assign(state.selected.firstName, { value: action.firstName, error: null }),
 				state,
 			);
+		case 'SET-SELECTED-LASTNAME':
+			return _.set('selected.lastName',
+				Object.assign(state.selected.lastName, { value: action.lastName, error: null }),
+				state,
+			);
+		case 'SET-SELECTED-NIF':
+			return _.set('selected.nif',
+				Object.assign(state.selected.nif, { value: action.nif, error: null }),
+				state,
+			);
+		case 'SET-SELECTED-EMAIL':
+			return _.set('selected.email',
+				Object.assign(state.selected.email, { value: action.email, error: null }),
+				state,
+			);
+		case 'SET-SELECTED-PASSWORD':
+			return _.set('selected.password',
+				Object.assign(state.selected.password, { value: action.password, error: null }),
+				state,
+			);
+		case 'SET-SELECTED-ALERTS':
+			return _.set('selected.alerts.value', action.alerts,
+				state,
+			);
+		case 'SET-SELECTED-NEWSLETTER':
+			return _.set('selected.newsletter.value', action.newsletter,
+				state,
+			);
+		case 'SET-SELECTED-PHONE':
+			return _.set('selected.phone',
+				Object.assign(state.selected.phone, { value: action.phone, error: null }),
+				state,
+			);
+		case 'SET-SELECTED-ADDRESS':
+			return _.set('selected.address',
+				Object.assign(state.selected.address, { value: action.address, error: null }),
+				state,
+			);
+		case 'SET-SELECTED-POSTCODE':
+			return _.set('selected.postCode',
+				Object.assign(state.selected.postCode, { value: action.postCode, error: null }),
+				state,
+			);
+		case 'SET-SELECTED-CITY':
+			return _.set('selected.city',
+				Object.assign(state.selected.city, { value: action.city, error: null }),
+				state,
+			);
+		case 'SET-SELECTED-COUNTRY':
+			return _.set('selected.country',
+				Object.assign(state.selected.country, { value: action.country, error: null }),
+				state,
+			);
+		case 'SET-SELECTED-NOTES':
+			return _.set('selected.notes',
+				Object.assign(state.selected.notes, { value: action.notes, error: null }),
+				state,
+			);
 		case 'GET-PARTNERS':
 			if (action.status !== 200) {
 				return state;
@@ -40,8 +98,11 @@ const partners = (state = initialState, action) => {
 		case 'SET-SELECTED':
 			return _.set('selected', find(state.list, action.id), state);
 		case 'SUBMIT-SELECTED-UPDATE':
-			console.log(action);
-			return state;
+			if (action.status !== 200) {
+				const user = setUserErrors(state.selected, action.body.payload);
+				return _.set('selected', user, state);
+			}
+			return _.set('selected', createUser(Object.assign({}, action.body, { id: action.body._id })), state);
 		default:
 			return state;
 	}

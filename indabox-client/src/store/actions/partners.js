@@ -9,6 +9,90 @@ function setFirstName(firstName) {
 	};
 }
 
+function setLastName(lastName) {
+	return {
+		type: 'SET-SELECTED-LASTNAME',
+		lastName
+	};
+}
+
+function setNif(nif) {
+	return {
+		type: 'SET-SELECTED-NIF',
+		nif
+	};
+}
+
+function setEmail(email) {
+	return {
+		type: 'SET-SELECTED-EMAIL',
+		email
+	};
+}
+
+function setPassword(password) {
+	return {
+		type: 'SET-SELECTED-PASSWORD',
+		password
+	};
+}
+
+function setAlerts(alerts) {
+	return {
+		type: 'SET-SELECTED-ALERTS',
+		alerts
+	};
+}
+
+function setNewsletter(newsletter) {
+	return {
+		type: 'SET-SELECTED-NEWSLETTER',
+		newsletter
+	};
+}
+
+function setPhone(phone) {
+	return {
+		type: 'SET-SELECTED-PHONE',
+		phone
+	};
+}
+
+function setAddress(address) {
+	return {
+		type: 'SET-SELECTED-ADDRESS',
+		address
+	};
+}
+
+function setPostCode(postCode) {
+	return {
+		type: 'SET-SELECTED-POSTCODE',
+		postCode
+	};
+}
+
+function setCity(city) {
+	return {
+		type: 'SET-SELECTED-CITY',
+		city
+	};
+}
+
+function setCountry(country) {
+	return {
+		type: 'SET-SELECTED-COUNTRY',
+		country
+	};
+}
+
+function setNotes(notes) {
+	return {
+		type: 'SET-SELECTED-NOTES',
+		notes
+	};
+}
+
 function getPartners() {
 	const req = {
 		type: 'GET-PARTNERS',
@@ -60,6 +144,18 @@ function update(data) {
 
 export default {
 	setFirstName,
+	setLastName,
+	setNif,
+	setEmail,
+	setPassword,
+	setAlerts,
+	setNewsletter,
+	setPhone,
+	setAddress,
+	setPostCode,
+	setCity,
+	setCountry,
+	setNotes,
 	getPartners,
 	getPartner,
 	setSelected,

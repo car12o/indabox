@@ -13,12 +13,21 @@ import EnhancedTableHead from './EnhancedTableHead';
 import EnhancedTableToolbar from './EnhancedTableToolbar';
 
 function desc(a, b, orderBy) {
-	if (b[orderBy] < a[orderBy]) {
+	let cmpA = a[orderBy];
+	let cmpB = b[orderBy];
+
+	if (_.has('value', cmpA)) {
+		cmpA = cmpA.value;
+		cmpB = cmpB.value;
+	}
+
+	if (cmpB < cmpA) {
 		return -1;
 	}
-	if (b[orderBy] > a[orderBy]) {
+	if (cmpB > cmpA) {
 		return 1;
 	}
+
 	return 0;
 }
 
@@ -76,7 +85,7 @@ class Partners extends React.Component {
 
 	handleSelectAllClick = event => {
 		if (event.target.checked) {
-			this.setState(() => ({ selected: this.props.data.map(n => n.number) }));
+			this.setState(() => ({ selected: this.props.data.map(n => n.id) }));
 			return;
 		}
 		this.setState({ selected: [] });
@@ -137,7 +146,7 @@ class Partners extends React.Component {
 							{stableSort(data, getSorting(order, orderBy))
 								.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
 								.map(n => {
-									const isSelected = this.isSelected(n.number);
+									const isSelected = this.isSelected(n.id);
 
 									return (
 										<TableRow className={classes.tableRow}
@@ -153,7 +162,7 @@ class Partners extends React.Component {
 												<Checkbox
 													classes={{ root: classes.tableCheckbox }}
 													checked={isSelected}
-													onClick={event => this.handleClick(event, n.number)}
+													onClick={event => this.handleClick(event, n.id)}
 												/>
 											</TableCell>
 											{rows.map((row, i) => (

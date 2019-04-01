@@ -140,6 +140,7 @@ function update(user) {
 		method: 'PATCH',
 		body,
 	};
+
 	return request(req);
 }
 

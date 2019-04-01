@@ -58,7 +58,7 @@ class UsersController {
                 { _id: userId },
                 req.body,
                 { new: true },
-            ).select('-password');
+            ).select('-password').populate('quotas');
             return res.send(user);
         } catch (e) {
             return next(new APIError(e));

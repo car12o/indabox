@@ -6,12 +6,10 @@ import PartnerComponent from '../../components/Partner';
 
 class Partner extends Component {
 	view() {
-		const { history } = this.props;
-
 		return {
 			leftButton: {
 				fn: () => {
-					history.goBack();
+					this.props.history.goBack();
 					this.setState({
 						disabled: false,
 						buttons: this.edit(),
@@ -30,19 +28,20 @@ class Partner extends Component {
 	}
 
 	edit() {
-		const { partners, update } = this.props;
-
 		return {
 			leftButton: {
-				fn: () => this.setState({
-					disabled: true,
-					buttons: this.view(),
-				}),
+				fn: () => {
+					this.props.getPartner(this.props.partners.selected.id);
+					this.setState({
+						disabled: true,
+						buttons: this.view(),
+					})
+				},
 				label: 'Cancelar'
 			},
 			rightButton: {
 				fn: () => {
-					update(partners.selected);
+					this.props.update(this.props.partners.selected);
 					this.setState({
 						disabled: true,
 						buttons: this.view(),
@@ -71,13 +70,25 @@ class Partner extends Component {
 	};
 
 	render() {
-		const { partners, setFirstName } = this.props;
+		const { partners, setFirstName, setLastName, setNif, setEmail, setAlerts, setNewsletter,
+			setPhone, setAddress, setPostCode, setCity, setCountry, setNotes } = this.props;
 
 		return (
 			<PartnerComponent
 				partner={partners.selected}
 				partnerActions={{
 					setFirstName,
+					setLastName,
+					setNif,
+					setEmail,
+					setAlerts,
+					setNewsletter,
+					setPhone,
+					setAddress,
+					setPostCode,
+					setCity,
+					setCountry,
+					setNotes,
 				}}
 				tab={this.state.tab}
 				handleChange={this.handleChange}
@@ -96,6 +107,17 @@ const mapDispatchToProps = dispatch => ({
 	getPartner: id => dispatch(partnersAc.getPartner(id)),
 	setPartner: (partner, history) => dispatch(partnersAc.setSelected(partner, history)),
 	setFirstName: firstName => dispatch(partnersAc.setFirstName(firstName)),
+	setLastName: lastName => dispatch(partnersAc.setLastName(lastName)),
+	setNif: nif => dispatch(partnersAc.setNif(nif)),
+	setEmail: email => dispatch(partnersAc.setEmail(email)),
+	setAlerts: alerts => dispatch(partnersAc.setAlerts(alerts)),
+	setNewsletter: newsletter => dispatch(partnersAc.setNewsletter(newsletter)),
+	setPhone: phone => dispatch(partnersAc.setPhone(phone)),
+	setAddress: address => dispatch(partnersAc.setAddress(address)),
+	setPostCode: postCode => dispatch(partnersAc.setPostCode(postCode)),
+	setCity: city => dispatch(partnersAc.setCity(city)),
+	setCountry: country => dispatch(partnersAc.setCountry(country)),
+	setNotes: notes => dispatch(partnersAc.setNotes(notes)),
 	update: body => dispatch(partnersAc.update(body))
 });
 
