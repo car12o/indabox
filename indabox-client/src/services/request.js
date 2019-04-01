@@ -18,7 +18,7 @@ export default (req) => {
 				Object.assign(options, { body: JSON.stringify(req.body) });
 			}
 
-			const res = await fetch(`http://${window.location.hostname}:8080${req.url}`, options);
+			const res = await fetch(`${process.env.REACT_APP_API_URL}${req.url}`, options);
 			const token = res.headers.get('Token');
 			if (token) {
 				localStorage.setItem('token', token);
