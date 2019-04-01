@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Joi = require('joi');
 const { hashPassword } = require('../services/crypto');
+const { quotaSchema } = require('./quota');
 
 const User = mongoose.Schema({
     number: { type: Number, default: 0 },
@@ -32,12 +33,12 @@ const User = mongoose.Schema({
 
 const userSchema = Joi.object().keys({
     number: Joi.number().min(0),
-    role: Joi.number().min(10),
-    type: Joi.string().min(5, 'UTF-8'),
+    role: Joi.number().min(5),
+    type: Joi.string().min(3, 'UTF-8'),
     alerts: Joi.boolean(),
     newsletter: Joi.boolean(),
-    firstName: Joi.string().min(5, 'UTF-8'),
-    lastName: Joi.string().min(5, 'UTF-8'),
+    firstName: Joi.string().min(3, 'UTF-8'),
+    lastName: Joi.string().min(3, 'UTF-8'),
     nif: Joi.string().min(9, 'UTF-8').max(9, 'UTF-8'),
     email: Joi.string().email({ minDomainAtoms: 2 }),
     password: Joi.string().min(9, 'UTF-8'),
@@ -46,12 +47,12 @@ const userSchema = Joi.object().keys({
     mobile: Joi.string().min(9, 'UTF-8'),
     address: Joi.string().min(9, 'UTF-8'),
     postCode: Joi.string().min(4, 'UTF-8'),
-    city: Joi.string().min(5, 'UTF-8'),
-    country: Joi.string().min(5, 'UTF-8'),
+    city: Joi.string().min(3, 'UTF-8'),
+    country: Joi.string().min(3, 'UTF-8'),
     ballotNumber: Joi.string().min(9, 'UTF-8'),
     specialty: Joi.string().min(9, 'UTF-8'),
     notes: Joi.string(),
-    quotas: Joi.array().items(Joi.string()),
+    quotas: Joi.array().items(quotaSchema),
 });
 
 module.exports = {

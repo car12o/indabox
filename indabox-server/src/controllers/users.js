@@ -12,9 +12,9 @@ class UsersController {
     static async get(req, res, next) {
         try {
             const { userId } = req.params;
-            let query = {};
+            let query = { role: 10 };
             if (userId) {
-                query = Object.assign({}, query, { _id: userId });
+                query = Object.assign({}, { _id: userId });
             }
 
             const user = await User.find(query)
@@ -54,8 +54,11 @@ class UsersController {
         const { userId } = req.params;
 
         try {
-            const user = await User.updateOne({ _id: userId }, req.body);
-
+            const user = await User.findOneAndUpdate(
+                { _id: userId },
+                req.body,
+                { new: true },
+            ).select('-password');
             return res.send(user);
         } catch (e) {
             return next(new APIError(e));

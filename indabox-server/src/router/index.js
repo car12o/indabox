@@ -12,8 +12,8 @@ const validation = require('../middleware/validation');
  */
 users.get('', UsersController.get);
 users.get('/:userId', UsersController.get);
-users.post('', UsersController.store);
-users.patch('/:userId', UsersController.update);
+users.post('', validation(userSchema), UsersController.store);
+users.patch('/:userId', validation(userSchema), UsersController.update);
 // users.delete('/:userId', UsersController.delete);
 
 /**

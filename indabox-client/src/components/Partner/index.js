@@ -60,6 +60,7 @@ const styles = theme => ({
 		backgroundColor: theme.palette.background.paper,
 		width: '100%',
 		marginTop: '25px',
+		boxShadow: '0px 2px 4px -1px rgba(0,0,0,0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12)',
 	},
 	tabsAppBar: {
 		backgroundColor: theme.palette.background.paper,
@@ -75,14 +76,15 @@ const styles = theme => ({
 
 class Partner extends Component {
 	render() {
-		const { classes, partner, tab, handleChange, profile } = this.props;
+		const { classes, partner, tab, handleChange, profile, disabled, buttons,
+			partnerActions } = this.props;
 
 		const theme = {
 			direction: 'ltl',
 		};
 
 		return (
-			<div>
+			<div className={classes.container}>
 				<Paper className={classes.root} elevation={1}>
 					<Typography className={classes.breadcrum} variant="h6" id="tableTitle">
 						<PaperHeader classes={classes} partner={partner} profile={profile} />
@@ -130,7 +132,12 @@ class Partner extends Component {
 							<Quotas data={partner.quotas} />
 						</TabContainer>
 						<TabContainer dir={theme.direction}>
-							<PartnerDetails partner={partner} />
+							<PartnerDetails
+								partner={partner}
+								actions={partnerActions}
+								buttons={buttons}
+								disabled={disabled}
+							/>
 						</TabContainer>
 					</SwipeableViews>
 				</div>

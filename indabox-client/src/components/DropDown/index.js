@@ -1,23 +1,15 @@
 import React, { Component } from 'react';
 import { withTheme } from '@material-ui/core/styles';
-import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 
-const styles = {
-	root: {
-		margin: '10px 0 20px 0',
-		padding: '0 30px'
-	}
-};
-
 class DropDown extends Component {
 	render() {
-		const { classes, theme, label, value, options, onChange, disabled } = this.props;
+		const { theme, label, value, options, onChange, disabled } = this.props;
 
 		return (
-			<FormControl classes={{ root: classes.root }} variant="outlined" >
+			<FormControl variant="outlined" >
 				<TextField
 					select
 					InputLabelProps={{
@@ -43,4 +35,4 @@ class DropDown extends Component {
 	}
 }
 
-export default withTheme()(withStyles(styles)(DropDown));
+export default withTheme()(DropDown);

@@ -7,7 +7,6 @@ import FormControl from '@material-ui/core/FormControl';
 const styles = {
 	root: {
 		margin: '10px 0 20px 0',
-		padding: '0 30px'
 	}
 };
 

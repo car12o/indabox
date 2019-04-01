@@ -83,10 +83,23 @@ const styles = theme => ({
 	content: {
 		flexGrow: 1,
 		padding: theme.spacing.unit * 3,
+		paddingLeft: (theme.spacing.unit * 7) + (theme.spacing.unit * 5),
+		width: '100%',
+		transition: theme.transitions.create('padding-left', {
+			easing: theme.transitions.easing.sharp,
+			duration: theme.transitions.duration.enteringScreen,
+		}),
+	},
+	contentShift: {
+		paddingLeft: (theme.spacing.unit * 28) + (theme.spacing.unit * 5),
+		transition: theme.transitions.create('padding-left', {
+			easing: theme.transitions.easing.sharp,
+			duration: theme.transitions.duration.leavingScreen,
+		}),
 	},
 	link: {
 		textDecoration: 'none',
-	},
+	}
 });
 
 class Home extends Component {
@@ -140,10 +153,6 @@ class Home extends Component {
 			<div className={classes.root}>
 				<Drawer
 					variant="permanent"
-					className={classNames(classes.drawer, {
-						[classes.drawerOpen]: open,
-						[classes.drawerClose]: !open,
-					})}
 					classes={{
 						paper: classNames({
 							[classes.drawerOpen]: open,
