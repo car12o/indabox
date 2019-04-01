@@ -33,7 +33,7 @@ const User = mongoose.Schema({
 
 const userSchema = Joi.object().keys({
     number: Joi.number().min(0),
-    role: Joi.number().min(5),
+    role: Joi.number(),
     type: Joi.string().min(3, 'UTF-8'),
     alerts: Joi.boolean(),
     newsletter: Joi.boolean(),

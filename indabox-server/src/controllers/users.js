@@ -1,3 +1,4 @@
+const _ = require('lodash/fp');
 const { User } = require('../models/user');
 require('../models/quota');
 const { hashPassword } = require('../services/crypto');
@@ -20,6 +21,7 @@ class UsersController {
             const user = await User.find(query)
                 .select('-password')
                 .populate('quotas', '-user');
+
             return res.send(userId ? user[0] : user);
         } catch (e) {
             return next(new APIError(e));
@@ -39,7 +41,7 @@ class UsersController {
             const data = Object.assign({}, req.body, { password });
             const user = await User.create(data);
 
-            return res.send(user);
+            return res.send(_.omit('_doc.password', user));
         } catch (e) {
             return next(new APIError(e));
         }
@@ -59,6 +61,7 @@ class UsersController {
                 req.body,
                 { new: true },
             ).select('-password').populate('quotas');
+
             return res.send(user);
         } catch (e) {
             return next(new APIError(e));
