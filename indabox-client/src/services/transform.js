@@ -7,7 +7,10 @@ import _ from 'lodash/fp';
 const createQuotas = quotas => quotas.map(quota => ({
     id: quota._id,
     year: quota.year,
-    status: quota.status.value,
+    status: {
+        value: quota.status.value,
+        label: quota.status.label,
+    },
     value: quota.status.payment || 0,
     createdAt: quota.createdAt,
     updatedAt: quota.updatedAt

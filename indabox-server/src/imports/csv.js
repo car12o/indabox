@@ -55,7 +55,8 @@ const parseRow = (line) => {
                 year: years[i],
                 value: val ? parseQuotaValue(val) : 0,
                 status: {
-                    value: val ? 'Paid' : 'Unpaid',
+                    label: val ? 'Paid' : 'Unpaid',
+                    value: val ? 1 : 0,
                 },
             })),
     };

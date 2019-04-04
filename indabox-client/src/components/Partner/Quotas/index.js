@@ -10,7 +10,7 @@ import Paper from '@material-ui/core/Paper';
 import PlayCircleFilled from '@material-ui/icons/PlayCircleFilled';
 import './styles.css';
 
-const styles = {
+const styles = theme => ({
 	root: {
 		width: '100%',
 		backgroundColor: 'transparent',
@@ -21,10 +21,13 @@ const styles = {
 		color: 'white',
 		fontSize: '14px',
 	},
+	tableRow: {
+		color: theme.palette.text.secondary,
+	},
 	lastCell: {
 		paddingRight: '120px !important',
 	}
-};
+});
 
 class Quotas extends Component {
 	render() {
@@ -46,13 +49,18 @@ class Quotas extends Component {
 					<TableBody>
 						{data.map(row => (
 							<TableRow key={row.id}>
-								<TableCell component="th" scope="row" align="right">
+								<TableCell classes={{ root: classNames({ [classes.tableRow]: row.status.value === 0 }) }}
+									component="th" scope="row" align="right" >
 									{row.id}
 								</TableCell>
-								<TableCell align="right">{row.year}</TableCell>
-								<TableCell align="right">{row.status}</TableCell>
-								<TableCell align="right">{row.value}€</TableCell>
-								<TableCell align="right">{row.invoiceEmitted ? 'Emitida' : 'Nao emitida'}</TableCell>
+								<TableCell classes={{ root: classNames({ [classes.tableRow]: row.status.value === 0 }) }}
+									align="right">{row.year}</TableCell>
+								<TableCell classes={{ root: classNames({ [classes.tableRow]: row.status.value === 0 }) }}
+									align="right">{row.status.label}</TableCell>
+								<TableCell classes={{ root: classNames({ [classes.tableRow]: row.status.value === 0 }) }}
+									align="right">{row.value}€</TableCell>
+								<TableCell classes={{ root: classNames({ [classes.tableRow]: row.status.value === 0 }) }}
+									align="right">{row.invoiceEmitted ? 'Emitida' : 'Nao emitida'}</TableCell>
 								<TableCell classes={{ root: classes.lastCell }} align="right"><PlayCircleFilled /></TableCell>
 							</TableRow>
 						))}

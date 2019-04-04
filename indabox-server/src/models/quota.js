@@ -4,7 +4,8 @@ const Joi = require('joi');
 const Quota = mongoose.Schema({
     year: { type: String, required: true, default: '' },
     status: {
-        value: { type: String, default: 'Unpaid' },
+        value: { type: Number, default: 0 },
+        label: { type: String, default: 'Unpaid' },
         payment: { type: mongoose.Schema.Types.ObjectId, ref: 'payments', default: null },
     },
     value: { type: Number, default: 0 },
@@ -15,7 +16,8 @@ const Quota = mongoose.Schema({
 const quotaSchema = Joi.object().keys({
     year: Joi.number().min(2015),
     state: Joi.object().keys({
-        value: Joi.string(),
+        label: Joi.string(),
+        value: Joi.number(),
         payment: Joi.string().allow(['Unpaid', 'Paid']),
     }),
     value: Joi.number(),
