@@ -33,16 +33,22 @@ const styles = (theme) => ({
 		marginBottom: '10px',
 		color: 'white',
 	},
-	checkBoxContainer: {
+	container: {
 		display: 'flex',
 		flexDirection: 'row',
+	},
+	containerTitle: {
+		flex: 1,
+		marginRight: '25px',
+	},
+	containerFirstName: {
+		flex: 3,
+	},
+	checkBoxContainer: {
 		marginBottom: '10px',
 	},
 	partnerContainer: {
-		display: 'flex',
-		flexDirection: 'row',
-		marginBottom: '10px',
-		marginTop: '15px',
+		marginBottom: '20px',
 	},
 	label: {
 		color: theme.palette.primary.main,
@@ -54,7 +60,6 @@ const styles = (theme) => ({
 	},
 	bottomLabelsFirst: {
 		marginRight: '40px',
-		marginTop: '-10px',
 		flexGrow: 1,
 	},
 	bottomLabelsSecond: {
@@ -79,14 +84,38 @@ class PartnerDetails extends Component {
 				<div id="partner-details" className={classes.root}>
 					<div className={classes.titleContainer}>
 						<span className={classes.title}>INDENTIFICAÇÃO</span>
-						<Input
-							type="text"
-							label={partner.firstName.label}
-							disabled={disabled}
-							value={partner.firstName.value}
-							onChange={actions.setFirstName}
-							error={partner.firstName.error}
-						/>
+						<div className={classes.container}>
+							<div className={classes.containerTitle}>
+							<DropDown
+									label="Titulo"
+									disabled={disabled}
+									options={[
+										{
+											value: 'Dr',
+											label: 'Dr',
+										},
+										{
+											value: 'Dra',
+											label: 'Dra',
+										},
+										{
+											value: 'Prof',
+											label: 'Prof',
+										},
+									]}
+								/>
+							</div>
+							<div className={classes.containerFirstName}>
+								<Input
+									type="text"
+									label={partner.firstName.label}
+									disabled={disabled}
+									value={partner.firstName.value}
+									onChange={actions.setFirstName}
+									error={partner.firstName.error}
+								/>
+							</div>
+						</div>
 						<Input
 							type="text"
 							label={partner.lastName.label}
@@ -111,7 +140,7 @@ class PartnerDetails extends Component {
 							onChange={actions.setEmail}
 							error={partner.email.error}
 						/>
-						<div className={classes.checkBoxContainer}>
+						<div className={classNames(classes.container, classes.checkBoxContainer)}>
 							<CheckBox
 								label={partner.alerts.label}
 								value={partner.alerts.value}
@@ -133,7 +162,7 @@ class PartnerDetails extends Component {
 							onChange={actions.setPhone}
 							error={partner.phone.error}
 						/>
-						<div className={classes.partnerContainer}>
+						<div className={classNames(classes.container, classes.partnerContainer)}>
 							<div className={classes.bottomLabelsFirst}>
 								<span className={classes.label}>Nº de sócio</span>
 								<p className={classes.value}>{partner.number}</p>
