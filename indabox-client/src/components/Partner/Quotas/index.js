@@ -22,6 +22,9 @@ const styles = theme => ({
 		fontSize: '14px',
 	},
 	tableRow: {
+		fontSize: '14px',
+	},
+	tableRowRed: {
 		color: theme.palette.text.secondary,
 	},
 	lastCell: {
@@ -49,18 +52,23 @@ class Quotas extends Component {
 					<TableBody>
 						{data.map(row => (
 							<TableRow key={row.id}>
-								<TableCell classes={{ root: classNames({ [classes.tableRow]: row.status.value === 0 }) }}
+								<TableCell classes={{ root: classNames(classes.tableRow, 
+								{ [classes.tableRowRed]: !row.payment || (row.payment.status.value !== 1) }) }}
 									component="th" scope="row" align="right" >
 									{row.id}
 								</TableCell>
-								<TableCell classes={{ root: classNames({ [classes.tableRow]: row.status.value === 0 }) }}
+								<TableCell classes={{ root: classNames(classes.tableRow, 
+								{ [classes.tableRowRed]: !row.payment || (row.payment.status.value !== 1) }) }}
 									align="right">{row.year}</TableCell>
-								<TableCell classes={{ root: classNames({ [classes.tableRow]: row.status.value === 0 }) }}
-									align="right">{row.status.label}</TableCell>
-								<TableCell classes={{ root: classNames({ [classes.tableRow]: row.status.value === 0 }) }}
+								<TableCell classes={{ root: classNames(classes.tableRow, 
+								{ [classes.tableRowRed]: !row.payment || (row.payment.status.value !== 1) }) }}
+									align="right">{row.payment ? row.payment.status.label : ''}</TableCell>
+								<TableCell classes={{ root: classNames(classes.tableRow, 
+								{ [classes.tableRowRed]: !row.payment || (row.payment.status.value !== 1) }) }}
 									align="right">{row.value}€</TableCell>
-								<TableCell classes={{ root: classNames({ [classes.tableRow]: row.status.value === 0 }) }}
-									align="right">{row.invoiceEmitted ? 'Emitida' : 'Nao emitida'}</TableCell>
+								<TableCell classes={{ root: classNames(classes.tableRow, 
+								{ [classes.tableRowRed]: !row.payment || (row.payment.status.value !== 1) }) }}
+									align="right">{row.invoiceEmitted ? 'Emitida' : 'Não emitida'}</TableCell>
 								<TableCell classes={{ root: classes.lastCell }} align="right"><PlayCircleFilled /></TableCell>
 							</TableRow>
 						))}

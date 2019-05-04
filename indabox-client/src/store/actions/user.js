@@ -58,6 +58,13 @@ function setPhone(phone) {
 	};
 }
 
+function setType(type) {
+	return {
+		type: 'SET-USER-TYPE',
+		userType: type,
+	};
+}
+
 function setAddress(address) {
 	return {
 		type: 'SET-USER-ADDRESS',
@@ -153,6 +160,7 @@ export default {
 	setAlerts,
 	setNewsletter,
 	setPhone,
+	setType,
 	setAddress,
 	setPostCode,
 	setCity,

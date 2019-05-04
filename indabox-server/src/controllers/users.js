@@ -1,6 +1,7 @@
 const _ = require('lodash/fp');
 const { User } = require('../models/user');
 require('../models/quota');
+require('../models/payment');
 const { hashPassword } = require('../services/crypto');
 const APIError = require('../services/error');
 
@@ -13,27 +14,47 @@ class UsersController {
     static async get(req, res, next) {
         try {
             const { userId } = req.params;
-            let query = { role: 10 };
-            if (userId) {
-                query = Object.assign({}, { _id: userId });
-            }
-
-            const user = await User.find(query)
+            const user = await User.findOne({ _id: userId })
                 .select('-password')
-                .populate('quotas', '-user');
+                .populate({
+                    path: 'quotas',
+                    select: '-user',
+                    populate: { path: 'payment' },
+                });
 
-            return res.send(userId ? user[0] : user);
+            return res.send(user);
         } catch (e) {
             return next(new APIError(e));
         }
     }
 
     /**
-     * store ...
+     * getAll ...
      * @param {object} req
      * @param {object} res
      */
-    static async store(req, res, next) {
+    static async getAll(req, res, next) {
+        try {
+            const users = await User.find({ role: 10 })
+                .select('-password')
+                .populate({
+                    path: 'quotas',
+                    select: '-user',
+                    populate: { path: 'payment' },
+                });
+
+            return res.send(users);
+        } catch (e) {
+            return next(new APIError(e));
+        }
+    }
+
+    /**
+     * create ...
+     * @param {object} req
+     * @param {object} res
+     */
+    static async create(req, res, next) {
         try {
             let { password } = req.body;
             password = hashPassword(password);

@@ -18,5 +18,10 @@
             "port": 6379,
             "password": "password_example"
         }
+    },
+    "ifthen": {
+        "ententy": "ifthen_ententy",
+        "subEntety": "ifthen_subEntety",
+        "key": "ifthen_key"
     }
 }

@@ -4,14 +4,14 @@ const { name } = require('../../config/default.json');
 const errorStackFormat = winston.format(info => Object.assign({}, info, {
     stack: info.stack,
     message: info.message,
+    payload: info.payload,
 }));
 
 const logger = winston.createLogger({
     level: 'info',
     format: winston.format.combine(
-        errorStackFormat(),
         winston.format.timestamp(),
-        winston.format.prettyPrint(),
+        errorStackFormat(),
     ),
     defaultMeta: { service: name },
     transports: [
@@ -21,7 +21,19 @@ const logger = winston.createLogger({
 });
 if (process.env.NODE_ENV !== 'production') {
     logger.add(new winston.transports.Console({
-        format: winston.format.simple(),
+        format: winston.format.combine(
+            winston.format.colorize({
+                all: true,
+                colors: {
+                    crit: 'drakred',
+                    debug: 'white',
+                    error: 'red',
+                    info: 'green',
+                    warn: 'yellow',
+                },
+            }),
+            winston.format.simple(),
+        ),
     }));
 }
 

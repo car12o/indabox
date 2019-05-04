@@ -38,11 +38,27 @@ const styles = (theme) => ({
 		flexDirection: 'row',
 		marginBottom: '10px',
 	},
-	label: {
-		color: theme.palette.primary.main
+	partnerContainer: {
+		display: 'flex',
+		flexDirection: 'row',
+		marginBottom: '10px',
+		marginTop: '15px',
 	},
-	bottomLabels: {
-		marginRight: '60px',
+	label: {
+		color: theme.palette.primary.main,
+		fontSize: '12px',
+	},
+	value: {
+		marginTop: '10px',
+		fontSize: '16px',
+	},
+	bottomLabelsFirst: {
+		marginRight: '40px',
+		marginTop: '-10px',
+		flexGrow: 1,
+	},
+	bottomLabelsSecond: {
+		flexGrow: 2,
 	},
 	actionsContainer: {
 		backgroundColor: theme.palette.background.default,
@@ -117,14 +133,32 @@ class PartnerDetails extends Component {
 							onChange={actions.setPhone}
 							error={partner.phone.error}
 						/>
-						<div className={classes.checkBoxContainer}>
-							<div className={classes.bottomLabels}>
+						<div className={classes.partnerContainer}>
+							<div className={classes.bottomLabelsFirst}>
 								<span className={classes.label}>Nº de sócio</span>
-								<p>{partner.number}</p>
+								<p className={classes.value}>{partner.number}</p>
 							</div>
-							<div>
-								<span className={classes.label}>Tipo de sócio</span>
-								<p>{partner.type}</p>
+							<div className={classes.bottomLabelsSecond}>
+								<DropDown
+									label={partner.type.label}
+									value={partner.type.value}
+									disabled={disabled}
+									onChange={actions.setType}
+									options={[
+										{
+											value: 'Titular',
+											label: 'Titular',
+										},
+										{
+											value: 'Aderente',
+											label: 'Aderente',
+										},
+										{
+											value: 'Efectivo',
+											label: 'Efectivo',
+										},
+									]}
+								/>
 							</div>
 						</div>
 					</div>
@@ -158,6 +192,7 @@ class PartnerDetails extends Component {
 							label={partner.country.label}
 							value={partner.country.value}
 							disabled={disabled}
+							onChange={actions.setCountry}
 							options={[
 								{
 									value: 'Portugal',

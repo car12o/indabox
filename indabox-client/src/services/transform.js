@@ -7,11 +7,9 @@ import _ from 'lodash/fp';
 const createQuotas = quotas => quotas.map(quota => ({
     id: quota._id,
     year: quota.year,
-    status: {
-        value: quota.status.value,
-        label: quota.status.label,
-    },
-    value: quota.status.payment || 0,
+    value: quota.value,
+    payment: quota.payment,
+    invoiceEmited: quota.invoiceEmited,
     createdAt: quota.createdAt,
     updatedAt: quota.updatedAt
 }));
@@ -24,7 +22,10 @@ const createUser = user => ({
     logged: _.getOr(false, 'logged', user),
     id: user.id || '',
     number: _.getOr(0, 'number', user),
-    type: user.type || '',
+    type: {
+        label: 'Tipo de sócio',
+        value: user.type || '',
+    },
     alerts: {
         label: 'Receber alertas',
         value: _.getOr(false, 'alerts', user),

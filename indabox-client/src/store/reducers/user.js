@@ -46,6 +46,11 @@ const user = (state = {}, action) => {
 				Object.assign(state.phone, { value: action.phone, error: null }),
 				state,
 			);
+		case 'SET-USER-TYPE':
+			return _.set('type',
+				Object.assign(state.type, { value: action.userType, error: null }),
+				state,
+			);
 		case 'SET-USER-ADDRESS':
 			return _.set('address',
 				Object.assign(state.address, { value: action.address, error: null }),

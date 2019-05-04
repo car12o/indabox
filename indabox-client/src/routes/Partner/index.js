@@ -71,7 +71,7 @@ class Partner extends Component {
 
 	render() {
 		const { partners, setFirstName, setLastName, setNif, setEmail, setAlerts, setNewsletter,
-			setPhone, setAddress, setPostCode, setCity, setCountry, setNotes } = this.props;
+			setPhone, setType, setAddress, setPostCode, setCity, setCountry, setNotes } = this.props;
 
 		return (
 			<PartnerComponent
@@ -84,6 +84,7 @@ class Partner extends Component {
 					setAlerts,
 					setNewsletter,
 					setPhone,
+					setType,
 					setAddress,
 					setPostCode,
 					setCity,
@@ -113,6 +114,7 @@ const mapDispatchToProps = dispatch => ({
 	setAlerts: alerts => dispatch(partnersAc.setAlerts(alerts)),
 	setNewsletter: newsletter => dispatch(partnersAc.setNewsletter(newsletter)),
 	setPhone: phone => dispatch(partnersAc.setPhone(phone)),
+	setType: type => dispatch(partnersAc.setType(type)),
 	setAddress: address => dispatch(partnersAc.setAddress(address)),
 	setPostCode: postCode => dispatch(partnersAc.setPostCode(postCode)),
 	setCity: city => dispatch(partnersAc.setCity(city)),

@@ -58,6 +58,11 @@ const partners = (state = initialState, action) => {
 				Object.assign(state.selected.phone, { value: action.phone, error: null }),
 				state,
 			);
+		case 'SET-SELECTED-TYPE':
+			return _.set('selected.type',
+				Object.assign(state.selected.type, { value: action.partnertype, error: null }),
+				state,
+			);
 		case 'SET-SELECTED-ADDRESS':
 			return _.set('selected.address',
 				Object.assign(state.selected.address, { value: action.address, error: null }),

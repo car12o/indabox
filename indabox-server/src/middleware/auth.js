@@ -28,7 +28,7 @@ class Auth {
         }
 
         const { userId } = req.params;
-        if (userId && (userId !== req.session.user.id || req.session.user.role > 0)) {
+        if (userId && (userId !== req.session.user.id && req.session.user.role > 0)) {
             return next(new APIError('Unauthorized!', { status: 401 }));
         }
 
