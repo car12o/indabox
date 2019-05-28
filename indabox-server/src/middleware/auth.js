@@ -1,5 +1,6 @@
 const Session = require('../services/session');
 const APIError = require('../services/error');
+const { userRoles } = require('../models/user');
 
 class Auth {
     /**
@@ -22,17 +23,25 @@ class Auth {
      * @param {object} res
      * @param {object} next
      */
-    static authorization(req, res, next) {
-        if (!req.session.logged) {
-            return next(new APIError('Unauthorized!', { status: 401 }));
-        }
+    static authorization(role) {
+        return (req, res, next) => {
+            const { user, logged } = req.session;
 
-        const { userId } = req.params;
-        if (userId && (userId !== req.session.user.id && req.session.user.role > 0)) {
-            return next(new APIError('Unauthorized!', { status: 401 }));
-        }
+            if (!logged) {
+                return next(new APIError('Unauthorized!', { status: 401 }));
+            }
 
-        return next();
+            if (user.role.value > role.value) {
+                return next(new APIError('Unauthorized!', { status: 401 }));
+            }
+
+            const { userId } = req.params;
+            if (userId && (userId !== user.id && user.role.value > userRoles.admin.value)) {
+                return next(new APIError('Unauthorized!', { status: 401 }));
+            }
+
+            return next();
+        };
     }
 }
 

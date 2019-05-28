@@ -8,7 +8,7 @@
             "name": "indabox-server",
             "user": "user_example",
             "password": "password_example",
-            "admin": {
+            "rootUser": {
                 "email": "email_example",
                 "password": "password_example"
             }

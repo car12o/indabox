@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const redis = require('redis');
 const { promisify } = require('util');
-const { User } = require('../models/user');
+const { User, userRoles } = require('../models/user');
 const { hashPassword } = require('../services/crypto');
 
 module.exports = {
@@ -18,9 +18,9 @@ module.exports = {
                 },
             );
 
-            const hasAdmin = await this.hasAdmin(config.admin);
+            const hasAdmin = await this.hasAdmin(config.rootUser);
             if (!hasAdmin) {
-                this.createAdmin(config.admin);
+                this.createAdmin(config.rootUser);
                 log.info('Created admin user');
             }
         },
@@ -28,8 +28,10 @@ module.exports = {
         createAdmin: ({ email, password }) => User.create({
             email,
             password: hashPassword(password),
-            role: 0,
-            type: 'Admin',
+            role: {
+                label: userRoles.root.label,
+                value: userRoles.root.value,
+            },
         }),
     },
     redis: {

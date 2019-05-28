@@ -1,4 +1,3 @@
-const _ = require('lodash/fp');
 const { MbReferenceId } = require('../models/mbReferenceId');
 
 const right = (value, n) => String(value).substring(String(value).length, String(value).length - n);

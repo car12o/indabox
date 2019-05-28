@@ -11,10 +11,12 @@ class GeneralController {
     static async state(req, res, next) {
         try {
             const { user } = req.session;
-            if (user) {
-                const result = await User.findOne({ _id: user.id });
-                req.session.setUser(result);
+            if (!user) {
+                return next(new APIError('Internal server error'));
             }
+
+            const result = await User.findOne({ _id: user.id });
+            req.session.setUser(result);
 
             return res.send(req.session.json());
         } catch (e) {
@@ -31,22 +33,13 @@ class GeneralController {
         try {
             const { email, password } = req.body;
             const user = await User.findOne({ email });
+
             if (!user) {
                 return next(new APIError('ValidationError', {
                     status: 400,
                     payload: [{
                         key: 'email',
                         err: 'Invalid email',
-                    }],
-                }));
-            }
-
-            if (user.role > 0) {
-                return next(new APIError('ValidationError', {
-                    status: 400,
-                    payload: [{
-                        key: 'email',
-                        err: 'Unauthorized',
                     }],
                 }));
             }
@@ -63,6 +56,7 @@ class GeneralController {
 
             req.session.setLogged(true);
             req.session.setUser(user);
+
             return res.send(req.session.json());
         } catch (e) {
             return next(new APIError(e));

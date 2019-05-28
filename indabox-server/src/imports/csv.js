@@ -1,5 +1,6 @@
 const fs = require('fs');
 const readline = require('readline');
+const { Types } = require('mongoose');
 const { mongo } = require('../services/database');
 const { database } = require('../../config/default.json');
 const { User } = require('../models/user');
@@ -18,8 +19,9 @@ const parseRow = (line) => {
         _,
         firstName,
         address,
-        phone1,
-        phone2,
+        phone,
+        // eslint-disable-next-line no-unused-vars
+        _1,
         mobile,
         email,
         nif,
@@ -40,8 +42,7 @@ const parseRow = (line) => {
         number: parseQuotaValue(number),
         firstName,
         address,
-        phone1,
-        phone2,
+        phone,
         mobile,
         email,
         nif,
@@ -78,32 +79,39 @@ const readFile = async () => {
             rl.pause();
 
             try {
-                let { user, quotas } = parseRow(line);
+                const { user, quotas } = parseRow(line);
                 if (user.firstName) {
-                    user = await User.create(user);
+                    const userDB = new User(Object.assign({}, user, { id: Types.ObjectId() }));
 
-                    quotas = await Promise.all(quotas
-                        .map(async (quota) => {
-                            const q = await Quota.create(Object.assign({}, quota, { user: user.id }));
+                    const quotasDB = await Promise.all(quotas.map(async (quota) => {
+                        const quotaDB = new Quota(Object.assign(
+                            {},
+                            quota,
+                            { id: Types.ObjectId() },
+                            { user: userDB.id },
+                        ));
 
-                            if (q.value) {
-                                const payment = await Payment.create({
-                                    quotas: [q.id],
-                                    status: {
-                                        label: paymentStatus.paid.label,
-                                        value: paymentStatus.paid.value,
-                                    },
-                                    value: q.value,
-                                    type: paymentTypes.imported,
-                                });
+                        if (quotaDB.value) {
+                            const payment = await Payment.create({
+                                type: paymentTypes.imported,
+                                value: quotaDB.value,
+                                status: {
+                                    label: paymentStatus.paid.label,
+                                    value: paymentStatus.paid.value,
+                                },
+                                quotas: [quotaDB.id],
+                            });
 
-                                await q.updateOne({ payment: payment.id });
-                            }
+                            quotaDB.payment = payment.id;
+                        }
 
-                            return q.id;
-                        }));
+                        await quotaDB.save();
 
-                    await user.updateOne({ quotas });
+                        return quotaDB.id;
+                    }));
+
+                    userDB.quotas = quotasDB;
+                    await userDB.save();
                 }
             } catch (error) {
                 throw error;
