@@ -3,10 +3,6 @@ import classNames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
-import Tooltip from '@material-ui/core/Tooltip';
-import DeleteIcon from '@material-ui/icons/Delete';
-import FilterListIcon from '@material-ui/icons/FilterList';
 import { lighten } from '@material-ui/core/styles/colorManipulator';
 
 const toolbarStyles = theme => ({
@@ -36,7 +32,7 @@ const toolbarStyles = theme => ({
 
 class EnhancedTableToolbar extends React.Component {
     render() {
-        const { numSelected, classes } = this.props;
+        const { numSelected, classes, title } = this.props;
         return (
             <Toolbar
                 className={classNames(classes.root, {
@@ -50,24 +46,8 @@ class EnhancedTableToolbar extends React.Component {
                         </Typography>
                     ) : (
                             <Typography variant="h6" id="tableTitle">
-                                Sócios
+                                {title}
                             </Typography>
-                        )}
-                </div>
-                <div className={classes.spacer} />
-                <div className={classes.actions}>
-                    {numSelected > 0 ? (
-                        <Tooltip title="Delete">
-                            <IconButton aria-label="Delete">
-                                <DeleteIcon />
-                            </IconButton>
-                        </Tooltip>
-                    ) : (
-                            <Tooltip title="Filter list">
-                                <IconButton aria-label="Filter list">
-                                    <FilterListIcon />
-                                </IconButton>
-                            </Tooltip>
                         )}
                 </div>
             </Toolbar>

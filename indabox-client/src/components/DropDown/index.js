@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import classNames from 'classnames';
 import { withTheme, withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -7,37 +8,40 @@ import FormControl from '@material-ui/core/FormControl';
 const styles = {
 	root: {
 		width: '100%',
-		marginTop: '10px',
-	}
+	},
 }
 
 class DropDown extends Component {
 	render() {
-		const { classes, theme, label, value, options, onChange, disabled } = this.props;
+		const { classes, theme, label, value, options, onChange, disabled, variant, inputClasses, styles } = this.props;
 
 		return (
-			<FormControl className={classes.root} variant="outlined" >
-				<TextField
-					select
-					InputLabelProps={{
-						style: { color: theme.palette.primary.main }
-					}}
-					InputProps={{
-						style: { color: theme.palette.secondary.main }
-					}}
-					variant="outlined"
-					label={label}
-					value={value}
-					onChange={e => onChange(e.target.value)}
-					disabled={disabled}
-				>
-					{options.map(option => (
-						<MenuItem key={option.value} value={option.value}>
-							{option.label}
-						</MenuItem>
-					))}
-				</TextField>
-			</FormControl>
+			<div className={classNames(classes.root, styles)}>
+				<FormControl classes={{ root: classes.root }} variant={variant || 'outlined'} >
+					<TextField
+						select
+						InputLabelProps={{
+							style: { color: theme.palette.primary.main }
+						}}
+						InputProps={{
+							style: Object.assign({}, {
+								color: theme.palette.secondary.main,
+							}, inputClasses),
+						}}
+						variant={variant || 'outlined'}
+						label={label}
+						value={value}
+						onChange={e => onChange(e.target.value)}
+						disabled={disabled}
+					>
+						{options.map(option => (
+							<MenuItem key={option.value} value={option.value}>
+								{option.label}
+							</MenuItem>
+						))}
+					</TextField>
+				</FormControl>
+			</div>
 		);
 	}
 }

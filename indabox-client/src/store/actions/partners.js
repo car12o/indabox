@@ -127,16 +127,12 @@ function setSelected(id, history) {
 }
 
 function update(data) {
-	const { id, quotas, createdAt, updatedAt, ...rest } = data;
+	const { id, logged, password, quotas, createdAt, updatedAt, createdBy, updatedBy, phone, ...rest } = data;
 	const body = _.transform((accm, elem, key) => {
-		if (!_.has('value', elem) && !_.isEmpty(elem)) {
+		if (!_.has('value', elem)) {
 			return Object.assign(accm, { [key]: elem });
 		}
-
-		if (_.isBoolean(elem.value) || !_.isEmpty(elem.value)) {
-			return Object.assign(accm, { [key]: elem.value });
-		}
-		return accm;
+		return Object.assign(accm, { [key]: elem.value });
 	}, {}, rest);
 
 	const req = {

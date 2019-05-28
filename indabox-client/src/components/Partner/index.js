@@ -8,16 +8,12 @@ import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Stamps from '../../components/Stamps';
-import PartnerDetails from './PartnerDetails';
-import Quotas from './Quotas';
-
-function TabContainer({ children, dir }) {
-	return (
-		<Typography component="div" dir={dir}>
-			{children}
-		</Typography>
-	);
-}
+import Identification from './Identification/identification';
+import Contact from './Contact/contact';
+import Notes from './Notes/notes';
+import Payments from './Payments/payments';
+import TableSelect from '../TableSelect';
+import TabContainer from './TabContainer/tabContainer';
 
 function PaperHeader({ profile, partner, classes }) {
 	if (profile) {
@@ -34,6 +30,13 @@ function PaperHeader({ profile, partner, classes }) {
 		</span>
 	);
 }
+
+const quotasRows = [
+	{ id: 'year', numeric: false, disablePadding: false, label: 'ANO' },
+	{ id: 'payment.status.label', numeric: false, disablePadding: false, label: 'ESTADO', default: 'Por pagar', color: true },
+	{ id: 'value', numeric: false, disablePadding: false, label: 'VALOR', symbol: '€' },
+	{ id: 'payment.updatedAt', numeric: false, disablePadding: false, label: 'DATA DE PAGAMENTO' },
+];
 
 const styles = theme => ({
 	root: {
@@ -71,13 +74,23 @@ const styles = theme => ({
 	},
 	tabSelected: {
 		fontWeight: 'bold',
-	}
+	},
+	classLabel: {
+		marginRight: '15px',
+	},
 });
 
 class Partner extends Component {
+	state = {
+		tabContainerHeight: 0,
+		quotes: {
+			selected: [],
+		}
+	};
+
 	render() {
-		const { classes, partner, tab, handleChange, profile, disabled, buttons,
-			partnerActions } = this.props;
+		const { classes, partner, tab, handleChange, profile, partnerDetails, partnerActions,
+			quotas } = this.props;
 
 		const theme = {
 			direction: 'ltl',
@@ -95,6 +108,7 @@ class Partner extends Component {
 							firstValue={partner.createdBy}
 							secoundLabel="em"
 							secoundValue={partner.createdAt}
+							classLabel={classes.classLabel}
 						/>
 						<Stamps
 							classes={{ root: classes.stampsLast }}
@@ -102,6 +116,7 @@ class Partner extends Component {
 							firstValue={partner.updatedBy}
 							secoundLabel="em"
 							secoundValue={partner.updatedAt}
+							classLabel={classes.classLabel}
 						/>
 					</div>
 				</Paper>
@@ -120,7 +135,19 @@ class Partner extends Component {
 							/>
 							<Tab
 								classes={{ textColorPrimary: classes.tab, selected: classes.tabSelected }}
-								label="Dados pessoais"
+								label="Pagamentos"
+							/>
+							<Tab
+								classes={{ textColorPrimary: classes.tab, selected: classes.tabSelected }}
+								label="Identificação"
+							/>
+							<Tab
+								classes={{ textColorPrimary: classes.tab, selected: classes.tabSelected }}
+								label="Contactos"
+							/>
+							<Tab
+								classes={{ textColorPrimary: classes.tab, selected: classes.tabSelected }}
+								label="Notas"
 							/>
 						</Tabs>
 					</AppBar>
@@ -128,16 +155,44 @@ class Partner extends Component {
 						axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
 						index={tab}
 					>
-						<TabContainer dir={theme.direction}>
-							<Quotas data={partner.quotas} />
+						<TabContainer
+							selected={this.state.quotes.selected}
+							buttons={quotas.buttons}
+							disabled={!this.state.quotes.selected.length}
+						>
+							<TableSelect
+								rows={quotasRows}
+								data={partner.quotas}
+								onClick={() => { }}
+								onSelect={(selected) => this.setState({ quotes: { selected } })}
+								order="desc"
+								orderBy="year"
+							/>
 						</TabContainer>
-						<TabContainer dir={theme.direction}>
-							<PartnerDetails
+						<TabContainer>
+							<Payments data={partner.quotas.reduce((accm, quota) => {
+								if (quota.payment) {
+									accm.push(quota.payment);
+								}
+								return accm;
+							}, []).sort((a, b) => a.createdAt - b.createdAt)} />
+						</TabContainer>
+						<TabContainer buttons={partnerDetails.buttons}>
+							<Identification
 								partner={partner}
 								actions={partnerActions}
-								buttons={buttons}
-								disabled={disabled}
+								disabled={partnerDetails.disabled}
 							/>
+						</TabContainer>
+						<TabContainer buttons={partnerDetails.buttons}>
+							<Contact
+								partner={partner}
+								actions={partnerActions}
+								disabled={partnerDetails.disabled}
+							/>
+						</TabContainer>
+						<TabContainer>
+							<Notes />
 						</TabContainer>
 					</SwipeableViews>
 				</div>

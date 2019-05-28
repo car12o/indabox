@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import classNames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
 import _ from 'lodash/fp';
 import Table from '@material-ui/core/Table';
@@ -58,15 +59,16 @@ const styles = (theme) => ({
 	tableRow: {
 		cursor: 'pointer',
 	},
+	tableRowError: {
+		color: `${theme.palette.primary.main} !important`,
+	},
 	tableCheckbox: {
 		color: `${theme.palette.primary.main} !important`,
-	}
+	},
 });
 
 class Partners extends React.Component {
 	state = {
-		order: 'asc',
-		orderBy: 'number',
 		selected: [],
 		page: 0,
 		rowsPerPage: 12,
@@ -85,10 +87,13 @@ class Partners extends React.Component {
 
 	handleSelectAllClick = event => {
 		if (event.target.checked) {
-			this.setState(() => ({ selected: this.props.data.map(n => n.id) }));
+			const selected = this.props.data.map(n => n.id)
+			this.setState(() => ({ selected }));
+			this.onSelect(selected);
 			return;
 		}
 		this.setState({ selected: [] });
+		this.onSelect([]);
 	};
 
 	handleClick = (event, id) => {
@@ -110,6 +115,7 @@ class Partners extends React.Component {
 		}
 
 		this.setState({ selected: newSelected });
+		this.onSelect(newSelected);
 		event.stopPropagation();
 	};
 
@@ -123,14 +129,29 @@ class Partners extends React.Component {
 
 	isSelected = id => this.state.selected.indexOf(id) !== -1;
 
+	onSelect(selected) {
+		if (this.props.onSelect) {
+			this.props.onSelect(selected);
+		}
+	}
+
 	render() {
-		const { classes, data, onClick, rows } = this.props;
-		const { order, orderBy, selected, rowsPerPage, page } = this.state;
+		const { classes, data, onClick, rows, tableToolbarTitle, hover } = this.props;
+		let { order, orderBy } = this.props;
+		order = order || 'asc';
+		orderBy = orderBy || 'number';
+
+		const { selected, rowsPerPage, page } = this.state;
 		const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
 
 		return (
 			<Paper className={classes.root}>
-				<EnhancedTableToolbar numSelected={selected.length} />
+				{tableToolbarTitle
+					? <EnhancedTableToolbar
+						numSelected={selected.length}
+						title={tableToolbarTitle}
+					/>
+					: ''}
 				<div className={classes.tableWrapper}>
 					<Table className={classes.table} aria-labelledby="tableTitle">
 						<EnhancedTableHead
@@ -146,11 +167,17 @@ class Partners extends React.Component {
 							{stableSort(data, getSorting(order, orderBy))
 								.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
 								.map(n => {
+									let error = false;
 									const isSelected = this.isSelected(n.id);
+									const row = rows.find(row => row.color);
+									if (row) {
+										error = _.has(row.id, n) ? false : true;
+									}
 
 									return (
-										<TableRow className={classes.tableRow}
-											hover
+										<TableRow
+											className={classNames({ [classes.tableRow]: hover })}
+											hover={hover}
 											onClick={() => onClick(n)}
 											role="checkbox"
 											aria-checked={isSelected}
@@ -168,8 +195,10 @@ class Partners extends React.Component {
 											{rows.map((row, i) => (
 												<TableCell
 													key={i}
-													align={i === 0 ? 'right' : 'left'} >
-													{_.has('value', n[row.id]) ? n[row.id].value : n[row.id]}
+													align='left'
+													className={classNames({ [classes.tableRowError]: error })}
+												>
+													{`${_.getOr(row.default, row.id, n)}${row.symbol ? row.symbol : ''}`}
 												</TableCell>
 											))}
 										</TableRow>

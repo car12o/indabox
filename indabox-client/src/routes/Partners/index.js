@@ -14,18 +14,20 @@ class Partners extends React.Component {
 
 		const rows = [
 			{ id: 'number', numeric: false, disablePadding: true, label: 'Nº de sócio' },
-			{ id: 'firstName', numeric: false, disablePadding: false, label: 'Nome' },
-			{ id: 'lastName', numeric: false, disablePadding: false, label: 'Apelido' },
-			{ id: 'nif', numeric: false, disablePadding: false, label: 'NIF' },
-			{ id: 'email', numeric: false, disablePadding: false, label: 'Endereço de email' },
-			{ id: 'type', numeric: false, disablePadding: false, label: 'Tipo de sócio' },
+			{ id: 'firstName.value', numeric: false, disablePadding: false, label: 'Nome' },
+			{ id: 'lastName.value', numeric: false, disablePadding: false, label: 'Apelido' },
+			{ id: 'nif.value', numeric: false, disablePadding: false, label: 'NIF' },
+			{ id: 'email.value', numeric: false, disablePadding: false, label: 'Endereço de email' },
+			{ id: 'type.value', numeric: false, disablePadding: false, label: 'Tipo de sócio' },
 		];
 
 		return (
 			<TableSelect
+				tableToolbarTitle="Sócios"
 				rows={rows}
 				data={partners.list}
 				onClick={onClick}
+				hover
 			/>
 		);
 	}
