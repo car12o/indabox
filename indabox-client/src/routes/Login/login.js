@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { userAc } from '../../store/actions';
-import s from './style.css';
+import { setUserProperty, login } from '../../store/actions/user';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Input from '../../components/Input';
+import s from './style.css';
 
 const styles = {
 	label: {
@@ -45,7 +45,7 @@ class Login extends Component {
 	}
 
 	render() {
-		const { classes, user, setEmail, setPassword, login } = this.props;
+		const { classes, user, setProperty, login } = this.props;
 
 		return (
 			<Paper className={s.container} elevation={1} onKeyUp={e => this.enterEventListener(e)}>
@@ -54,16 +54,16 @@ class Login extends Component {
 					INICIAR SESSÃO
 				</Typography>
 				<Input
-					label="NIF ou endereço de email"
+					label={user.email.label}
 					value={user.email.value}
-					onChange={setEmail}
+					onChange={value => setProperty('email', value)}
 					error={user.email.error}
 				/>
 				<Input
 					type="password"
 					label={user.password.label}
 					value={user.password.value}
-					onChange={setPassword}
+					onChange={value => setProperty('password', value)}
 					error={user.password.error}
 				/>
 				<Button classes={{ contained: classes.button }} color="primary" size="large" variant="contained"
@@ -80,9 +80,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-	setEmail: (email) => dispatch(userAc.setEmail(email)),
-	setPassword: (password) => dispatch(userAc.setPassword(password)),
-	login: (email, password) => dispatch(userAc.login(email, password)),
+	setProperty: (...args) => dispatch(setUserProperty(...args)),
+	login: (...args) => dispatch(login(...args)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Login));

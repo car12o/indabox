@@ -15,7 +15,9 @@ class GeneralController {
                 return next(new APIError('Internal server error'));
             }
 
-            const result = await User.findOne({ _id: user.id });
+            const { _id } = user;
+            const result = await User.findOne({ _id });
+
             req.session.setUser(result);
 
             return res.send(req.session.json());

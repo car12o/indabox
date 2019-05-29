@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { userAc } from '../../store/actions';
+import { logout } from '../../store/actions/user';
 
 class Logout extends Component {
 	componentWillMount() {
@@ -25,7 +25,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-	logout: () => dispatch(userAc.logout()),
+	logout: () => dispatch(logout()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Logout);

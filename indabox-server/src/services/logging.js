@@ -8,7 +8,7 @@ const errorStackFormat = winston.format(info => Object.assign({}, info, {
 }));
 
 const logger = winston.createLogger({
-    level: 'info',
+    level: 'debug',
     format: winston.format.combine(
         winston.format.timestamp(),
         errorStackFormat(),
@@ -25,7 +25,6 @@ if (process.env.NODE_ENV !== 'production') {
             winston.format.colorize({
                 all: true,
                 colors: {
-                    crit: 'drakred',
                     debug: 'white',
                     error: 'red',
                     info: 'green',

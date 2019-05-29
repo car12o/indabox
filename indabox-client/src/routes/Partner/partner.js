@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import _ from 'lodash/fp';
-import { partnersAc } from '../../store/actions';
+// import { partnersAc } from '../../store/actions';
 import PartnerComponent from '../../components/Partner';
 
 class Partner extends Component {
@@ -109,22 +109,22 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-	getPartner: id => dispatch(partnersAc.getPartner(id)),
-	setPartner: (partner, history) => dispatch(partnersAc.setSelected(partner, history)),
-	setFirstName: firstName => dispatch(partnersAc.setFirstName(firstName)),
-	setLastName: lastName => dispatch(partnersAc.setLastName(lastName)),
-	setNif: nif => dispatch(partnersAc.setNif(nif)),
-	setEmail: email => dispatch(partnersAc.setEmail(email)),
-	setAlerts: alerts => dispatch(partnersAc.setAlerts(alerts)),
-	setNewsletter: newsletter => dispatch(partnersAc.setNewsletter(newsletter)),
-	setPhone: phone => dispatch(partnersAc.setPhone(phone)),
-	setType: type => dispatch(partnersAc.setType(type)),
-	setAddress: address => dispatch(partnersAc.setAddress(address)),
-	setPostCode: postCode => dispatch(partnersAc.setPostCode(postCode)),
-	setCity: city => dispatch(partnersAc.setCity(city)),
-	setCountry: country => dispatch(partnersAc.setCountry(country)),
-	setNotes: notes => dispatch(partnersAc.setNotes(notes)),
-	update: body => dispatch(partnersAc.update(body))
+	// getPartner: id => dispatch(partnersAc.getPartner(id)),
+	// setPartner: (partner, history) => dispatch(partnersAc.setSelected(partner, history)),
+	// setFirstName: firstName => dispatch(partnersAc.setFirstName(firstName)),
+	// setLastName: lastName => dispatch(partnersAc.setLastName(lastName)),
+	// setNif: nif => dispatch(partnersAc.setNif(nif)),
+	// setEmail: email => dispatch(partnersAc.setEmail(email)),
+	// setAlerts: alerts => dispatch(partnersAc.setAlerts(alerts)),
+	// setNewsletter: newsletter => dispatch(partnersAc.setNewsletter(newsletter)),
+	// setPhone: phone => dispatch(partnersAc.setPhone(phone)),
+	// setType: type => dispatch(partnersAc.setType(type)),
+	// setAddress: address => dispatch(partnersAc.setAddress(address)),
+	// setPostCode: postCode => dispatch(partnersAc.setPostCode(postCode)),
+	// setCity: city => dispatch(partnersAc.setCity(city)),
+	// setCountry: country => dispatch(partnersAc.setCountry(country)),
+	// setNotes: notes => dispatch(partnersAc.setNotes(notes)),
+	// update: body => dispatch(partnersAc.update(body))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Partner);

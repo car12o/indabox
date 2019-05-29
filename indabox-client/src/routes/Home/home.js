@@ -17,9 +17,9 @@ import HomeIcon from '@material-ui/icons/Home';
 import Test from '../../components/Test';
 
 // Routes ...
-import Partners from '../Partners';
-import Partner from '../Partner';
-import Profile from '../Profile';
+import Partners from '../Partners/partners';
+import Partner from '../Partner/partner';
+import Profile from '../Profile/profile';
 
 const drawerWidth = 240;
 const styles = theme => ({

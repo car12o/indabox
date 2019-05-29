@@ -4,8 +4,7 @@ import reducers from './reducers';
 import { createUser } from '../services/transform';
 
 export default (res) => {
-    const { user, logged } = res.body;
-    const initialState = createUser({ logged, ...user });
+    const initialState = createUser(res.body);
     const store = createStore(reducers, { user: initialState }, applyMiddleware(thunkMiddleware));
     return store;
 }

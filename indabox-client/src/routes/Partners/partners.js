@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { getPartners } from '../../store/actions/partners';
 import TableSelect from '../../components/TableSelect';
-import { partnersAc } from '../../store/actions';
 
 class Partners extends React.Component {
 	componentWillMount() {
@@ -12,13 +12,15 @@ class Partners extends React.Component {
 		const { history, partners, setPartner } = this.props;
 		const onClick = n => setPartner(n.id, history);
 
+		console.log(partners);
+
 		const rows = [
-			{ id: 'number', numeric: false, disablePadding: true, label: 'Nº de sócio' },
+			{ id: 'number.value', numeric: false, disablePadding: true, label: 'Nº de sócio' },
 			{ id: 'firstName.value', numeric: false, disablePadding: false, label: 'Nome' },
 			{ id: 'lastName.value', numeric: false, disablePadding: false, label: 'Apelido' },
 			{ id: 'nif.value', numeric: false, disablePadding: false, label: 'NIF' },
 			{ id: 'email.value', numeric: false, disablePadding: false, label: 'Endereço de email' },
-			{ id: 'type.value', numeric: false, disablePadding: false, label: 'Tipo de sócio' },
+			{ id: 'role.value.label', numeric: false, disablePadding: false, label: 'Tipo de sócio' },
 		];
 
 		return (
@@ -38,8 +40,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-	getPartners: () => dispatch(partnersAc.getPartners()),
-	setPartner: (id, history) => dispatch(partnersAc.setSelected(id, history)),
+	getPartners: () => dispatch(getPartners()),
+	// setPartner: (id, history) => dispatch(partnersAc.setSelected(id, history)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Partners);

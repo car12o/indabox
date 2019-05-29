@@ -17,10 +17,10 @@ const userRoles = {
     },
 };
 
-const userTitle = {
-    doctor: 'Dr.',
-    doctora: 'Dra.',
-};
+const userTitle = [
+    'Dr.',
+    'Dra.',
+];
 
 const userCountries = [
     'Portugal',
@@ -36,7 +36,7 @@ const User = mongoose.Schema({
         value: { type: Number, default: userRoles.holder.value },
     },
     number: { type: Number, default: 0 },
-    title: { type: String, default: userTitle.doctor },
+    title: { type: String, default: userTitle[0] },
     firstName: { type: String, default: '' },
     lastName: { type: String, default: '' },
     nif: { type: String, default: '' },
@@ -76,7 +76,7 @@ const User = mongoose.Schema({
 const userSchema = Joi.object().keys({
     role: Joi.number().valid(userRoles.admin.value, userRoles.holder.value),
     number: Joi.number().min(0),
-    title: Joi.string().valid(userTitle.doctor, userTitle.doctora),
+    title: Joi.string().valid(...userTitle),
     firstName: Joi.string().min(3, 'UTF-8'),
     lastName: Joi.string().min(3, 'UTF-8'),
     nif: Joi.string().min(9, 'UTF-8').max(9, 'UTF-8'),

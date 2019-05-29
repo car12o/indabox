@@ -55,14 +55,14 @@ class Session {
 
         if (value) {
             const {
-                _id,
                 __v,
                 password,
                 ...user
             } = value.toObject();
 
-            this.user = Object.assign({}, user, { id: value.id });
+            this.user = user;
         }
+
         redis.set(this.token, JSON.stringify(this));
     }
 

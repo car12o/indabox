@@ -1,7 +1,7 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { userAc } from '../../store/actions';
+// import { userAc } from '../../store/actions';
 import PartnerComponent from '../../components/Partner';
 
 class Profile extends Component {
@@ -100,21 +100,21 @@ const mapStateToProps = state => ({
 
 
 const mapDispatchToProps = dispatch => ({
-	setFirstName: firstName => dispatch(userAc.setFirstName(firstName)),
-	setLastName: lastName => dispatch(userAc.setLastName(lastName)),
-	setNif: nif => dispatch(userAc.setNif(nif)),
-	setEmail: email => dispatch(userAc.setEmail(email)),
-	setAlerts: alerts => dispatch(userAc.setAlerts(alerts)),
-	setNewsletter: newsletter => dispatch(userAc.setNewsletter(newsletter)),
-	setPhone: phone => dispatch(userAc.setPhone(phone)),
-	setType: type => dispatch(userAc.setType(type)),
-	setAddress: address => dispatch(userAc.setAddress(address)),
-	setPostCode: postCode => dispatch(userAc.setPostCode(postCode)),
-	setCity: city => dispatch(userAc.setCity(city)),
-	setCountry: country => dispatch(userAc.setCountry(country)),
-	setNotes: notes => dispatch(userAc.setNotes(notes)),
-	update: body => dispatch(userAc.update(body)),
-	getUser: id => dispatch(userAc.getUser(id)),
+	// setFirstName: firstName => dispatch(userAc.setFirstName(firstName)),
+	// setLastName: lastName => dispatch(userAc.setLastName(lastName)),
+	// setNif: nif => dispatch(userAc.setNif(nif)),
+	// setEmail: email => dispatch(userAc.setEmail(email)),
+	// setAlerts: alerts => dispatch(userAc.setAlerts(alerts)),
+	// setNewsletter: newsletter => dispatch(userAc.setNewsletter(newsletter)),
+	// setPhone: phone => dispatch(userAc.setPhone(phone)),
+	// setType: type => dispatch(userAc.setType(type)),
+	// setAddress: address => dispatch(userAc.setAddress(address)),
+	// setPostCode: postCode => dispatch(userAc.setPostCode(postCode)),
+	// setCity: city => dispatch(userAc.setCity(city)),
+	// setCountry: country => dispatch(userAc.setCountry(country)),
+	// setNotes: notes => dispatch(userAc.setNotes(notes)),
+	// update: body => dispatch(userAc.update(body)),
+	// getUser: id => dispatch(userAc.getUser(id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Profile);

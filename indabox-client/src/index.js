@@ -10,9 +10,9 @@ import PrivateRoute from './components/PrivateRoute';
 // import * as serviceWorker from './serviceWorker';
 
 // Routes
-import Home from './routes/Home';
-import Login from './routes/Login';
-import Logout from './routes/Logout';
+import Home from './routes/Home/home';
+import Login from './routes/Login/login';
+import Logout from './routes/Logout/logout';
 
 const theme = createMuiTheme({
     palette: {
