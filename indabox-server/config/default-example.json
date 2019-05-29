@@ -1,17 +1,17 @@
 {
     "name": "indabox-server",
     "port": 8080,
+    "rootUser": {
+        "email": "email_example",
+        "password": "password_example"
+    },
     "database": {
         "mongo": {
             "host": "indabox-mongo",
             "port": 27017,
             "name": "indabox-server",
             "user": "user_example",
-            "password": "password_example",
-            "rootUser": {
-                "email": "email_example",
-                "password": "password_example"
-            }
+            "password": "password_example"
         },
         "redis": {
             "host": "indabox-redis",

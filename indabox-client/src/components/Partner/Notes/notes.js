@@ -24,12 +24,16 @@ const styles = (theme) => ({
 
 class PartnerDetails extends Component {
 	render() {
-		const { classes } = this.props;
+		const { classes, partner, setProperty } = this.props;
 
 		return (
 			<div id="partner-details" className={classes.root}>
 				<Typography classes={{ root: classes.title }}>NOTAS</Typography>
 				<TextArea
+					label={partner.notes.label}
+					value={partner.notes.value}
+					onChange={value => setProperty('notes', value)}
+					// disabled={disabled}
 					styles={classes.textArea}
 				/>
 			</div>

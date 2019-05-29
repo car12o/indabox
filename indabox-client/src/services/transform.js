@@ -174,18 +174,4 @@ const createUser = user => ({
     quotas: createQuotas(user.quotas),
 });
 
-/**
- * setUserErrors ...
- * @param {object} state
- * @param {object} errors
- */
-const setUserErrors = (state, errors) => errors.reduce((accm, e) => {
-    const { key, err } = e;
-    if (fp.has(`${key}.value`, accm)) {
-        const prop = Object.assign({}, accm[key], { error: err });
-        return Object.assign({}, accm, { [key]: prop });
-    }
-    return accm;
-}, Object.assign({}, state));
-
-export { createUser, setUserErrors };
+export { createUser };

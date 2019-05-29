@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import RadioGroup from '../../RadioGroup/radioGroup';
 import Radio from '@material-ui/core/Radio';
 import Input from '../../Input';
-import DropDown from '../../DropDown';
+import DropDown from '../../DropDown/dropDown';
 import './styles.css'
 
 
@@ -53,7 +52,7 @@ class PartnerDetails extends Component {
 	};
 
 	render() {
-		const { classes } = this.props;
+		const { classes, partner, setProperty } = this.props;
 
 		return (
 			<div id="partner-details" className={classes.root}>
@@ -62,55 +61,54 @@ class PartnerDetails extends Component {
 					value={this.state.radioGroupValue}
 					handleChange={this.radioHandleChange}
 					formControlLabels={[
-						(<FormControlLabel
-							classes={{ root: classes.formControlLabel }}
-							value="0"
-							control={<Radio />}
-							label="Faturar com esta morada"
-						/>),
-						(<FormControlLabel
-							classes={{ root: classes.formControlLabel }}
-							value="1"
-							control={<Radio />}
-							label="Faturar noutro nome"
-						/>)
+						{
+							classes: { root: classes.formControlLabel },
+							value: "0",
+							control: <Radio />,
+							label: "Faturar com esta morada",
+						},
+						{
+							classes: { root: classes.formControlLabel },
+							value: "1",
+							control: <Radio />,
+							label: "Faturar noutro nome",
+						},
 					]}
 				/>
 				<div className={classes.container}>
 					<div className={classes.column}>
 						<Input
 							type="text"
-							label="test"
-						// disabled={disabled}
-						// value={partner.firstName.value}
-						// onChange={actions.setFirstName}
-						// error={partner.firstName.error}
-						// styles={classes.input}
+							label={partner.address.road.label}
+							value={partner.address.road.value}
+							onChange={value => setProperty('address.road', value)}
+							error={partner.address.road.error}
+							// disabled={disabled}
+							styles={classes.input}
 						/>
 						<div className={classes.row}>
 							<Input
 								type="text"
-								label="test"
+								label={partner.address.postCode.label}
+								value={partner.address.postCode.value}
+								onChange={value => setProperty('address.postCode', value)}
+								error={partner.address.postCode.error}
 								// disabled={disabled}
-								// value={partner.firstName.value}
-								// onChange={actions.setFirstName}
-								// error={partner.firstName.error}
 								styles={classes.rowInput}
 							/>
 							<Input
 								type="text"
-								label="test"
+								label={partner.address.city.label}
+								value={partner.address.city.value}
+								onChange={value => setProperty('address.city', value)}
+								error={partner.address.city.error}
 							// disabled={disabled}
-							// value={partner.firstName.value}
-							// onChange={actions.setFirstName}
-							// error={partner.firstName.error}
-							// styles={classes.input}
 							/>
 						</div>
 						<DropDown
-							label="Titulo"
-							// disabled={disabled}
-							styles={classes.dropdown}
+							label={partner.address.country.label}
+							value={partner.address.country.value}
+							onChange={value => setProperty('address.country', value)}
 							options={[
 								{
 									value: 'Dr',
@@ -125,77 +123,78 @@ class PartnerDetails extends Component {
 									label: 'Prof',
 								},
 							]}
+							// disabled={disabled}
+							styles={classes.dropdown}
 						/>
 						<Input
 							type="text"
-							label="test"
+							label={partner.mobile.label}
+							value={partner.mobile.value}
+							onChange={value => setProperty('mobile', value)}
+							error={partner.mobile.error}
 						// disabled={disabled}
-						// value={partner.firstName.value}
-						// onChange={actions.setFirstName}
-						// error={partner.firstName.error}
-						// styles={classes.input}
 						/>
 						<Input
 							type="text"
-							label="test"
-						// disabled={disabled}
-						// value={partner.firstName.value}
-						// onChange={actions.setFirstName}
-						// error={partner.firstName.error}
-						// styles={classes.input}
+							label={partner.phone.label}
+							value={partner.phone.value}
+							onChange={value => setProperty('phone', value)}
+							error={partner.phone.error}
+							// disabled={disabled}
+							styles={classes.rowInput}
 						/>
 					</div>
 					<div className={classes.column}>
 						<Input
 							type="text"
-							label="test"
-						// disabled={disabled}
-						// value={partner.firstName.value}
-						// onChange={actions.setFirstName}
-						// error={partner.firstName.error}
-						// styles={classes.input}
+							label={partner.billing.name.label}
+							value={partner.billing.name.value}
+							onChange={value => setProperty('billing.name', value)}
+							error={partner.billing.name.error}
+							// disabled={disabled}
+							styles={classes.rowInput}
 						/>
 						<Input
 							type="text"
-							label="test"
-						// disabled={disabled}
-						// value={partner.firstName.value}
-						// onChange={actions.setFirstName}
-						// error={partner.firstName.error}
-						// styles={classes.input}
+							label={partner.billing.nif.label}
+							value={partner.billing.nif.value}
+							onChange={value => setProperty('billing.nif', value)}
+							error={partner.billing.nif.error}
+							// disabled={disabled}
+							styles={classes.rowInput}
 						/>
 						<Input
 							type="text"
-							label="test"
-						// disabled={disabled}
-						// value={partner.firstName.value}
-						// onChange={actions.setFirstName}
-						// error={partner.firstName.error}
-						// styles={classes.input}
+							label={partner.billing.address.road.label}
+							value={partner.billing.address.road.value}
+							onChange={value => setProperty('address.road', value)}
+							error={partner.billing.address.road.error}
+							// disabled={disabled}
+							styles={classes.input}
 						/>
 						<div className={classes.row}>
 							<Input
 								type="text"
-								label="test"
+								label={partner.billing.address.postCode.label}
+								value={partner.billing.address.postCode.value}
+								onChange={value => setProperty('address.postCode', value)}
+								error={partner.billing.address.postCode.error}
 								// disabled={disabled}
-								// value={partner.firstName.value}
-								// onChange={actions.setFirstName}
-								// error={partner.firstName.error}
 								styles={classes.rowInput}
 							/>
 							<Input
 								type="text"
-								label="test"
+								label={partner.billing.address.city.label}
+								value={partner.billing.address.city.value}
+								onChange={value => setProperty('address.city', value)}
+								error={partner.billing.address.city.error}
 							// disabled={disabled}
-							// value={partner.firstName.value}
-							// onChange={actions.setFirstName}
-							// error={partner.firstName.error}
 							/>
 						</div>
 						<DropDown
-							label="Titulo"
-							// disabled={disabled}
-							styles={classes.dropdown}
+							label={partner.billing.address.country.label}
+							value={partner.billing.address.country.value}
+							onChange={value => setProperty('address.country', value)}
 							options={[
 								{
 									value: 'Dr',
@@ -210,10 +209,11 @@ class PartnerDetails extends Component {
 									label: 'Prof',
 								},
 							]}
+							// disabled={disabled}
+							styles={classes.dropdown}
 						/>
 					</div>
 				</div>
-
 			</div>
 		);
 	}

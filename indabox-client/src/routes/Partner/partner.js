@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import _ from 'lodash/fp';
-// import { partnersAc } from '../../store/actions';
-import PartnerComponent from '../../components/Partner';
+import { getPartner, setPartnersSelectedProperty } from '../../store/actions/partners';
+import PartnerComponent from '../../components/Partner/partner';
 
 class Partner extends Component {
 	partnerDetailsView() {
@@ -49,7 +48,7 @@ class Partner extends Component {
 	}
 
 	state = {
-		tab: 4,
+		tab: 0,
 		partnerDetails: {
 			disabled: true,
 			buttons: this.partnerDetailsView(),
@@ -62,11 +61,9 @@ class Partner extends Component {
 		}
 	}
 
-	componentDidMount() {
-		const { partners, match, getPartner } = this.props;
-		if (_.isEmpty(partners.selected.id)) {
-			getPartner(match.params.id);
-		}
+	componentWillMount() {
+		const { match, getPartner } = this.props;
+		getPartner(match.params.id);
 	}
 
 	handleChange = (event, tab) => {
@@ -74,57 +71,26 @@ class Partner extends Component {
 	};
 
 	render() {
-		const { partners, setFirstName, setLastName, setNif, setEmail, setAlerts, setNewsletter,
-			setPhone, setType, setAddress, setPostCode, setCity, setCountry, setNotes } = this.props;
+		const { partner, setProperty } = this.props;
 
 		return (
 			<PartnerComponent
-				partner={partners.selected}
-				partnerActions={{
-					setFirstName,
-					setLastName,
-					setNif,
-					setEmail,
-					setAlerts,
-					setNewsletter,
-					setPhone,
-					setType,
-					setAddress,
-					setPostCode,
-					setCity,
-					setCountry,
-					setNotes,
-				}}
 				tab={this.state.tab}
-				partnerDetails={this.state.partnerDetails}
-				quotas={this.state.quotas}
+				partner={partner}
 				handleChange={this.handleChange}
+				setProperty={setProperty}
 			/>
 		);
 	}
 }
 
 const mapStateToProps = state => ({
-	partners: state.partners
+	partner: state.partners.selected
 });
 
 const mapDispatchToProps = dispatch => ({
-	// getPartner: id => dispatch(partnersAc.getPartner(id)),
-	// setPartner: (partner, history) => dispatch(partnersAc.setSelected(partner, history)),
-	// setFirstName: firstName => dispatch(partnersAc.setFirstName(firstName)),
-	// setLastName: lastName => dispatch(partnersAc.setLastName(lastName)),
-	// setNif: nif => dispatch(partnersAc.setNif(nif)),
-	// setEmail: email => dispatch(partnersAc.setEmail(email)),
-	// setAlerts: alerts => dispatch(partnersAc.setAlerts(alerts)),
-	// setNewsletter: newsletter => dispatch(partnersAc.setNewsletter(newsletter)),
-	// setPhone: phone => dispatch(partnersAc.setPhone(phone)),
-	// setType: type => dispatch(partnersAc.setType(type)),
-	// setAddress: address => dispatch(partnersAc.setAddress(address)),
-	// setPostCode: postCode => dispatch(partnersAc.setPostCode(postCode)),
-	// setCity: city => dispatch(partnersAc.setCity(city)),
-	// setCountry: country => dispatch(partnersAc.setCountry(country)),
-	// setNotes: notes => dispatch(partnersAc.setNotes(notes)),
-	// update: body => dispatch(partnersAc.update(body))
+	getPartner: id => dispatch(getPartner(id)),
+	setProperty: (...args) => dispatch(setPartnersSelectedProperty(...args)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Partner);

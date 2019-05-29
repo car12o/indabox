@@ -9,10 +9,7 @@ class Partners extends React.Component {
 	}
 
 	render() {
-		const { history, partners, setPartner } = this.props;
-		const onClick = n => setPartner(n.id, history);
-
-		console.log(partners);
+		const { history, partners } = this.props;
 
 		const rows = [
 			{ id: 'number.value', numeric: false, disablePadding: true, label: 'Nº de sócio' },
@@ -28,7 +25,9 @@ class Partners extends React.Component {
 				tableToolbarTitle="Sócios"
 				rows={rows}
 				data={partners.list}
-				onClick={onClick}
+				onClick={n => history.push(`/partners/${n.id}`)}
+				orderBy="number.value"
+				order="desc"
 				hover
 			/>
 		);
@@ -41,7 +40,6 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
 	getPartners: () => dispatch(getPartners()),
-	// setPartner: (id, history) => dispatch(partnersAc.setSelected(id, history)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Partners);

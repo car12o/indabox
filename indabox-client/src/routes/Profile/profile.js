@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 // import { userAc } from '../../store/actions';
-import PartnerComponent from '../../components/Partner';
+import PartnerComponent from '../../components/Partner/partner';
 
 class Profile extends Component {
 	view() {

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControl from '@material-ui/core/FormControl';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 const styles = theme => ({
     formControl: {
@@ -26,7 +27,14 @@ class RadioButtonsGroup extends React.Component {
                         value={value}
                         onChange={handleChange}
                     >
-                        {formControlLabels.map(C => C)}
+                        {formControlLabels.map((props, i) =>
+                            <FormControlLabel
+                                key={i}
+                                classes={props.classes}
+                                value={props.value}
+                                control={props.control}
+                                label={props.label}
+                            />)}
                     </RadioGroup>
                 </FormControl>
             </div>

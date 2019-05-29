@@ -6,7 +6,7 @@ const { hashPassword } = require('../services/crypto');
 
 module.exports = {
     mongo: {
-        connect: async function connect(config) {
+        connect: async function connect(config, rootUser) {
             await mongoose.connect(
                 `mongodb://${config.user}:${config.password}@${config.host}:\
                 ${config.port}/${config.name}?authSource=admin`, {
@@ -18,9 +18,9 @@ module.exports = {
                 },
             );
 
-            const hasAdmin = await this.hasAdmin(config.rootUser);
+            const hasAdmin = await this.hasAdmin(rootUser);
             if (!hasAdmin) {
-                this.createAdmin(config.rootUser);
+                this.createAdmin(rootUser);
                 log.info('Created admin user');
             }
         },

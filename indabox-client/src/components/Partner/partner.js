@@ -7,7 +7,7 @@ import SwipeableViews from 'react-swipeable-views';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import Stamps from '../../components/Stamps';
+import Stamps from '../Stamps';
 import Identification from './Identification/identification';
 import Contact from './Contact/contact';
 import Notes from './Notes/notes';
@@ -82,15 +82,13 @@ const styles = theme => ({
 
 class Partner extends Component {
 	state = {
-		tabContainerHeight: 0,
 		quotes: {
 			selected: [],
 		}
 	};
 
 	render() {
-		const { classes, partner, tab, handleChange, profile, partnerDetails, partnerActions,
-			quotas } = this.props;
+		const { classes, partner, profile, tab, handleChange, setProperty } = this.props;
 
 		const theme = {
 			direction: 'ltl',
@@ -155,11 +153,12 @@ class Partner extends Component {
 						axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
 						index={tab}
 					>
-						<TabContainer
+						<TabContainer>
+							{/* <TabContainer
 							selected={this.state.quotes.selected}
 							buttons={quotas.buttons}
 							disabled={!this.state.quotes.selected.length}
-						>
+						> */}
 							<TableSelect
 								rows={quotasRows}
 								data={partner.quotas}
@@ -177,26 +176,31 @@ class Partner extends Component {
 								return accm;
 							}, []).sort((a, b) => a.createdAt - b.createdAt)} />
 						</TabContainer>
-						<TabContainer buttons={partnerDetails.buttons}>
+						<TabContainer>
+							{/* <TabContainer buttons={partnerDetails.buttons}> */}
 							<Identification
 								partner={partner}
-								actions={partnerActions}
-								disabled={partnerDetails.disabled}
-							/>
-						</TabContainer>
-						<TabContainer buttons={partnerDetails.buttons}>
-							<Contact
-								partner={partner}
-								actions={partnerActions}
-								disabled={partnerDetails.disabled}
+								setProperty={setProperty}
+							// actions={partnerActions}
+							// disabled={partnerDetails.disabled}
 							/>
 						</TabContainer>
 						<TabContainer>
-							<Notes />
+							{/* <TabContainer buttons={partnerDetails.buttons}> */}
+							<Contact
+								partner={partner}
+								setProperty={setProperty}
+							/>
+						</TabContainer>
+						<TabContainer>
+							<Notes
+								partner={partner}
+								setProperty={setProperty}
+							/>
 						</TabContainer>
 					</SwipeableViews>
 				</div>
-			</div>
+			</div >
 		);
 	}
 }

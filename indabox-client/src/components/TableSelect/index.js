@@ -137,9 +137,9 @@ class Partners extends React.Component {
 
 	render() {
 		const { classes, data, onClick, rows, tableToolbarTitle, hover } = this.props;
-		let { order, orderBy } = this.props;
-		order = order || 'asc';
-		orderBy = orderBy || 'number';
+		const order = this.state.order || this.props.order || 'asc';
+		const orderBy = this.state.orderBy || this.props.orderBy || 'number';
+
 
 		const { selected, rowsPerPage, page } = this.state;
 		const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
