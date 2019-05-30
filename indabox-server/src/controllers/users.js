@@ -33,17 +33,24 @@ class UsersController {
             const { userId } = req.params;
             const user = await User.findOne({ _id: userId })
                 .select('-password')
-                .populate({
-                    path: 'quotas',
-                    select: '-user',
-                    populate: {
-                        path: 'payment',
+                .populate([
+                    {
+                        path: 'quotas',
+                        select: '-user',
+                        populate: {
+                            path: 'payment',
+                            select: ['status', 'updatedAt'],
+                        },
+                    },
+                    {
+                        path: 'payments',
+                        select: '-user',
                         populate: {
                             path: 'quotas',
                             select: 'year',
                         },
                     },
-                });
+                ]);
 
             return res.send(user);
         } catch (e) {

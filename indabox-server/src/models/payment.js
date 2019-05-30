@@ -29,10 +29,11 @@ const Payment = mongoose.Schema({
         label: { type: String, default: paymentStatus.unpaid.label },
         value: { type: Number, default: paymentStatus.unpaid.value },
     },
-    quotas: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Quota' }],
-    mbReference: { type: mongoose.Schema.Types.ObjectId, ref: 'MbReference', default: null },
     createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null },
     updatedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', default: null },
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    quotas: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Quota' }],
+    mbReference: { type: mongoose.Schema.Types.ObjectId, ref: 'MbReference', default: null },
 }, { timestamps: true });
 
 module.exports = {

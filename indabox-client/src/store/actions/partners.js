@@ -27,3 +27,11 @@ export function setPartnersSelectedProperty(path, value) {
 		value,
 	}
 }
+
+export function setPaymentInvoiceStatus(paymentId, status) {
+	return {
+		type: 'SET_PAYMENT_INVOICE_STATUS',
+		paymentId,
+		status,
+	};
+}

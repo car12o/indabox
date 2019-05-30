@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { getPartner, setPartnersSelectedProperty } from '../../store/actions/partners';
+import { getPartner, setPartnersSelectedProperty, setPaymentInvoiceStatus } from '../../store/actions/partners';
 import PartnerComponent from '../../components/Partner/partner';
 
 class Partner extends Component {
@@ -71,7 +71,7 @@ class Partner extends Component {
 	};
 
 	render() {
-		const { partner, setProperty } = this.props;
+		const { partner, setProperty, setPaymentInvoiceStatus } = this.props;
 
 		return (
 			<PartnerComponent
@@ -79,6 +79,7 @@ class Partner extends Component {
 				partner={partner}
 				handleChange={this.handleChange}
 				setProperty={setProperty}
+				setPaymentInvoiceStatus={setPaymentInvoiceStatus}
 			/>
 		);
 	}
@@ -91,6 +92,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
 	getPartner: id => dispatch(getPartner(id)),
 	setProperty: (...args) => dispatch(setPartnersSelectedProperty(...args)),
+	setPaymentInvoiceStatus: (...args) => dispatch(setPaymentInvoiceStatus(...args)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Partner);

@@ -35,7 +35,7 @@ const quotasRows = [
 	{ id: 'year', numeric: false, disablePadding: false, label: 'ANO' },
 	{ id: 'payment.status.label', numeric: false, disablePadding: false, label: 'ESTADO', default: 'Por pagar', color: true },
 	{ id: 'value', numeric: false, disablePadding: false, label: 'VALOR', symbol: '€' },
-	{ id: 'payment.updatedAt', numeric: false, disablePadding: false, label: 'DATA DE PAGAMENTO' },
+	{ id: 'payment.updatedAt', numeric: false, disablePadding: false, label: 'DATA DE PAGAMENTO', default: '', },
 ];
 
 const styles = theme => ({
@@ -88,7 +88,7 @@ class Partner extends Component {
 	};
 
 	render() {
-		const { classes, partner, profile, tab, handleChange, setProperty } = this.props;
+		const { classes, partner, profile, tab, handleChange, setProperty, setPaymentInvoiceStatus } = this.props;
 
 		const theme = {
 			direction: 'ltl',
@@ -169,12 +169,10 @@ class Partner extends Component {
 							/>
 						</TabContainer>
 						<TabContainer>
-							<Payments data={partner.quotas.reduce((accm, quota) => {
-								if (quota.payment) {
-									accm.push(quota.payment);
-								}
-								return accm;
-							}, []).sort((a, b) => a.createdAt - b.createdAt)} />
+							<Payments
+								setPaymentInvoiceStatus={setPaymentInvoiceStatus}
+								data={partner.payments}
+							/>
 						</TabContainer>
 						<TabContainer>
 							{/* <TabContainer buttons={partnerDetails.buttons}> */}

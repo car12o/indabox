@@ -71,6 +71,7 @@ const User = mongoose.Schema({
     deletedBy: { type: String, default: null },
     deletedAt: { type: Date, default: null },
     quotas: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Quota', default: null }],
+    payments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Payment', default: null }],
 }, { timestamps: true });
 
 const userSchema = Joi.object().keys({

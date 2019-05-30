@@ -11,6 +11,11 @@ import Dropdown from '../../DropDown/dropDown';
 import PaymentModal from '../PaymentModal/paymentModal';
 import './styles.css';
 
+const invoices = [
+	{ label: 'Emitida', value: true },
+	{ label: 'Não emitida', value: false },
+];
+
 const styles = theme => ({
 	root: {
 		width: '100%',
@@ -39,7 +44,7 @@ class Quotas extends Component {
 	};
 
 	render() {
-		const { classes, data } = this.props;
+		const { classes, data, setPaymentInvoiceStatus } = this.props;
 
 		return (
 			<Paper id="quotas-component" className={classes.root}>
@@ -60,18 +65,16 @@ class Quotas extends Component {
 								<TableCell component="th" scope="row" align="right" >
 									{row.type}
 								</TableCell>
-								<TableCell align="right">{row.createdBy || 'Ficheiro'}</TableCell>
-								<TableCell align="right">{row.quotas}</TableCell>
+								<TableCell align="right">{row.createdBy}</TableCell>
+								<TableCell align="right">{row.quotas.map(quota => quota.year).join(',')}</TableCell>
 								<TableCell align="right">{row.status.label}</TableCell>
 								<TableCell align="right">{row.value}€</TableCell>
 								<TableCell className={classes.lastCell} align="right" onClick={e => e.stopPropagation()}>
 									<Dropdown
 										inputClasses={{ fontSize: '13px' }}
-										value="Não emitida"
-										options={[
-											{ label: 'Emitida', value: 'Emitida' },
-											{ label: 'Não emitida', value: 'Não emitida' },
-										]}
+										value={row.invoiceEmited}
+										onChange={value => setPaymentInvoiceStatus(row.id, value)}
+										options={invoices}
 										variant="standard"
 									/>
 								</TableCell>

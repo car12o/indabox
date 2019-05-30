@@ -2,7 +2,7 @@ const fs = require('fs');
 const readline = require('readline');
 const { Types } = require('mongoose');
 const { mongo } = require('../services/database');
-const { database } = require('../../config/default.json');
+const { database, rootUser } = require('../../config/default.json');
 const { User } = require('../models/user');
 const { Quota } = require('../models/quota');
 const { Payment, paymentStatus, paymentTypes } = require('../models/payment');
@@ -68,7 +68,7 @@ const readFile = async () => {
     }
 
     try {
-        await mongo.connect(database.mongo);
+        await mongo.connect(database.mongo, rootUser);
         // eslint-disable-next-line no-unused-vars
         const [_, path] = arg.split('=');
         const rl = readline.createInterface({
@@ -83,7 +83,7 @@ const readFile = async () => {
                 if (user.firstName) {
                     const userDB = new User(Object.assign({}, user, { id: Types.ObjectId() }));
 
-                    const quotasDB = await Promise.all(quotas.map(async (quota) => {
+                    await Promise.all(quotas.map(async (quota) => {
                         const quotaDB = new Quota(Object.assign(
                             {},
                             quota,
@@ -100,17 +100,17 @@ const readFile = async () => {
                                     value: paymentStatus.paid.value,
                                 },
                                 quotas: [quotaDB.id],
+                                user: userDB.id,
                             });
 
                             quotaDB.payment = payment.id;
+                            userDB.payments.push(payment.id);
                         }
 
+                        userDB.quotas.push(quotaDB.id);
                         await quotaDB.save();
-
-                        return quotaDB.id;
                     }));
 
-                    userDB.quotas = quotasDB;
                     await userDB.save();
                 }
             } catch (error) {

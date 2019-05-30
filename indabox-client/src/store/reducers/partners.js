@@ -33,10 +33,22 @@ function setPartnersSelectedProperty(state, action) {
 	return fp.set(`selected.${path}`, value, state);
 }
 
+function setPaymentInvoiceStatus(state, action) {
+	const payments = state.selected.payments.map(payment => {
+		if (action.paymentId === payment.id) {
+			return fp.set('invoiceEmited', action.status, payment);
+		}
+		return payment;
+	});
+
+	return fp.set('selected.payments', payments, state);
+}
+
 const handlers = {
 	UPDATE_PARTNERS_LIST: updatePartnersList,
 	UPDATE_PARTNERS_SELECTED: updatePartnersSelected,
 	SET_PARTNER_SELECTED_PROPERTY: setPartnersSelectedProperty,
+	SET_PAYMENT_INVOICE_STATUS: setPaymentInvoiceStatus,
 };
 
 const initialState = {

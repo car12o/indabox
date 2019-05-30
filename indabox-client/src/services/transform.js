@@ -9,10 +9,34 @@ const createQuotas = quotas => {
         return quotas.map(quota => ({
             id: quota._id || '',
             year: quota.year || '',
-            value: quota.value || '',
+            value: quota.value || 0,
             payment: quota.payment || null,
             createdAt: quota.createdAt || null,
             updatedAt: quota.updatedAt || null,
+        }));
+    }
+
+    return [];
+};
+
+/**
+ * createPayments ...
+ * @param {object} payments 
+ */
+const createPayments = payments => {
+    if (payments) {
+        return payments.map(payment => ({
+            id: payment._id || '',
+            status: payment.status || null,
+            invoiceEmited: payment.invoiceEmited || false,
+            quotas: payment.quotas || [],
+            mbReference: payment.mbReference || null,
+            type: payment.type || 'Importado',
+            value: payment.value || 0,
+            createdBy: payment.createdBy || 'Ficheiro',
+            updatedBy: payment.updatedBy || null,
+            createdAt: payment.createdAt || null,
+            updatedAt: payment.updatedAt || null,
         }));
     }
 
@@ -172,6 +196,7 @@ const createUser = user => ({
     createdAt: user.createdAt || null,
     updatedAt: user.updatedAt || null,
     quotas: createQuotas(user.quotas),
+    payments: createPayments(user.payments),
 });
 
 export { createUser };
