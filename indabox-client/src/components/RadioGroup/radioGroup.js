@@ -1,6 +1,7 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
+import classNames from 'classnames';
+import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -13,11 +14,14 @@ const styles = theme => ({
         display: 'flex',
         flexDirection: 'row',
     },
+    cursorDefault: {
+        cursor: 'default',
+    }
 });
 
 class RadioButtonsGroup extends React.Component {
     render() {
-        const { classes, styles, formControlLabels, value, handleChange } = this.props;
+        const { classes, styles, formControlLabels, value, handleChange, disabled } = this.props;
 
         return (
             <div className={styles}>
@@ -25,14 +29,14 @@ class RadioButtonsGroup extends React.Component {
                     <RadioGroup
                         className={classes.group}
                         value={value}
-                        onChange={handleChange}
+                        onChange={disabled ? () => { } : e => handleChange(e.target.value)}
                     >
                         {formControlLabels.map((props, i) =>
                             <FormControlLabel
                                 key={i}
-                                classes={props.classes}
+                                classes={{ root: classNames(props.classes, { [classes.cursorDefault]: disabled }) }}
                                 value={props.value}
-                                control={props.control}
+                                control={<Radio classes={{ root: classNames({ [classes.cursorDefault]: disabled }) }} />}
                                 label={props.label}
                             />)}
                     </RadioGroup>
@@ -41,9 +45,5 @@ class RadioButtonsGroup extends React.Component {
         );
     }
 }
-
-RadioButtonsGroup.propTypes = {
-    classes: PropTypes.object.isRequired,
-};
 
 export default withStyles(styles)(RadioButtonsGroup);

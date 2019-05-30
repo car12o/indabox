@@ -40,7 +40,9 @@ const styles = theme => ({
 
 class Quotas extends Component {
 	state = {
-		modalOpen: false,
+		modal: {
+			open: false
+		},
 	};
 
 	render() {
@@ -61,7 +63,12 @@ class Quotas extends Component {
 					</TableHead>
 					<TableBody>
 						{data.map((row, i) => (
-							<TableRow key={i} className={classes.tableRow} onClick={() => this.setState({ modalOpen: true })}>
+							<TableRow key={i} className={classes.tableRow} onClick={() => this.setState({
+								modal: {
+									open: true,
+									payment: row,
+								}
+							})}>
 								<TableCell component="th" scope="row" align="right" >
 									{row.type}
 								</TableCell>
@@ -83,8 +90,13 @@ class Quotas extends Component {
 					</TableBody>
 				</Table>
 				<PaymentModal
-					open={this.state.modalOpen}
-					onClose={() => this.setState({ modalOpen: false })}
+					open={this.state.modal.open}
+					payment={this.state.modal.payment}
+					onClose={() => this.setState({
+						modal: {
+							open: false,
+						}
+					})}
 				/>
 			</Paper>
 		);

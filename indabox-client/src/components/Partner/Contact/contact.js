@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import RadioGroup from '../../RadioGroup/radioGroup';
-import Radio from '@material-ui/core/Radio';
 import Input from '../../Input';
 import DropDown from '../../DropDown/dropDown';
 import './styles.css'
@@ -21,7 +20,7 @@ const styles = (theme) => ({
 	},
 	formControlLabel: {
 		width: '49%',
-		paddingLeft: '56px'
+		paddingLeft: '56px',
 	},
 	container: {
 		display: 'flex',
@@ -39,39 +38,30 @@ const styles = (theme) => ({
 	},
 	rowInput: {
 		marginRight: '20px',
-	}
+	},
 });
 
 class PartnerDetails extends Component {
-	state = {
-		radioGroupValue: '0',
-	};
-
-	radioHandleChange = event => {
-		this.setState({ radioGroupValue: event.target.value });
-	};
-
 	render() {
-		const { classes, partner, setProperty } = this.props;
+		const { classes, partner, setProperty, disabled } = this.props;
 
 		return (
 			<div id="partner-details" className={classes.root}>
 				<Typography classes={{ root: classes.title }}>CONTACTOS</Typography>
 				<RadioGroup
-					value={this.state.radioGroupValue}
-					handleChange={this.radioHandleChange}
+					value={partner.billing.active.toString()}
+					handleChange={value => setProperty('billing.active', value === 'true')}
+					disabled={disabled}
 					formControlLabels={[
 						{
-							classes: { root: classes.formControlLabel },
-							value: "0",
-							control: <Radio />,
-							label: "Faturar com esta morada",
+							classes: classes.formControlLabel,
+							value: 'false',
+							label: 'Faturar com esta morada',
 						},
 						{
-							classes: { root: classes.formControlLabel },
-							value: "1",
-							control: <Radio />,
-							label: "Faturar noutro nome",
+							classes: classes.formControlLabel,
+							value: 'true',
+							label: 'Faturar noutro nome',
 						},
 					]}
 				/>
@@ -83,7 +73,7 @@ class PartnerDetails extends Component {
 							value={partner.address.road.value}
 							onChange={value => setProperty('address.road', value)}
 							error={partner.address.road.error}
-							// disabled={disabled}
+							disabled={disabled}
 							styles={classes.input}
 						/>
 						<div className={classes.row}>
@@ -93,7 +83,7 @@ class PartnerDetails extends Component {
 								value={partner.address.postCode.value}
 								onChange={value => setProperty('address.postCode', value)}
 								error={partner.address.postCode.error}
-								// disabled={disabled}
+								disabled={disabled}
 								styles={classes.rowInput}
 							/>
 							<Input
@@ -102,7 +92,7 @@ class PartnerDetails extends Component {
 								value={partner.address.city.value}
 								onChange={value => setProperty('address.city', value)}
 								error={partner.address.city.error}
-							// disabled={disabled}
+								disabled={disabled}
 							/>
 						</div>
 						<DropDown
@@ -123,7 +113,7 @@ class PartnerDetails extends Component {
 									label: 'Prof',
 								},
 							]}
-							// disabled={disabled}
+							disabled={disabled}
 							styles={classes.dropdown}
 						/>
 						<Input
@@ -132,7 +122,7 @@ class PartnerDetails extends Component {
 							value={partner.mobile.value}
 							onChange={value => setProperty('mobile', value)}
 							error={partner.mobile.error}
-						// disabled={disabled}
+							disabled={disabled}
 						/>
 						<Input
 							type="text"
@@ -140,7 +130,7 @@ class PartnerDetails extends Component {
 							value={partner.phone.value}
 							onChange={value => setProperty('phone', value)}
 							error={partner.phone.error}
-							// disabled={disabled}
+							disabled={disabled}
 							styles={classes.rowInput}
 						/>
 					</div>
@@ -151,7 +141,7 @@ class PartnerDetails extends Component {
 							value={partner.billing.name.value}
 							onChange={value => setProperty('billing.name', value)}
 							error={partner.billing.name.error}
-							// disabled={disabled}
+							disabled={disabled}
 							styles={classes.rowInput}
 						/>
 						<Input
@@ -160,7 +150,7 @@ class PartnerDetails extends Component {
 							value={partner.billing.nif.value}
 							onChange={value => setProperty('billing.nif', value)}
 							error={partner.billing.nif.error}
-							// disabled={disabled}
+							disabled={disabled}
 							styles={classes.rowInput}
 						/>
 						<Input
@@ -169,7 +159,7 @@ class PartnerDetails extends Component {
 							value={partner.billing.address.road.value}
 							onChange={value => setProperty('address.road', value)}
 							error={partner.billing.address.road.error}
-							// disabled={disabled}
+							disabled={disabled}
 							styles={classes.input}
 						/>
 						<div className={classes.row}>
@@ -179,7 +169,7 @@ class PartnerDetails extends Component {
 								value={partner.billing.address.postCode.value}
 								onChange={value => setProperty('address.postCode', value)}
 								error={partner.billing.address.postCode.error}
-								// disabled={disabled}
+								disabled={disabled}
 								styles={classes.rowInput}
 							/>
 							<Input
@@ -188,7 +178,7 @@ class PartnerDetails extends Component {
 								value={partner.billing.address.city.value}
 								onChange={value => setProperty('address.city', value)}
 								error={partner.billing.address.city.error}
-							// disabled={disabled}
+								disabled={disabled}
 							/>
 						</div>
 						<DropDown
@@ -209,7 +199,7 @@ class PartnerDetails extends Component {
 									label: 'Prof',
 								},
 							]}
-							// disabled={disabled}
+							disabled={disabled}
 							styles={classes.dropdown}
 						/>
 					</div>

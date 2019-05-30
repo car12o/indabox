@@ -1,4 +1,12 @@
 import fp from 'lodash/fp';
+const transform = fp.transform.convert({ 'cap': false });
+
+const formatDate = (date) => {
+    if (date) {
+        return new Date(date).toLocaleString('pt-PT');
+    }
+    return null;
+};
 
 /**
  * createQuotas ...
@@ -10,9 +18,11 @@ const createQuotas = quotas => {
             id: quota._id || '',
             year: quota.year || '',
             value: quota.value || 0,
-            payment: quota.payment || null,
-            createdAt: quota.createdAt || null,
-            updatedAt: quota.updatedAt || null,
+            payment: quota.payment
+                ? Object.assign({}, quota.payment, { updatedAt: formatDate(quota.payment.updatedAt) })
+                : null,
+            createdAt: formatDate(quota.createdAt),
+            updatedAt: formatDate(quota.updatedAt),
         }));
     }
 
@@ -33,10 +43,10 @@ const createPayments = payments => {
             mbReference: payment.mbReference || null,
             type: payment.type || 'Importado',
             value: payment.value || 0,
-            createdBy: payment.createdBy || 'Ficheiro',
-            updatedBy: payment.updatedBy || null,
-            createdAt: payment.createdAt || null,
-            updatedAt: payment.updatedAt || null,
+            createdBy: payment.createdBy || 'Importado',
+            updatedBy: payment.updatedBy || 'Importado',
+            createdAt: formatDate(payment.createdAt),
+            updatedAt: formatDate(payment.updatedAt),
         }));
     }
 
@@ -111,6 +121,7 @@ const createUser = user => ({
             value: fp.getOr('', 'billing.nif', user),
             error: null,
         },
+        active: fp.getOr(false, 'billing.active', user),
     },
     number: {
         label: 'Nº de sócio',
@@ -189,14 +200,53 @@ const createUser = user => ({
         value: user.notes || '',
         error: null,
     },
-    createdBy: user.createdBy || 'Imported',
-    updatedBy: user.updatedBy || 'Imported',
-    deletedBy: user.deletedBy || 'Imported',
-    deletedAt: user.deletedAt || null,
-    createdAt: user.createdAt || null,
-    updatedAt: user.updatedAt || null,
+    createdBy: user.createdBy || 'Importado',
+    updatedBy: user.updatedBy || 'Importado',
+    deletedBy: user.deletedBy || null,
+    deletedAt: formatDate(user.deletedAt),
+    createdAt: formatDate(user.createdAt),
+    updatedAt: formatDate(user.updatedAt),
     quotas: createQuotas(user.quotas),
     payments: createPayments(user.payments),
 });
 
-export { createUser };
+/**
+ * cleanUserToSubmit ...
+ * @param {object} user 
+ */
+const cleanUserToSubmit = user => {
+    const {
+        id,
+        role,
+        password,
+        rePassword,
+        quotas,
+        payments,
+        logged,
+        createdAt,
+        createdBy,
+        updatedAt,
+        updatedBy,
+        deletedBy,
+        ...rest } = user;
+
+    const result = transform((accum, prop, key) => {
+        if (prop || fp.isBoolean(prop)) {
+            if (fp.isObject(prop)) {
+                if (fp.has('value', prop)) {
+                    return Object.assign(accum, { [key]: prop.value });
+                }
+
+                return Object.assign(accum, { [key]: cleanUserToSubmit(prop) });
+            }
+
+            return Object.assign(accum, { [key]: prop });
+        }
+
+        return accum;
+    }, {}, rest);
+
+    return result;
+}
+
+export { createUser, cleanUserToSubmit };

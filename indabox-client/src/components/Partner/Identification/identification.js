@@ -33,7 +33,7 @@ const styles = (theme) => ({
 
 class PartnerDetails extends Component {
 	render() {
-		const { classes, partner, setProperty } = this.props;
+		const { classes, partner, setProperty, disabled } = this.props;
 
 		return (
 			<div id="partner-details" className={classes.root}>
@@ -57,7 +57,7 @@ class PartnerDetails extends Component {
 								label: 'Prof',
 							},
 						]}
-						// disabled={disabled}
+						disabled={disabled}
 						styles={classes.dropdown}
 					/>
 					<Input
@@ -66,7 +66,7 @@ class PartnerDetails extends Component {
 						value={partner.firstName.value}
 						onChange={value => setProperty('firstName', value)}
 						error={partner.firstName.error}
-						// disabled={disabled}
+						disabled={disabled}
 						styles={classes.input}
 					/>
 					<Input
@@ -75,7 +75,7 @@ class PartnerDetails extends Component {
 						value={partner.lastName.value}
 						onChange={value => setProperty('lastName', value)}
 						error={partner.lastName.error}
-						// disabled={disabled}
+						disabled={disabled}
 						styles={classes.input}
 					/>
 				</div>
@@ -98,7 +98,7 @@ class PartnerDetails extends Component {
 								label: 'Prof',
 							},
 						]}
-						// disabled={disabled}
+						disabled={disabled}
 						styles={classes.dropdown}
 					/>
 					<Input
@@ -107,7 +107,7 @@ class PartnerDetails extends Component {
 						value={partner.number.value}
 						onChange={value => setProperty('number', value)}
 						error={partner.number.error}
-						// disabled={disabled}
+						disabled={disabled}
 						styles={classes.input}
 					/>
 					<Input
@@ -116,7 +116,7 @@ class PartnerDetails extends Component {
 						value={partner.nif.value}
 						onChange={value => setProperty('nif', value)}
 						error={partner.nif.error}
-						// disabled={disabled}
+						disabled={disabled}
 						styles={classes.input}
 					/>
 				</div>
@@ -127,7 +127,7 @@ class PartnerDetails extends Component {
 						value={partner.email.value}
 						onChange={value => setProperty('email', value)}
 						error={partner.email.error}
-						// disabled={disabled}
+						disabled={disabled}
 						styles={classes.input}
 					/>
 					<Input
@@ -136,7 +136,7 @@ class PartnerDetails extends Component {
 						value={partner.password.value}
 						onChange={value => setProperty('password', value)}
 						error={partner.password.error}
-						// disabled={disabled}
+						disabled={disabled}
 						styles={classes.input}
 					/>
 					<Input
@@ -145,7 +145,7 @@ class PartnerDetails extends Component {
 						value={partner.rePassword.value}
 						onChange={value => setProperty('rePassword', value)}
 						error={partner.rePassword.error}
-						// disabled={disabled}
+						disabled={disabled}
 						styles={classes.input}
 					/>
 				</div>
@@ -156,7 +156,7 @@ class PartnerDetails extends Component {
 						value={partner.ballotNumber.value}
 						onChange={value => setProperty('ballotNumber', value)}
 						error={partner.ballotNumber.error}
-						// disabled={disabled}
+						disabled={disabled}
 						styles={classes.input}
 					/>
 					<Input
@@ -165,7 +165,7 @@ class PartnerDetails extends Component {
 						value={partner.specialty.value}
 						onChange={value => setProperty('specialty', value)}
 						error={partner.specialty.error}
-						// disabled={disabled}
+						disabled={disabled}
 						styles={classes.input}
 					/>
 					<Input
@@ -174,7 +174,7 @@ class PartnerDetails extends Component {
 						value={partner.specialtySessions.value}
 						onChange={value => setProperty('specialtySessions', value)}
 						error={partner.specialtySessions.error}
-						// disabled={disabled}
+						disabled={disabled}
 						styles={classes.input}
 					/>
 				</div>
@@ -183,14 +183,14 @@ class PartnerDetails extends Component {
 						label={partner.alerts.label}
 						value={partner.alerts.value}
 						onChange={value => setProperty('alerts', value)}
-						// disabled={disabled}
+						disabled={disabled}
 						styles={classes.input}
 					/>
 					<CheckBox
 						label={partner.newsletter.label}
 						value={partner.newsletter.value}
 						onChange={value => setProperty('newsletter', value)}
-						// disabled={disabled}
+						disabled={disabled}
 						styles={classes.input}
 					/>
 				</div>

@@ -36,46 +36,47 @@ class SimpleDialog extends React.Component {
     };
 
     render() {
-        const { classes, onClose, selectedValue, ...other } = this.props;
+        const { classes, onClose, selectedValue, payment, ...other } = this.props;
+        const { createdBy, createdAt, type, updatedAt, status, quotas, value } = payment || {};
 
         return (
             <Dialog onClose={this.handleClose} aria-labelledby="simple-dialog-title" {...other}>
                 <DialogTitle classes={{ root: classes.titleContainer }}>
-                    <p className={classes.title}>Detalhe do pagamento</p>
+                    <p className={classes.title}>Detalhes do pagamento</p>
                 </DialogTitle>
                 <div>
                     <div className={classes.bodyContainer}>
                         <Stamps
                             firstLabel="Criado por:"
-                            firstValue="{partner.createdBy}"
+                            firstValue={createdBy}
                             classLabel={classes.classLabel}
                             classText={classes.classText}
                         />
                         <Stamps
                             firstLabel="Data criação:"
-                            firstValue="{partner.createdBy}"
+                            firstValue={createdAt}
                             classLabel={classes.classLabel}
-                            classText={classes.classText}                        
+                            classText={classes.classText}
                         />
                     </div>
                     <div className={classes.bodyContainer}>
                         <Stamps
                             firstLabel="Tipo:"
-                            firstValue="{partner.createdBy}"
+                            firstValue={type}
                             classLabel={classes.classLabel}
                             classText={classes.classText}
                         />
                         <Stamps
                             firstLabel="Data pagamento:"
-                            firstValue="{partner.createdBy}"
+                            firstValue={updatedAt}
                             classLabel={classes.classLabel}
-                            classText={classes.classText}                        
+                            classText={classes.classText}
                         />
                     </div>
                     <div className={classes.bodyContainer}>
                         <Stamps
                             firstLabel="Estado:"
-                            firstValue="{partner.createdBy}"
+                            firstValue={status ? status.label : ''}
                             classLabel={classes.classLabel}
                             classText={classes.classText}
                         />
@@ -83,21 +84,21 @@ class SimpleDialog extends React.Component {
                     <div className={classes.bodyContainer}>
                         <Stamps
                             firstLabel="Quotas:"
-                            firstValue="{partner.createdBy}"
+                            firstValue={quotas ? quotas.map(q => q.year).join(',') : ''}
                             classLabel={classes.classLabel}
                             classText={classes.classText}
                         />
                         <Stamps
                             firstLabel="Valor total:"
-                            firstValue="{partner.createdBy}"
+                            firstValue={`${value}€`}
                             classLabel={classes.classLabel}
-                            classText={classes.classText}                        
+                            classText={classes.classText}
                         />
                     </div>
                     {/* <div className={classes.bodyContainer}>
                         <Stamps
                             firstLabel="Dados de pagamento:"
-                            firstValue="{partner.createdBy}"
+                            firstValue="{createdBy}"
                             classLabel={classes.classLabel}
                             classText={classes.classText}
                         />

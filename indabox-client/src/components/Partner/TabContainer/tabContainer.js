@@ -16,7 +16,7 @@ const styles = (theme) => ({
         justifyContent: 'center',
     },
     buttons: {
-        margin: '10px',
+        margin: '10px 25px',
     }
 });
 

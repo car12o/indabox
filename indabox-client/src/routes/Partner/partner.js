@@ -1,18 +1,18 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { getPartner, setPartnersSelectedProperty, setPaymentInvoiceStatus } from '../../store/actions/partners';
+import { getPartner, setPartnerProperty, setPaymentInvoiceStatus, updatePartner } from '../../store/actions/partners';
 import PartnerComponent from '../../components/Partner/partner';
 
 class Partner extends Component {
-	partnerDetailsView() {
+	view(key) {
 		return [
 			{ label: 'Voltar', color: 'secondary', fn: () => this.props.history.goBack() },
 			{
 				label: 'Editar', color: 'primary', fn: () => {
 					this.setState({
-						partnerDetails: {
+						[key]: {
 							disabled: false,
-							buttons: this.partnerDetailsEdit(),
+							buttons: this.edit(key),
 						}
 					});
 				}
@@ -20,26 +20,26 @@ class Partner extends Component {
 		];
 	}
 
-	partnerDetailsEdit() {
+	edit(key) {
 		return [
 			{
 				label: 'Cancelar', color: 'secondary', fn: () => {
-					this.props.getPartner(this.props.partners.selected.id);
+					this.props.getPartner(this.props.partner.id);
 					this.setState({
-						partnerDetails: {
+						[key]: {
 							disabled: true,
-							buttons: this.partnerDetailsView(),
+							buttons: this.view(key),
 						}
 					});
 				}
 			},
 			{
 				label: 'Gravar', color: 'primary', fn: () => {
-					this.props.update(this.props.partners.selected);
+					this.props.updatePartner(this.props.partner);
 					this.setState({
-						partnerDetails: {
+						[key]: {
 							disabled: true,
-							buttons: this.partnerDetailsView(),
+							buttons: this.view(key),
 						}
 					});
 				},
@@ -47,19 +47,31 @@ class Partner extends Component {
 		];
 	}
 
-	state = {
-		tab: 0,
-		partnerDetails: {
-			disabled: true,
-			buttons: this.partnerDetailsView(),
-		},
-		quotas: {
-			buttons: [
-				{ label: 'Pagar manualmente', color: 'primary', fn: (v) => console.log(v) },
-				{ label: 'Gerar referencia MB', color: 'primary', fn: (v) => console.log(v) }
-			]
+	initialState(tab) {
+		return {
+			tab,
+			identification: {
+				disabled: true,
+				buttons: this.view('identification'),
+			},
+			contacts: {
+				disabled: true,
+				buttons: this.view('contacts'),
+			},
+			notes: {
+				disabled: true,
+				buttons: this.view('notes'),
+			},
+			quotas: {
+				buttons: [
+					{ label: 'Pagar manualmente', color: 'primary', fn: (v) => console.log(v) },
+					{ label: 'Gerar referencia MB', color: 'primary', fn: (v) => console.log(v) }
+				]
+			}
 		}
 	}
+
+	state = this.initialState(0);
 
 	componentWillMount() {
 		const { match, getPartner } = this.props;
@@ -67,7 +79,7 @@ class Partner extends Component {
 	}
 
 	handleChange = (event, tab) => {
-		this.setState({ tab })
+		this.setState(this.initialState(tab));
 	};
 
 	render() {
@@ -80,6 +92,10 @@ class Partner extends Component {
 				handleChange={this.handleChange}
 				setProperty={setProperty}
 				setPaymentInvoiceStatus={setPaymentInvoiceStatus}
+				identification={this.state.identification}
+				contacts={this.state.contacts}
+				notes={this.state.notes}
+				quotas={this.state.quotas}
 			/>
 		);
 	}
@@ -91,7 +107,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
 	getPartner: id => dispatch(getPartner(id)),
-	setProperty: (...args) => dispatch(setPartnersSelectedProperty(...args)),
+	updatePartner: data => dispatch(updatePartner(data)),
+	setProperty: (...args) => dispatch(setPartnerProperty(...args)),
 	setPaymentInvoiceStatus: (...args) => dispatch(setPaymentInvoiceStatus(...args)),
 });
 

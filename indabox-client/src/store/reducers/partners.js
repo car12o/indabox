@@ -9,7 +9,7 @@ function updatePartnersList(state, action) {
 	return state;
 }
 
-function updatePartnersSelected(state, action) {
+function updatePartner(state, action) {
 	if (action.status === 200) {
 		return fp.set('selected', createUser(action.body), state);
 	}
@@ -17,7 +17,7 @@ function updatePartnersSelected(state, action) {
 	return state;
 }
 
-function setPartnersSelectedProperty(state, action) {
+function setPartnerProperty(state, action) {
 	const { path, value } = action;
 
 	if (fp.has(`selected.${path}.value`, state)) {
@@ -46,8 +46,8 @@ function setPaymentInvoiceStatus(state, action) {
 
 const handlers = {
 	UPDATE_PARTNERS_LIST: updatePartnersList,
-	UPDATE_PARTNERS_SELECTED: updatePartnersSelected,
-	SET_PARTNER_SELECTED_PROPERTY: setPartnersSelectedProperty,
+	UPDATE_PARTNER: updatePartner,
+	SET_PARTNER_PROPERTY: setPartnerProperty,
 	SET_PAYMENT_INVOICE_STATUS: setPaymentInvoiceStatus,
 };
 

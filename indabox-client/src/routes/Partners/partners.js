@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { getPartners } from '../../store/actions/partners';
-import TableSelect from '../../components/TableSelect';
+import TableSelect from '../../components/TableSelect/tableSelect';
 
 class Partners extends React.Component {
 	componentWillMount() {

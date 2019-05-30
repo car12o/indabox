@@ -96,17 +96,24 @@ class UsersController {
                 body,
                 { new: true },
             ).select('-password')
-                .populate({
-                    path: 'quotas',
-                    select: '-user',
-                    populate: {
-                        path: 'payment',
+                .populate([
+                    {
+                        path: 'quotas',
+                        select: '-user',
+                        populate: {
+                            path: 'payment',
+                            select: ['status', 'updatedAt'],
+                        },
+                    },
+                    {
+                        path: 'payments',
+                        select: '-user',
                         populate: {
                             path: 'quotas',
                             select: 'year',
                         },
                     },
-                });
+                ]);
 
             return res.send(user);
         } catch (e) {

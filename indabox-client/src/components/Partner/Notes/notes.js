@@ -24,7 +24,7 @@ const styles = (theme) => ({
 
 class PartnerDetails extends Component {
 	render() {
-		const { classes, partner, setProperty } = this.props;
+		const { classes, partner, setProperty, disabled } = this.props;
 
 		return (
 			<div id="partner-details" className={classes.root}>
@@ -33,7 +33,7 @@ class PartnerDetails extends Component {
 					label={partner.notes.label}
 					value={partner.notes.value}
 					onChange={value => setProperty('notes', value)}
-					// disabled={disabled}
+					disabled={disabled}
 					styles={classes.textArea}
 				/>
 			</div>

@@ -1,4 +1,5 @@
 import request from '../../services/request';
+import { cleanUserToSubmit } from '../../services/transform';
 
 export function getPartners() {
 	const req = {
@@ -12,7 +13,7 @@ export function getPartners() {
 
 export function getPartner(id) {
 	const req = {
-		type: 'UPDATE_PARTNERS_SELECTED',
+		type: 'UPDATE_PARTNER',
 		url: `/users/${id}`,
 		method: 'GET',
 	};
@@ -20,9 +21,22 @@ export function getPartner(id) {
 	return request(req);
 }
 
-export function setPartnersSelectedProperty(path, value) {
+export function updatePartner(user) {
+	const body = cleanUserToSubmit(user);
+
+	const req = {
+		type: 'UPDATE_PARTNER',
+		url: `/users/${user.id}`,
+		method: 'PATCH',
+		body,
+	};
+
+	return request(req);
+}
+
+export function setPartnerProperty(path, value) {
 	return {
-		type: 'SET_PARTNER_SELECTED_PROPERTY',
+		type: 'SET_PARTNER_PROPERTY',
 		path,
 		value,
 	}

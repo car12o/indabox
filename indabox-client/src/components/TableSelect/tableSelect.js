@@ -136,7 +136,7 @@ class Partners extends React.Component {
 	}
 
 	render() {
-		const { classes, data, onClick, rows, tableToolbarTitle, hover } = this.props;
+		const { classes, data, onClick, rows, tableToolbarTitle, hover, rowsPerPageOptions } = this.props;
 		const order = this.state.order || this.props.order || 'asc';
 		const orderBy = this.state.orderBy || this.props.orderBy || 'number';
 
@@ -214,7 +214,7 @@ class Partners extends React.Component {
 					</Table>
 				</div>
 				<TablePagination
-					rowsPerPageOptions={[6, 12, 25]}
+					rowsPerPageOptions={rowsPerPageOptions || [6, 12, 25]}
 					labelRowsPerPage="Numero por pagina"
 					component="div"
 					count={data.length}

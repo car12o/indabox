@@ -12,7 +12,7 @@ import Identification from './Identification/identification';
 import Contact from './Contact/contact';
 import Notes from './Notes/notes';
 import Payments from './Payments/payments';
-import TableSelect from '../TableSelect';
+import TableSelect from '../TableSelect/tableSelect';
 import TabContainer from './TabContainer/tabContainer';
 
 function PaperHeader({ profile, partner, classes }) {
@@ -88,7 +88,8 @@ class Partner extends Component {
 	};
 
 	render() {
-		const { classes, partner, profile, tab, handleChange, setProperty, setPaymentInvoiceStatus } = this.props;
+		const { classes, partner, profile, tab, handleChange, setProperty,
+			setPaymentInvoiceStatus, identification, contacts, notes, quotas } = this.props;
 
 		const theme = {
 			direction: 'ltl',
@@ -153,12 +154,11 @@ class Partner extends Component {
 						axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
 						index={tab}
 					>
-						<TabContainer>
-							{/* <TabContainer
+						<TabContainer
 							selected={this.state.quotes.selected}
 							buttons={quotas.buttons}
 							disabled={!this.state.quotes.selected.length}
-						> */}
+						>
 							<TableSelect
 								rows={quotasRows}
 								data={partner.quotas}
@@ -166,6 +166,7 @@ class Partner extends Component {
 								onSelect={(selected) => this.setState({ quotes: { selected } })}
 								order="desc"
 								orderBy="year"
+								rowsPerPageOptions={[12]}
 							/>
 						</TabContainer>
 						<TabContainer>
@@ -174,26 +175,25 @@ class Partner extends Component {
 								data={partner.payments}
 							/>
 						</TabContainer>
-						<TabContainer>
-							{/* <TabContainer buttons={partnerDetails.buttons}> */}
+						<TabContainer buttons={identification.buttons}>
 							<Identification
 								partner={partner}
 								setProperty={setProperty}
-							// actions={partnerActions}
-							// disabled={partnerDetails.disabled}
+								disabled={identification.disabled}
 							/>
 						</TabContainer>
-						<TabContainer>
-							{/* <TabContainer buttons={partnerDetails.buttons}> */}
+						<TabContainer buttons={contacts.buttons}>
 							<Contact
 								partner={partner}
 								setProperty={setProperty}
+								disabled={contacts.disabled}
 							/>
 						</TabContainer>
-						<TabContainer>
+						<TabContainer buttons={notes.buttons}>
 							<Notes
 								partner={partner}
 								setProperty={setProperty}
+								disabled={notes.disabled}
 							/>
 						</TabContainer>
 					</SwipeableViews>

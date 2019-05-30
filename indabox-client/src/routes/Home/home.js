@@ -9,7 +9,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import PeopleIcon from '@material-ui/icons/People';
-import PersonIcon from '@material-ui/icons/Person';
+// import PersonIcon from '@material-ui/icons/Person';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import ArrowForward from '@material-ui/icons/ArrowForward';
@@ -116,11 +116,11 @@ class Home extends Component {
 				icon: <PeopleIcon />,
 				link: '/partners'
 			},
-			{
-				label: 'A minha conta',
-				icon: <PersonIcon />,
-				link: '/profile'
-			},
+			// {
+			// 	label: 'A minha conta',
+			// 	icon: <PersonIcon />,
+			// 	link: '/profile'
+			// },
 			{
 				label: 'Sair',
 				icon: <ExitToAppIcon />,
