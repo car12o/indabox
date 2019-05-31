@@ -24,8 +24,8 @@ function updateUserState(state, action) {
 
 	if (action.status === 400) {
 		return action.body.payload.reduce((accum, elem) => {
-			if (fp.has(`${elem.key}.error`, accum)) {
-				return fp.set(`${elem.key}.error`, elem.err, accum);
+			if (fp.has(`${elem.path}.error`, accum)) {
+				return fp.set(`${elem.path}.error`, elem.err, accum);
 			}
 			return accum;
 		}, state);

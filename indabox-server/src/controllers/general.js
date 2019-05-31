@@ -7,6 +7,7 @@ class GeneralController {
      * state ...
      * @param {object} req
      * @param {object} res
+     * @param {object} next
      */
     static async state(req, res, next) {
         try {
@@ -20,7 +21,7 @@ class GeneralController {
 
             req.session.setUser(result);
 
-            return res.send(req.session.json());
+            return res.json(req.session.json());
         } catch (e) {
             return next(new APIError(e));
         }
@@ -30,6 +31,7 @@ class GeneralController {
      * login ...
      * @param {object} req
      * @param {object} res
+     * @param {object} next
      */
     static async login(req, res, next) {
         try {
@@ -59,7 +61,7 @@ class GeneralController {
             req.session.setLogged(true);
             req.session.setUser(user);
 
-            return res.send(req.session.json());
+            return res.json(req.session.json());
         } catch (e) {
             return next(new APIError(e));
         }
@@ -69,11 +71,12 @@ class GeneralController {
      * logout ...
      * @param {object} req
      * @param {object} res
+     * @param {object} next
      */
     static async logout(req, res) {
         req.session.setLogged(false);
         req.session.setUser(null);
-        return res.send(req.session.json());
+        return res.json(req.session.json());
     }
 }
 

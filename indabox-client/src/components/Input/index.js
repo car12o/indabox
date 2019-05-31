@@ -10,6 +10,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 const styles = {
 	root: {
 		width: '100%',
+		marginBottom: '8px'
 	}
 }
 

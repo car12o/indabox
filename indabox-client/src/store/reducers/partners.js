@@ -14,6 +14,15 @@ function updatePartner(state, action) {
 		return fp.set('selected', createUser(action.body), state);
 	}
 
+	if (action.status === 400) {
+		return action.body.payload.reduce((accum, elem) => {
+			if (fp.has(`selected.${elem.path}.error`, accum)) {
+				return fp.set(`selected.${elem.path}.error`, elem.err, accum);
+			}
+			return accum;
+		}, state);
+	}
+
 	return state;
 }
 

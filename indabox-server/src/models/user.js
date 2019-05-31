@@ -4,11 +4,11 @@ const { hashPassword } = require('../services/crypto');
 
 const userRoles = {
     root: {
-        label: 'root',
+        label: 'Root',
         value: 0,
     },
     admin: {
-        label: 'admin',
+        label: 'Admin',
         value: 10,
     },
     holder: {

@@ -1,5 +1,5 @@
 import fp from 'lodash/fp';
-const transform = fp.transform.convert({ 'cap': false });
+const transform = fp.transform.convert({ cap: false });
 
 const formatDate = (date) => {
     if (date) {

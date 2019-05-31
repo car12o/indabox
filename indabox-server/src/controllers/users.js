@@ -1,5 +1,10 @@
-// const _ = require('lodash/fp');
-const { User } = require('../models/user');
+const fp = require('lodash/fp');
+const {
+    User,
+    userTitle,
+    userRoles,
+    userCountries,
+} = require('../models/user');
 require('../models/quota');
 require('../models/payment');
 const { hashPassword } = require('../services/crypto');
@@ -10,6 +15,7 @@ class UsersController {
      * getAll ...
      * @param {object} req
      * @param {object} res
+     * @param {object} next
      */
     static async getAll(req, res, next) {
         try {
@@ -17,7 +23,7 @@ class UsersController {
             const users = await User.find().where('role.value').gte(user.role.value)
                 .select('-password');
 
-            return res.send(users);
+            return res.json(users);
         } catch (e) {
             return next(new APIError(e));
         }
@@ -27,6 +33,7 @@ class UsersController {
      * get ...
      * @param {object} req
      * @param {object} res
+     * @param {object} next
      */
     static async get(req, res, next) {
         try {
@@ -52,36 +59,18 @@ class UsersController {
                     },
                 ]);
 
-            return res.send(user);
+            return res.json(user);
         } catch (e) {
             return next(new APIError(e));
         }
     }
 
     /**
-     * create ...
-     * @param {object} req
-     * @param {object} res
-     */
-    // static async create(req, res, next) {
-    //     try {
-    //         let { password } = req.body;
-    //         password = hashPassword(password);
-
-    //         const data = Object.assign({}, req.body, { password });
-    //         const user = await User.create(data);
-
-    //         return res.send(_.omit('_doc.password', user));
-    //     } catch (e) {
-    //         return next(new APIError(e));
-    //     }
-    // }
-
-    /**
-     * update ...
-     * @param {object} req
-     * @param {object} res
-     */
+    * update ...
+    * @param {object} req
+    * @param {object} res
+    * @param {object} next
+    */
     static async update(req, res, next) {
         const { userId } = req.params;
         const { body } = req;
@@ -115,29 +104,47 @@ class UsersController {
                     },
                 ]);
 
-            return res.send(user);
+            return res.json(user);
         } catch (e) {
             return next(new APIError(e));
         }
     }
 
     /**
-     * delete ...
+     * getTitles ...
      * @param {object} req
      * @param {object} res
      */
-    // static async delete(req, res) {
-    //     const { id } = req.params;
+    static getTitles(req, res) {
+        res.json({ titles: userTitle });
+    }
 
-    //     try {
-    //         const user = await User.deleteOne({ _id: id });
+    /**
+     * getTitles ...
+     * @param {object} req
+     * @param {object} res
+     */
+    static getRoles(req, res) {
+        const { role } = req.session.user;
 
-    //         return res.send(user);
-    //     } catch (e) {
-    //         log.error(e);
-    //         return res.status(500).send(e);
-    //     }
-    // }
+        const result = fp.transform((accum, elem) => {
+            if (elem.value >= role.value) {
+                return accum.push(elem);
+            }
+            return accum;
+        }, [], userRoles);
+
+        res.json({ roles: result });
+    }
+
+    /**
+     * getTitles ...
+     * @param {object} req
+     * @param {object} res
+     */
+    static getCountries(req, res) {
+        res.json({ countries: userCountries });
+    }
 }
 
 module.exports = UsersController;

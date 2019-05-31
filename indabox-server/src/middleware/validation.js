@@ -14,9 +14,11 @@ const validation = schema => async (req, res, next) => {
     } catch (e) {
         const payload = e.details.reduce((acc, err) => {
             const { key } = err.context;
-            if (!acc.find(elem => elem.key === key)) {
+            const path = err.path.join('.');
+            if (!acc.find(elem => elem.path === path)) {
                 acc.push({
                     key,
+                    path,
                     err: err.message,
                 });
             }

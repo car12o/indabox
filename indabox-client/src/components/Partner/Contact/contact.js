@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
+import request from '../../../services/request'
 import RadioGroup from '../../RadioGroup/radioGroup';
 import Input from '../../Input';
 import DropDown from '../../DropDown/dropDown';
@@ -42,6 +43,29 @@ const styles = (theme) => ({
 });
 
 class PartnerDetails extends Component {
+	get(url, handler) {
+		request({
+			url,
+			method: 'GET',
+		})(res => handler(res));
+	}
+
+	setCountries(res) {
+		if (res.status === 200) {
+			this.setState({
+				countries: res.body.countries.map(country => ({ label: country, value: country })),
+			});
+		}
+	}
+
+	componentWillMount() {
+		this.get('/countries', this.setCountries.bind(this));
+	}
+
+	state = {
+		countries: [],
+	};
+
 	render() {
 		const { classes, partner, setProperty, disabled } = this.props;
 
@@ -99,20 +123,7 @@ class PartnerDetails extends Component {
 							label={partner.address.country.label}
 							value={partner.address.country.value}
 							onChange={value => setProperty('address.country', value)}
-							options={[
-								{
-									value: 'Dr',
-									label: 'Dr',
-								},
-								{
-									value: 'Dra',
-									label: 'Dra',
-								},
-								{
-									value: 'Prof',
-									label: 'Prof',
-								},
-							]}
+							options={this.state.countries}
 							disabled={disabled}
 							styles={classes.dropdown}
 						/>
@@ -157,7 +168,7 @@ class PartnerDetails extends Component {
 							type="text"
 							label={partner.billing.address.road.label}
 							value={partner.billing.address.road.value}
-							onChange={value => setProperty('address.road', value)}
+							onChange={value => setProperty('billing.address.road', value)}
 							error={partner.billing.address.road.error}
 							disabled={disabled}
 							styles={classes.input}
@@ -167,7 +178,7 @@ class PartnerDetails extends Component {
 								type="text"
 								label={partner.billing.address.postCode.label}
 								value={partner.billing.address.postCode.value}
-								onChange={value => setProperty('address.postCode', value)}
+								onChange={value => setProperty('billing.address.postCode', value)}
 								error={partner.billing.address.postCode.error}
 								disabled={disabled}
 								styles={classes.rowInput}
@@ -176,7 +187,7 @@ class PartnerDetails extends Component {
 								type="text"
 								label={partner.billing.address.city.label}
 								value={partner.billing.address.city.value}
-								onChange={value => setProperty('address.city', value)}
+								onChange={value => setProperty('billing.address.city', value)}
 								error={partner.billing.address.city.error}
 								disabled={disabled}
 							/>
@@ -184,21 +195,8 @@ class PartnerDetails extends Component {
 						<DropDown
 							label={partner.billing.address.country.label}
 							value={partner.billing.address.country.value}
-							onChange={value => setProperty('address.country', value)}
-							options={[
-								{
-									value: 'Dr',
-									label: 'Dr',
-								},
-								{
-									value: 'Dra',
-									label: 'Dra',
-								},
-								{
-									value: 'Prof',
-									label: 'Prof',
-								},
-							]}
+							onChange={value => setProperty('billing.address.country', value)}
+							options={this.state.countries}
 							disabled={disabled}
 							styles={classes.dropdown}
 						/>

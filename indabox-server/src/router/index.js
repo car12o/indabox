@@ -12,11 +12,10 @@ const { userRoles, userSchema } = require('../models/user');
 /**
  * users ...
  */
-users.get('', UsersController.getAll);
-users.get('/:userId', UsersController.get);
-// users.post('', validation(userSchema), UsersController.create);
-users.patch('/:userId', validation(userSchema), UsersController.update);
-// users.delete('/:userId', UsersController.delete);
+users.get('', Auth.authorization(userRoles.admin), UsersController.getAll);
+users.get('/:userId', Auth.authorization(userRoles.admin), UsersController.get);
+users.patch('/:userId', Auth.authorization(userRoles.admin), validation(userSchema), UsersController.update);
+users.get('/titles', Auth.authorization(userRoles.holder), UsersController.getTitles);
 
 /**
  * mbReferences ...
@@ -26,10 +25,11 @@ users.patch('/:userId', validation(userSchema), UsersController.update);
 /**
  * router ...
  */
-router.use('/users', Auth.authorization(userRoles.admin), users);
-
+router.use('/users', users);
+router.get('/titles', Auth.authorization(userRoles.holder), UsersController.getTitles);
+router.get('/roles', Auth.authorization(userRoles.holder), UsersController.getRoles);
+router.get('/countries', Auth.authorization(userRoles.holder), UsersController.getCountries);
 // router.use('/mbreferences', mbReferences);
-
 router.get('/state', Auth.authorization(userRoles.admin), GeneralController.state);
 router.post('/login', validation(userSchema), GeneralController.login);
 router.get('/logout', Auth.authorization(userRoles.admin), GeneralController.logout);

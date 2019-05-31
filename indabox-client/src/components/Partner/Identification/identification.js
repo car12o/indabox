@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
+import request from '../../../services/request'
 import Input from '../../Input';
 import CheckBox from '../../CheckBox';
 import DropDown from '../../DropDown/dropDown';
@@ -15,13 +16,12 @@ const styles = (theme) => ({
 	title: {
 		padding: '18px 30px',
 		fontSize: '14px',
-		marginBottom: '10px',
+		marginBottom: '35px',
 		color: 'white',
 	},
 	row: {
 		display: 'flex',
 		padding: '0 20px',
-		margin: '15px 0'
 	},
 	input: {
 		padding: '0 20px',
@@ -32,6 +32,39 @@ const styles = (theme) => ({
 });
 
 class PartnerDetails extends Component {
+	get(url, handler) {
+		request({
+			url,
+			method: 'GET',
+		})(res => handler(res));
+	}
+
+	setTitle(res) {
+		if (res.status === 200) {
+			this.setState({
+				titles: res.body.titles.map(title => ({ label: title, value: title })),
+			});
+		}
+	}
+
+	setRoles(res) {
+		if (res.status === 200) {
+			this.setState({
+				roles: res.body.roles.map(role => ({ label: role.label, value: role.label })),
+			});
+		}
+	}
+
+	componentWillMount() {
+		this.get('/titles', this.setTitle.bind(this));
+		this.get('/roles', this.setRoles.bind(this));
+	}
+
+	state = {
+		titles: [],
+		roles: [],
+	};
+
 	render() {
 		const { classes, partner, setProperty, disabled } = this.props;
 
@@ -43,20 +76,7 @@ class PartnerDetails extends Component {
 						label={partner.title.label}
 						value={partner.title.value}
 						onChange={value => setProperty('title', value)}
-						options={[
-							{
-								value: 'Dr',
-								label: 'Dr',
-							},
-							{
-								value: 'Dra',
-								label: 'Dra',
-							},
-							{
-								value: 'Prof',
-								label: 'Prof',
-							},
-						]}
+						options={this.state.titles}
 						disabled={disabled}
 						styles={classes.dropdown}
 					/>
@@ -84,20 +104,7 @@ class PartnerDetails extends Component {
 						label={partner.role.label}
 						value={partner.role.value.label}
 						onChange={value => setProperty('role.value.label', value)}
-						options={[
-							{
-								value: 'Dr',
-								label: 'Dr',
-							},
-							{
-								value: 'Dra',
-								label: 'Dra',
-							},
-							{
-								value: 'Prof',
-								label: 'Prof',
-							},
-						]}
+						options={this.state.roles}
 						disabled={disabled}
 						styles={classes.dropdown}
 					/>

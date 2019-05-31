@@ -22,7 +22,7 @@ class MbReferences {
                 value, quotas, reference, refId,
             });
 
-            return res.send(_.omit('_doc.quotas', mbReference));
+            return res.json(_.omit('_doc.quotas', mbReference));
         } catch (e) {
             return next(new APIError(e));
         }
