@@ -1,3 +1,4 @@
+const fp = require('lodash/fp');
 const mongoose = require('mongoose');
 const Joi = require('joi');
 const { hashPassword } = require('../services/crypto');
@@ -76,7 +77,10 @@ const User = mongoose.Schema({
 }, { timestamps: true });
 
 const userSchema = Joi.object().keys({
-    role: Joi.number().valid(userRoles.admin.value, userRoles.holder.value),
+    role: Joi.object().keys({
+        label: Joi.string().valid(...fp.transform((accum, v) => accum.push(v.label), [], userRoles)),
+        value: Joi.number().valid(...fp.transform((accum, v) => accum.push(v.value), [], userRoles)),
+    }),
     number: Joi.number().min(0),
     title: Joi.string().valid(...userTitle),
     firstName: Joi.string().min(3, 'UTF-8').allow(''),
@@ -84,6 +88,11 @@ const userSchema = Joi.object().keys({
     nif: Joi.string().min(9, 'UTF-8').max(9, 'UTF-8').allow(''),
     email: Joi.string().email({ minDomainAtoms: 2 }).allow(''),
     password: Joi.string().min(6, 'UTF-8').allow(''),
+    rePassword: Joi.string().min(6, 'UTF-8').when('password', {
+        is: Joi.exist(),
+        then: Joi.ref('password'),
+        otherwise: Joi.allow(''),
+    }).options({ language: { any: { allowOnly: '!!Passwords do not match' } } }),
     ballotNumber: Joi.string().min(6, 'UTF-8').allow(''),
     specialty: Joi.string().min(3, 'UTF-8').allow(''),
     specialtySessions: Joi.string().min(3, 'UTF-8').allow(''),

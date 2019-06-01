@@ -8,6 +8,13 @@ const formatDate = (date) => {
     return null;
 };
 
+const getBys = (by) => {
+    if (by) {
+        return by.firstName || by._id;
+    }
+    return 'Importado';
+}
+
 /**
  * createQuotas ...
  * @param {object} quotas 
@@ -43,8 +50,8 @@ const createPayments = payments => {
             mbReference: payment.mbReference || null,
             type: payment.type || 'Importado',
             value: payment.value || 0,
-            createdBy: payment.createdBy || 'Importado',
-            updatedBy: payment.updatedBy || 'Importado',
+            createdBy: getBys(payment.createdBy),
+            updatedBy: getBys(payment.updatedBy),
             createdAt: formatDate(payment.createdAt),
             updatedAt: formatDate(payment.updatedAt),
         }));
@@ -154,12 +161,12 @@ const createUser = user => ({
     },
     password: {
         label: 'Senha',
-        value: user.password || '',
+        value: '',
         error: null,
     },
     rePassword: {
         label: 'Repetir Senha',
-        value: user.rePassword || '',
+        value: '',
         error: null,
     },
     ballotNumber: {
@@ -200,9 +207,9 @@ const createUser = user => ({
         value: user.notes || '',
         error: null,
     },
-    createdBy: user.createdBy || 'Importado',
-    updatedBy: user.updatedBy || 'Importado',
-    deletedBy: user.deletedBy || null,
+    createdBy: getBys(user.createdBy),
+    updatedBy: getBys(user.updatedBy),
+    deletedBy: getBys(user.deletedBy),
     deletedAt: formatDate(user.deletedAt),
     createdAt: formatDate(user.createdAt),
     updatedAt: formatDate(user.updatedAt),
@@ -217,9 +224,6 @@ const createUser = user => ({
 const cleanUserToSubmit = user => {
     const {
         id,
-        role,
-        password,
-        rePassword,
         quotas,
         payments,
         logged,

@@ -26,8 +26,8 @@ class Partners extends React.Component {
 				rows={rows}
 				data={partners.list}
 				onClick={n => history.push(`/partners/${n.id}`)}
-				orderBy="number.value"
 				order="desc"
+				orderBy="number.value"
 				hover
 			/>
 		);

@@ -35,6 +35,9 @@ const styles = theme => ({
 	},
 	lastCell: {
 		paddingRight: '120px !important',
+	},
+	dropdown: {
+		marginBottom: '-5px'
 	}
 });
 
@@ -83,6 +86,7 @@ class Quotas extends Component {
 										onChange={value => setPaymentInvoiceStatus(row.id, value)}
 										options={invoices}
 										variant="standard"
+										styles={classes.dropdown}
 									/>
 								</TableCell>
 							</TableRow>

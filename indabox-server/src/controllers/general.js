@@ -42,7 +42,7 @@ class GeneralController {
                 return next(new APIError('ValidationError', {
                     status: 400,
                     payload: [{
-                        key: 'email',
+                        path: 'email',
                         err: 'Invalid email',
                     }],
                 }));
@@ -52,7 +52,7 @@ class GeneralController {
                 return next(new APIError('ValidationError', {
                     status: 400,
                     payload: [{
-                        key: 'password',
+                        path: 'password',
                         err: 'Invalid password',
                     }],
                 }));

@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
-import _ from 'lodash/fp';
+import fp from 'lodash/fp';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -13,14 +13,9 @@ import Checkbox from '@material-ui/core/Checkbox';
 import EnhancedTableHead from './EnhancedTableHead';
 import EnhancedTableToolbar from './EnhancedTableToolbar';
 
-function desc(a, b, orderBy) {
-	let cmpA = a[orderBy];
-	let cmpB = b[orderBy];
-
-	if (_.has('value', cmpA)) {
-		cmpA = cmpA.value;
-		cmpB = cmpB.value;
-	}
+function desc(a, b) {
+	let cmpA = a;
+	let cmpB = b;
 
 	if (cmpB < cmpA) {
 		return -1;
@@ -32,10 +27,10 @@ function desc(a, b, orderBy) {
 	return 0;
 }
 
-function stableSort(array, cmp) {
+function stableSort(array, cmp, path) {
 	const stabilizedThis = array.map((el, index) => [el, index]);
 	stabilizedThis.sort((a, b) => {
-		const order = cmp(a[0], b[0]);
+		const order = cmp(fp.getOr('0', path, a[0]), fp.getOr('0', path, b[0]));
 		if (order !== 0) return order;
 		return a[1] - b[1];
 	});
@@ -75,11 +70,11 @@ class Partners extends React.Component {
 	};
 
 	handleRequestSort = (event, property) => {
-		const orderBy = property;
-		let order = 'desc';
+		let orderBy = property;
+		let order = this.state.order === 'desc' ? 'desc' : 'asc';
 
-		if (this.state.orderBy === property && this.state.order === 'desc') {
-			order = 'asc';
+		if (this.state.orderBy === orderBy) {
+			order = this.state.order === 'desc' ? 'asc' : 'desc'
 		}
 
 		this.setState({ order, orderBy });
@@ -164,14 +159,14 @@ class Partners extends React.Component {
 							rowCount={data.length}
 						/>
 						<TableBody>
-							{stableSort(data, getSorting(order, orderBy))
+							{stableSort(data, getSorting(order, orderBy), orderBy)
 								.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
 								.map(n => {
 									let error = false;
 									const isSelected = this.isSelected(n.id);
 									const row = rows.find(row => row.color);
 									if (row) {
-										error = _.has(row.id, n) ? false : true;
+										error = fp.has(row.id, n) ? false : true;
 									}
 
 									return (
@@ -198,7 +193,7 @@ class Partners extends React.Component {
 													align='left'
 													className={classNames({ [classes.tableRowError]: error })}
 												>
-													{`${_.getOr(row.default, row.id, n)}${row.symbol ? row.symbol : ''}`}
+													{`${fp.getOr(row.default, row.id, n)}${row.symbol ? row.symbol : ''}`}
 												</TableCell>
 											))}
 										</TableRow>

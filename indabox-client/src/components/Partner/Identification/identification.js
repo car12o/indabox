@@ -50,7 +50,7 @@ class PartnerDetails extends Component {
 	setRoles(res) {
 		if (res.status === 200) {
 			this.setState({
-				roles: res.body.roles.map(role => ({ label: role.label, value: role.label })),
+				roles: res.body.roles.map(role => ({ label: role.label, value: JSON.stringify(role) })),
 			});
 		}
 	}
@@ -102,8 +102,8 @@ class PartnerDetails extends Component {
 				<div className={classes.row}>
 					<DropDown
 						label={partner.role.label}
-						value={partner.role.value.label}
-						onChange={value => setProperty('role.value.label', value)}
+						value={JSON.stringify(partner.role.value)}
+						onChange={value => setProperty('role', JSON.parse(value))}
 						options={this.state.roles}
 						disabled={disabled}
 						styles={classes.dropdown}

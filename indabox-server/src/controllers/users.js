@@ -57,6 +57,18 @@ class UsersController {
                             select: 'year',
                         },
                     },
+                    {
+                        path: 'createdBy',
+                        select: 'firstName',
+                    },
+                    {
+                        path: 'updatedBy',
+                        select: 'firstName',
+                    },
+                    {
+                        path: 'deletedBy',
+                        select: 'firstName',
+                    },
                 ]);
 
             return res.json(user);
@@ -78,6 +90,8 @@ class UsersController {
         if (body.password) {
             body.password = hashPassword(body.password);
         }
+
+        body.updatedBy = fp.get('session.user._id', req);
 
         try {
             const user = await User.findOneAndUpdate(
@@ -101,6 +115,18 @@ class UsersController {
                             path: 'quotas',
                             select: 'year',
                         },
+                    },
+                    {
+                        path: 'createdBy',
+                        select: 'firstName',
+                    },
+                    {
+                        path: 'updatedBy',
+                        select: 'firstName',
+                    },
+                    {
+                        path: 'deletedBy',
+                        select: 'firstName',
                     },
                 ]);
 
