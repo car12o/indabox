@@ -1,4 +1,5 @@
 import request from '../../services/request';
+import { cleanUserToSubmit } from '../../services/transform';
 
 export function setUserProperty(path, value) {
 	return {
@@ -6,6 +7,29 @@ export function setUserProperty(path, value) {
 		path,
 		value,
 	}
+}
+
+export function getUser(id) {
+	const req = {
+		type: 'UPDATE_USER_STATE',
+		url: `/users/${id}`,
+		method: 'GET',
+	};
+
+	return request(req);
+}
+
+export function updateUser(user) {
+	const body = cleanUserToSubmit(user);
+
+	const req = {
+		type: 'UPDATE_USER_STATE',
+		url: `/users/${user.id}`,
+		method: 'PATCH',
+		body,
+	};
+
+	return request(req);
 }
 
 export function login(email, password) {

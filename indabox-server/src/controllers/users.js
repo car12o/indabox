@@ -85,10 +85,10 @@ class UsersController {
     */
     static async update(req, res, next) {
         const { userId } = req.params;
-        const { body } = req;
+        const { password, ...body } = req.body;
 
-        if (body.password) {
-            body.password = hashPassword(body.password);
+        if (password) {
+            body.password = hashPassword(password);
         }
 
         body.updatedBy = fp.get('session.user._id', req);

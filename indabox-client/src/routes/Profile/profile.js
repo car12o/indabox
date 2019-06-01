@@ -1,94 +1,97 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-// import { userAc } from '../../store/actions';
+import { setUserProperty, getUser, updateUser } from '../../store/actions/user';
 import PartnerComponent from '../../components/Partner/partner';
 
 class Profile extends Component {
-	view() {
-		return {
-			leftButton: {
-				fn: () => {
-					this.props.history.goBack();
+	view(key) {
+		return [
+			{ label: 'Voltar', color: 'secondary', fn: () => this.props.history.goBack() },
+			{
+				label: 'Editar', color: 'primary', fn: () => {
 					this.setState({
-						disabled: false,
-						buttons: this.edit(),
+						[key]: {
+							disabled: false,
+							buttons: this.edit(key),
+						}
 					});
-				},
-				label: 'Voltar'
+				}
 			},
-			rightButton: {
-				fn: () => this.setState({
-					disabled: false,
-					buttons: this.edit(),
-				}),
-				label: 'Editar',
-			}
-		};
+		];
 	}
 
-	edit() {
-		return {
-			leftButton: {
-				fn: () => {
+	edit(key) {
+		return [
+			{
+				label: 'Cancelar', color: 'secondary', fn: () => {
 					this.props.getUser(this.props.user.id);
 					this.setState({
-						disabled: true,
-						buttons: this.view(),
-					})
-				},
-				label: 'Cancelar'
+						[key]: {
+							disabled: true,
+							buttons: this.view(key),
+						}
+					});
+				}
 			},
-			rightButton: {
-				fn: () => {
-					this.props.update(this.props.user);
+			{
+				label: 'Gravar', color: 'primary', fn: () => {
+					this.props.updateUser(this.props.user);
 					this.setState({
-						disabled: true,
-						buttons: this.view(),
+						[key]: {
+							disabled: true,
+							buttons: this.view(key),
+						}
 					});
 				},
-				label: 'Gravar',
-			}
-		};
+			},
+		];
 	}
 
-	state = {
-		tab: 1,
-		disabled: true,
-		buttons: this.view(),
+	initialState(tab) {
+		return {
+			tab,
+			identification: {
+				disabled: true,
+				buttons: this.view('identification'),
+			},
+			contacts: {
+				disabled: true,
+				buttons: this.view('contacts'),
+			},
+			notes: {
+				disabled: true,
+				buttons: this.view('notes'),
+			},
+			quotas: {
+				buttons: [
+					{ label: 'Pagar manualmente', color: 'primary', fn: (v) => console.log(v) },
+					{ label: 'Gerar referencia MB', color: 'primary', fn: (v) => console.log(v) }
+				]
+			}
+		}
 	}
+
+	state = this.initialState(0);
 
 	handleChange = (event, tab) => {
-		this.setState({ tab })
+		this.setState(this.initialState(tab));
 	};
 
 	render() {
-		const { user, setFirstName, setLastName, setNif, setEmail, setAlerts, setNewsletter,
-			setPhone, setType, setAddress, setPostCode, setCity, setCountry, setNotes } = this.props;
+		const { user, setProperty } = this.props;
 
 		return (
 			<PartnerComponent
-				partner={user}
-				partnerActions={{
-					setFirstName,
-					setLastName,
-					setNif,
-					setEmail,
-					setAlerts,
-					setNewsletter,
-					setPhone,
-					setType,
-					setAddress,
-					setPostCode,
-					setCity,
-					setCountry,
-					setNotes
-				}}
 				tab={this.state.tab}
+				partner={user}
 				handleChange={this.handleChange}
-				disabled={this.state.disabled}
-				buttons={this.state.buttons}
-				profile
+				setProperty={setProperty}
+				// setPaymentInvoiceStatus={setPaymentInvoiceStatus}
+				identification={this.state.identification}
+				contacts={this.state.contacts}
+				notes={this.state.notes}
+				quotas={this.state.quotas}
 			/>
 		);
 	}
@@ -100,21 +103,9 @@ const mapStateToProps = state => ({
 
 
 const mapDispatchToProps = dispatch => ({
-	// setFirstName: firstName => dispatch(userAc.setFirstName(firstName)),
-	// setLastName: lastName => dispatch(userAc.setLastName(lastName)),
-	// setNif: nif => dispatch(userAc.setNif(nif)),
-	// setEmail: email => dispatch(userAc.setEmail(email)),
-	// setAlerts: alerts => dispatch(userAc.setAlerts(alerts)),
-	// setNewsletter: newsletter => dispatch(userAc.setNewsletter(newsletter)),
-	// setPhone: phone => dispatch(userAc.setPhone(phone)),
-	// setType: type => dispatch(userAc.setType(type)),
-	// setAddress: address => dispatch(userAc.setAddress(address)),
-	// setPostCode: postCode => dispatch(userAc.setPostCode(postCode)),
-	// setCity: city => dispatch(userAc.setCity(city)),
-	// setCountry: country => dispatch(userAc.setCountry(country)),
-	// setNotes: notes => dispatch(userAc.setNotes(notes)),
-	// update: body => dispatch(userAc.update(body)),
-	// getUser: id => dispatch(userAc.getUser(id)),
+	setProperty: (...args) => dispatch(setUserProperty(...args)),
+	getUser: id => dispatch(getUser(id)),
+	updateUser: data => dispatch(updateUser(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Profile);
