@@ -13,14 +13,14 @@ services:
     volumes:
       - ./_data/indabox-mongo:/data/db
     environment:
-      MONGO_INITDB_ROOT_USERNAME: user_example
-      MONGO_INITDB_ROOT_PASSWORD: password_example
+      MONGO_INITDB_ROOT_USERNAME: $root@user
+      MONGO_INITDB_ROOT_PASSWORD: $root@password
 
   indabox-redis:
     image: redis:5.0.3
     container_name: indabox-redis
     restart: unless-stopped
-    command: redis-server --appendonly yes --requirepass password_example
+    command: redis-server --appendonly yes --requirepass $redis@password
     ports:
       - 6379:6379
     volumes:
@@ -39,6 +39,16 @@ services:
       - ./indabox-server:/var/www
     working_dir: /var/www
     command: sh -c "npm i && npm run start"
+    environment:
+      ROOT_EMAIL: $root@email
+      ROOT_PASSWORD: $root@password
+      DB_USER: $db@user
+      DB_PASSWORD: $db@password
+      REDIS_PASSWORD: $redis@password
+      IFTHEN_ENTETY: $ifthen@entety
+      IFTHEN_SUBENTETY: $ifthen@subentety
+      IFTHEN_KEY: $ifthen@key
+
 
   indabox-client:
     image: node:11.8-alpine
@@ -50,3 +60,5 @@ services:
       - ./indabox-client:/var/www
     working_dir: /var/www
     command: sh -c "npm i && npm run start"
+    environment:
+      REACT_APP_API_URL: http://193.70.43.66:8080

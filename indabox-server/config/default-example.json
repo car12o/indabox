@@ -1,27 +1,15 @@
 {
     "name": "indabox-server",
     "port": 8080,
-    "rootUser": {
-        "email": "email_example",
-        "password": "password_example"
-    },
     "database": {
         "mongo": {
             "host": "indabox-mongo",
             "port": 27017,
-            "name": "indabox-server",
-            "user": "user_example",
-            "password": "password_example"
+            "name": "indabox-server"
         },
         "redis": {
             "host": "indabox-redis",
-            "port": 6379,
-            "password": "password_example"
+            "port": 6379
         }
-    },
-    "ifthen": {
-        "ententy": "ifthen_ententy",
-        "subEntety": "ifthen_subEntety",
-        "key": "ifthen_key"
     }
 }
