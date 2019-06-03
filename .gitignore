@@ -5,7 +5,6 @@ _data
 
 # server
 indabox-server/logs/*
-default.json
 
 # client
 indabox-client/build

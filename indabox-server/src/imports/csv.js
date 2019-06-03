@@ -2,7 +2,7 @@ const fs = require('fs');
 const readline = require('readline');
 const { Types } = require('mongoose');
 const { mongo } = require('../services/database');
-const { database, rootUser } = require('../../config/default.json');
+const { database } = require('../../config/default.json');
 const { User } = require('../models/user');
 const { Quota } = require('../models/quota');
 const { Payment, paymentStatus, paymentTypes } = require('../models/payment');
@@ -68,7 +68,7 @@ const readFile = async () => {
     }
 
     try {
-        await mongo.connect(database.mongo, rootUser);
+        await mongo.connect(database.mongo);
         // eslint-disable-next-line no-unused-vars
         const [_, path] = arg.split('=');
         const rl = readline.createInterface({

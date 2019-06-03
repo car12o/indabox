@@ -6,9 +6,16 @@ const { hashPassword } = require('../services/crypto');
 
 module.exports = {
     mongo: {
-        connect: async function connect(config, rootUser) {
+        connect: async function connect(config) {
+            const {
+                DB_USER,
+                DB_PASSWORD,
+                ROOT_EMAIL,
+                ROOT_PASSWORD,
+            } = process.env;
+
             await mongoose.connect(
-                `mongodb://${config.user}:${config.password}@${config.host}:\
+                `mongodb://${DB_USER}:${DB_PASSWORD}@${config.host}:\
                 ${config.port}/${config.name}?authSource=admin`, {
                     useNewUrlParser: true,
                     useCreateIndex: true,
@@ -18,9 +25,14 @@ module.exports = {
                 },
             );
 
-            const hasAdmin = await this.hasAdmin(rootUser);
+            const root = {
+                email: ROOT_EMAIL,
+                password: ROOT_PASSWORD,
+            };
+
+            const hasAdmin = await this.hasAdmin(root);
             if (!hasAdmin) {
-                this.createAdmin(rootUser);
+                this.createAdmin(root);
                 log.info('Created admin user');
             }
         },
@@ -41,7 +53,7 @@ module.exports = {
                 this.client = redis.createClient({
                     host: config.host,
                     port: config.port,
-                    password: config.password,
+                    password: process.env.REDIS_PASSWORD,
                 });
             }
 

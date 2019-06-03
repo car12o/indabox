@@ -7,7 +7,7 @@ const logger = require('./services/logging');
 const { mongo, redis } = require('./services/database');
 const Auth = require('./middleware/auth');
 const router = require('./router');
-const { port, database, rootUser } = require('../config/default.json');
+const { port, database } = require('../config/default.json');
 
 // Security ...
 app.use(helmet());
@@ -21,7 +21,7 @@ log = logger;
 app.use(morgan('dev'));
 
 // Database ...
-mongo.connect(database.mongo, rootUser)
+mongo.connect(database.mongo)
     .then(() => log.info('Successfully connected to mongo'))
     .catch(e => log.error(e));
 
