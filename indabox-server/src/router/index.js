@@ -7,13 +7,14 @@ const GeneralController = require('../controllers/general');
 const UsersController = require('../controllers/users');
 // const MbReferences = require('../controllers/mbReferences');
 const APIError = require('../services/error');
-const { userRoles, userSchema } = require('../models/user');
+const { userRoles, userSchema, userCreateSchema } = require('../models/user');
 
 /**
  * users ...
  */
-users.get('', Auth.authorization(userRoles.admin), UsersController.getAll);
+users.get('/', Auth.authorization(userRoles.admin), UsersController.getAll);
 users.get('/:userId', Auth.authorization(userRoles.admin), UsersController.get);
+users.post('/', Auth.authorization(userRoles.root), validation(userCreateSchema), UsersController.create);
 users.patch('/:userId', Auth.authorization(userRoles.admin), validation(userSchema), UsersController.update);
 users.get('/titles', Auth.authorization(userRoles.holder), UsersController.getTitles);
 

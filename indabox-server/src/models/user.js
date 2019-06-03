@@ -120,9 +120,19 @@ const userSchema = Joi.object().keys({
     notes: Joi.string().allow(''),
 });
 
+const userCreateSchema = Joi.object().keys({
+    role: Joi.string().valid(...fp.transform((accum, v) => accum.push(v.label), [], userRoles)).required(),
+    firstName: Joi.string().min(3, 'UTF-8').required(),
+    email: Joi.string().email({ minDomainAtoms: 2 }).required(),
+    password: Joi.string().min(6, 'UTF-8').required(),
+    rePassword: Joi.string().min(6, 'UTF-8').required().valid(Joi.ref('password'))
+        .options({ language: { any: { allowOnly: '!!Passwords do not match' } } }),
+});
+
 module.exports = {
     User: mongoose.model('User', User, 'users'),
     userSchema,
+    userCreateSchema,
     userRoles,
     userTitle,
     userCountries,

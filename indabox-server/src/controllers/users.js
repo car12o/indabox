@@ -78,22 +78,50 @@ class UsersController {
     }
 
     /**
+     * create ...
+     * @param {object} req
+     * @param {object} res
+     * @param {object} next
+     */
+    static async create(req, res, next) {
+        try {
+            const { password, role, ...body } = req.body;
+
+            body.role = userRoles[role];
+
+            if (password) {
+                body.password = hashPassword(password);
+            }
+
+            const activeUser = fp.get('session.user._id', req);
+            body.createdBy = activeUser;
+            body.updatedBy = activeUser;
+
+            const user = await User.create(body);
+
+            return res.json(user);
+        } catch (e) {
+            return next(new APIError(e));
+        }
+    }
+
+    /**
     * update ...
     * @param {object} req
     * @param {object} res
     * @param {object} next
     */
     static async update(req, res, next) {
-        const { userId } = req.params;
-        const { password, ...body } = req.body;
-
-        if (password) {
-            body.password = hashPassword(password);
-        }
-
-        body.updatedBy = fp.get('session.user._id', req);
-
         try {
+            const { userId } = req.params;
+            const { password, ...body } = req.body;
+
+            if (password) {
+                body.password = hashPassword(password);
+            }
+
+            body.updatedBy = fp.get('session.user._id', req);
+
             const user = await User.findOneAndUpdate(
                 { _id: userId },
                 body,
