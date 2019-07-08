@@ -21,8 +21,54 @@ export function getPartner(id) {
 	return request(req);
 }
 
-export function updatePartner(user) {
-	const body = cleanUserToSubmit(user);
+export function updatePartnerIdentification(user) {
+	const body = cleanUserToSubmit(user, [
+		'title',
+		'firstName',
+		'lastName',
+		'role',
+		'number',
+		'nif',
+		'email',
+		'password',
+		'rePassword',
+		'ballotNumber',
+		'specialty',
+		'specialtySessions',
+		'alerts',
+		'newsletter',
+	]);
+
+	const req = {
+		type: 'UPDATE_PARTNER',
+		url: `/users/${user.id}`,
+		method: 'PATCH',
+		body,
+	};
+
+	return request(req);
+}
+
+export function updatePartnerContact(user) {
+	const body = cleanUserToSubmit(user, [
+		'address',
+		'mobile',
+		'phone',
+		'billing',
+	]);
+
+	const req = {
+		type: 'UPDATE_PARTNER',
+		url: `/users/${user.id}`,
+		method: 'PATCH',
+		body,
+	};
+
+	return request(req);
+}
+
+export function updatePartnerNotes(user) {
+	const body = cleanUserToSubmit(user, ['notes']);
 
 	const req = {
 		type: 'UPDATE_PARTNER',

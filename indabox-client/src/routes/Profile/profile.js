@@ -1,7 +1,7 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { setUserProperty, getUser, updateUser } from '../../store/actions/user';
+import { setUserProperty, getUser, updateUserIdentification, updateUserContact, updateUserNotes } from '../../store/actions/user';
 import PartnerComponent from '../../components/Partner/partner';
 
 class Profile extends Component {
@@ -14,6 +14,7 @@ class Profile extends Component {
 						[key]: {
 							disabled: false,
 							buttons: this.edit(key),
+							action: this.state[key].action,
 						}
 					});
 				}
@@ -30,17 +31,19 @@ class Profile extends Component {
 						[key]: {
 							disabled: true,
 							buttons: this.view(key),
+							action: this.state[key].action,
 						}
 					});
 				}
 			},
 			{
-				label: 'Gravar', color: 'primary', fn: () => {
-					this.props.updateUser(this.props.user);
+				label: 'Gravar', color: 'primary', fn: action => {
+					this.props[action](this.props.user);
 					this.setState({
 						[key]: {
 							disabled: true,
 							buttons: this.view(key),
+							action: this.state[key].action,
 						}
 					});
 				},
@@ -54,14 +57,17 @@ class Profile extends Component {
 			identification: {
 				disabled: true,
 				buttons: this.view('identification'),
+				action: 'updateUserIdentification',
 			},
 			contacts: {
 				disabled: true,
 				buttons: this.view('contacts'),
+				action: 'updateUserContact',
 			},
 			notes: {
 				disabled: true,
 				buttons: this.view('notes'),
+				action: 'updateUserNotes',
 			},
 			quotas: {
 				buttons: [
@@ -105,7 +111,9 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
 	setProperty: (...args) => dispatch(setUserProperty(...args)),
 	getUser: id => dispatch(getUser(id)),
-	updateUser: data => dispatch(updateUser(data)),
+	updateUserIdentification: data => dispatch(updateUserIdentification(data)),
+	updateUserContact: data => dispatch(updateUserContact(data)),
+	updateUserNotes: data => dispatch(updateUserNotes(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Profile);

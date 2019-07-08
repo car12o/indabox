@@ -221,18 +221,10 @@ const createUser = user => ({
  * cleanUserToSubmit ...
  * @param {object} user 
  */
-const cleanUserToSubmit = user => {
-    const {
-        id,
-        quotas,
-        payments,
-        logged,
-        createdAt,
-        createdBy,
-        updatedAt,
-        updatedBy,
-        deletedBy,
-        ...rest } = user;
+const cleanUserToSubmit = (user, keys) => {
+    const data = keys
+        ? keys.reduce((accm, k) => Object.assign({}, accm, { [k]: user[k] }), {})
+        : user;
 
     const result = transform((accum, prop, key) => {
         if (prop || fp.isBoolean(prop)) {
@@ -248,7 +240,7 @@ const cleanUserToSubmit = user => {
         }
 
         return accum;
-    }, {}, rest);
+    }, {}, data);
 
     return result;
 }

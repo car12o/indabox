@@ -175,21 +175,30 @@ class Partner extends Component {
 								data={partner.payments}
 							/>
 						</TabContainer>
-						<TabContainer buttons={identification.buttons}>
+						<TabContainer
+							buttons={identification.buttons}
+							selected={identification.action}
+						>
 							<Identification
 								partner={partner}
 								setProperty={setProperty}
 								disabled={identification.disabled}
 							/>
 						</TabContainer>
-						<TabContainer buttons={contacts.buttons}>
+						<TabContainer
+							buttons={contacts.buttons}
+							selected={contacts.action}
+						>
 							<Contact
 								partner={partner}
 								setProperty={setProperty}
 								disabled={contacts.disabled}
 							/>
 						</TabContainer>
-						<TabContainer buttons={notes.buttons}>
+						<TabContainer
+							buttons={notes.buttons}
+							selected={notes.action}
+						>
 							<Notes
 								partner={partner}
 								setProperty={setProperty}

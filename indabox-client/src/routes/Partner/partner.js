@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { getPartner, setPartnerProperty, setPaymentInvoiceStatus, updatePartner } from '../../store/actions/partners';
+import {
+	getPartner, setPartnerProperty, setPaymentInvoiceStatus,
+	updatePartnerIdentification, updatePartnerContact, updatePartnerNotes
+} from '../../store/actions/partners';
 import PartnerComponent from '../../components/Partner/partner';
 
 class Partner extends Component {
@@ -13,6 +16,7 @@ class Partner extends Component {
 						[key]: {
 							disabled: false,
 							buttons: this.edit(key),
+							action: this.state[key].action,
 						}
 					});
 				}
@@ -29,17 +33,19 @@ class Partner extends Component {
 						[key]: {
 							disabled: true,
 							buttons: this.view(key),
+							action: this.state[key].action,
 						}
 					});
 				}
 			},
 			{
-				label: 'Gravar', color: 'primary', fn: () => {
-					this.props.updatePartner(this.props.partner);
+				label: 'Gravar', color: 'primary', fn: action => {
+					this.props[action](this.props.partner);
 					this.setState({
 						[key]: {
 							disabled: true,
 							buttons: this.view(key),
+							action: this.state[key].action,
 						}
 					});
 				},
@@ -53,14 +59,17 @@ class Partner extends Component {
 			identification: {
 				disabled: true,
 				buttons: this.view('identification'),
+				action: 'updatePartnerIdentification',
 			},
 			contacts: {
 				disabled: true,
 				buttons: this.view('contacts'),
+				action: 'updatePartnerContact',
 			},
 			notes: {
 				disabled: true,
 				buttons: this.view('notes'),
+				action: 'updatePartnerNotes',
 			},
 			quotas: {
 				buttons: [
@@ -107,7 +116,9 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
 	getPartner: id => dispatch(getPartner(id)),
-	updatePartner: data => dispatch(updatePartner(data)),
+	updatePartnerIdentification: data => dispatch(updatePartnerIdentification(data)),
+	updatePartnerContact: data => dispatch(updatePartnerContact(data)),
+	updatePartnerNotes: data => dispatch(updatePartnerNotes(data)),
 	setProperty: (...args) => dispatch(setPartnerProperty(...args)),
 	setPaymentInvoiceStatus: (...args) => dispatch(setPaymentInvoiceStatus(...args)),
 });
