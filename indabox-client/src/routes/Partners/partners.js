@@ -1,14 +1,25 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import { getPartners } from '../../store/actions/partners';
 import TableSelect from '../../components/TableSelect/tableSelect';
 
 class Partners extends React.Component {
-	componentWillMount() {
-		this.props.getPartners();
+	async componentWillMount() {
+		this.setState({ loading: true });
+		await this.props.getPartners();
+		this.setState({ loading: false });
 	}
 
+	state = {
+		loading: false,
+	};
+
 	render() {
+		if (this.state.loading) {
+			return (<LinearProgress />);
+		}
+
 		const { history, partners } = this.props;
 
 		const rows = [
@@ -35,7 +46,7 @@ class Partners extends React.Component {
 }
 
 const mapStateToProps = state => ({
-	partners: state.partners
+	partners: state.partners,
 });
 
 const mapDispatchToProps = dispatch => ({

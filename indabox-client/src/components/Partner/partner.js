@@ -65,6 +65,10 @@ const styles = theme => ({
 		marginTop: '25px',
 		boxShadow: '0px 2px 4px -1px rgba(0,0,0,0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12)',
 	},
+	emptyDataTitle: {
+		padding: '30px 15px',
+		fontSize: '16px',
+	},
 	tabsAppBar: {
 		backgroundColor: theme.palette.background.paper,
 		boxShadow: 'none',
@@ -159,15 +163,17 @@ class Partner extends Component {
 							buttons={quotas.buttons}
 							disabled={!this.state.quotes.selected.length}
 						>
-							<TableSelect
-								rows={quotasRows}
-								data={partner.quotas}
-								onClick={() => { }}
-								onSelect={(selected) => this.setState({ quotes: { selected } })}
-								order="desc"
-								orderBy="year"
-								rowsPerPageOptions={[12]}
-							/>
+							{partner.quotas.length > 0
+								? <TableSelect
+									rows={quotasRows}
+									data={partner.quotas}
+									onClick={() => { }}
+									onSelect={(selected) => this.setState({ quotes: { selected } })}
+									order="desc"
+									orderBy="year"
+									rowsPerPageOptions={[12]}
+								/>
+								: <Typography classes={{ root: classes.emptyDataTitle }}>Nao existem quotas ...</Typography>}
 						</TabContainer>
 						<TabContainer>
 							<Payments

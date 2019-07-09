@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import classNames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
+import Typography from '@material-ui/core/Typography';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -23,6 +24,10 @@ const styles = theme => ({
 		overflowX: 'auto',
 		boxShadow: 'none',
 	},
+	emptyDataTitle: {
+		padding: '30px 15px',
+		fontSize: '16px',
+	},
 	tableHead: {
 		color: 'white',
 		fontSize: '14px',
@@ -38,7 +43,7 @@ const styles = theme => ({
 	},
 	dropdown: {
 		marginBottom: '-5px'
-	}
+	},
 });
 
 class Quotas extends Component {
@@ -50,6 +55,12 @@ class Quotas extends Component {
 
 	render() {
 		const { classes, data, setPaymentInvoiceStatus } = this.props;
+
+		if (data.length < 1) {
+			return (
+				<Typography classes={{ root: classes.emptyDataTitle }}>Nao existem pagamentos ...</Typography>
+			);
+		}
 
 		return (
 			<Paper id="quotas-component" className={classes.root}>

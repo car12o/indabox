@@ -1,7 +1,10 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { setUserProperty, getUser, updateUserIdentification, updateUserContact, updateUserNotes } from '../../store/actions/user';
+import {
+	setUserProperty, getUser, updateUserIdentification,
+	updateUserContact, updateUserNotes
+} from '../../store/actions/user';
 import PartnerComponent from '../../components/Partner/partner';
 
 class Profile extends Component {

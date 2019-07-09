@@ -13,7 +13,7 @@ class GeneralController {
         try {
             const { user } = req.session;
             if (!user) {
-                return next(new APIError('Internal server error'));
+                next(new APIError('Internal server error'));
             }
 
             const { _id } = user;
@@ -21,9 +21,9 @@ class GeneralController {
 
             req.session.setUser(result);
 
-            return res.json(req.session.json());
+            res.json(req.session.json());
         } catch (e) {
-            return next(new APIError(e));
+            next(new APIError(e));
         }
     }
 
@@ -39,7 +39,7 @@ class GeneralController {
             const user = await User.findOne({ email });
 
             if (!user) {
-                return next(new APIError('ValidationError', {
+                next(new APIError('ValidationError', {
                     status: 400,
                     payload: [{
                         path: 'email',
@@ -49,7 +49,7 @@ class GeneralController {
             }
 
             if (!verifyHash(password, user.password)) {
-                return next(new APIError('ValidationError', {
+                next(new APIError('ValidationError', {
                     status: 400,
                     payload: [{
                         path: 'password',
@@ -61,9 +61,9 @@ class GeneralController {
             req.session.setLogged(true);
             req.session.setUser(user);
 
-            return res.json(req.session.json());
+            res.json(req.session.json());
         } catch (e) {
-            return next(new APIError(e));
+            next(new APIError(e));
         }
     }
 
@@ -76,7 +76,7 @@ class GeneralController {
     static async logout(req, res) {
         req.session.setLogged(false);
         req.session.setUser(null);
-        return res.json(req.session.json());
+        res.json(req.session.json());
     }
 }
 

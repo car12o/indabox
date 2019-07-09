@@ -23,9 +23,9 @@ class UsersController {
             const users = await User.find().where('role.value').gte(user.role.value)
                 .select('-password');
 
-            return res.json(users);
+            res.json(users);
         } catch (e) {
-            return next(new APIError(e));
+            next(new APIError(e));
         }
     }
 
@@ -71,9 +71,9 @@ class UsersController {
                     },
                 ]);
 
-            return res.json(user);
+            res.json(user);
         } catch (e) {
-            return next(new APIError(e));
+            next(new APIError(e));
         }
     }
 
@@ -99,9 +99,9 @@ class UsersController {
 
             const user = await User.create(body);
 
-            return res.json(user);
+            res.json(user);
         } catch (e) {
-            return next(new APIError(e));
+            next(new APIError(e));
         }
     }
 
@@ -158,9 +158,9 @@ class UsersController {
                     },
                 ]);
 
-            return res.json(user);
+            res.json(user);
         } catch (e) {
-            return next(new APIError(e));
+            next(new APIError(e));
         }
     }
 
@@ -183,7 +183,7 @@ class UsersController {
 
         const result = fp.transform((accum, elem) => {
             if (elem.value >= role.value) {
-                return accum.push(elem);
+                accum.push(elem);
             }
             return accum;
         }, [], userRoles);

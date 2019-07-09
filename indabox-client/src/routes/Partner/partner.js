@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import {
 	getPartner, setPartnerProperty, setPaymentInvoiceStatus,
 	updatePartnerIdentification, updatePartnerContact, updatePartnerNotes
@@ -56,6 +57,7 @@ class Partner extends Component {
 	initialState(tab) {
 		return {
 			tab,
+			loading: false,
 			identification: {
 				disabled: true,
 				buttons: this.view('identification'),
@@ -80,18 +82,25 @@ class Partner extends Component {
 		}
 	}
 
-	state = this.initialState(0);
-
-	componentWillMount() {
+	async componentWillMount() {
 		const { match, getPartner } = this.props;
-		getPartner(match.params.id);
+
+		this.setState({ loading: true });
+		await getPartner(match.params.id);
+		this.setState({ loading: false });
 	}
+
+	state = this.initialState(0);
 
 	handleChange = (event, tab) => {
 		this.setState(this.initialState(tab));
 	};
 
 	render() {
+		if (this.state.loading) {
+			return (<LinearProgress />);
+		}
+
 		const { partner, setProperty, setPaymentInvoiceStatus } = this.props;
 
 		return (
