@@ -21,7 +21,7 @@ const styles = (theme) => ({
 	},
 	row: {
 		display: 'flex',
-		padding: '0 20px',
+		padding: '10px 20px',
 	},
 	input: {
 		padding: '0 20px',

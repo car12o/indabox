@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import classNames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import request from '../../../services/request'
@@ -20,8 +21,7 @@ const styles = (theme) => ({
 		color: 'white',
 	},
 	formControlLabel: {
-		width: '49%',
-		paddingLeft: '56px',
+		paddingLeft: '50px',
 	},
 	container: {
 		display: 'flex',
@@ -30,12 +30,19 @@ const styles = (theme) => ({
 		width: '100%',
 		padding: '10px 50px',
 	},
+	columnTitle: {
+		fontSize: '16px',
+		padding: '15px 0',
+	},
+	hide: {
+		visibility: 'hidden',
+	},
 	row: {
 		display: 'flex',
 		flexDirection: 'row',
 	},
 	dropdown: {
-		margin: '0 0 20px 0',
+		margin: '0 0 28px 0',
 	},
 	rowInput: {
 		marginRight: '20px',
@@ -83,7 +90,6 @@ class PartnerDetails extends Component {
 							label: 'Faturar com esta morada',
 						},
 						{
-							classes: classes.formControlLabel,
 							value: 'true',
 							label: 'Faturar noutro nome',
 						},
@@ -91,6 +97,9 @@ class PartnerDetails extends Component {
 				/>
 				<div className={classes.container}>
 					<div className={classes.column}>
+						<Typography classes={{ root: classes.columnTitle }} color="secondary" >
+							Dados pessoais
+						</Typography>
 						<Input
 							type="text"
 							label={partner.address.road.label}
@@ -145,7 +154,13 @@ class PartnerDetails extends Component {
 							styles={classes.rowInput}
 						/>
 					</div>
-					<div className={classes.column}>
+					<div className={classNames(
+						classes.column,
+						{ [classes.hide]: !partner.billing.active },
+					)}>
+						<Typography classes={{ root: classes.columnTitle }} color="secondary" >
+							Dados de faturação
+						</Typography>
 						<Input
 							type="text"
 							label={partner.billing.name.label}

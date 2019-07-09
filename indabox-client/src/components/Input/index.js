@@ -1,40 +1,52 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
 import classNames from 'classnames';
 import { withTheme, withStyles } from '@material-ui/core/styles';
 import FormControl from '@material-ui/core/FormControl';
 import FormHelperText from '@material-ui/core/FormHelperText';
-import OutlinedInput from '@material-ui/core/OutlinedInput';
-import InputLabel from '@material-ui/core/InputLabel';
+import TextField from '@material-ui/core/TextField';
 
-const styles = {
+const styles = theme => ({
 	root: {
 		width: '100%',
 		marginBottom: '8px'
-	}
-}
+	},
+	textField: {
+		color: `${theme.palette.secondary.main} !important`,
+	},
+	inputLabel: {
+		color: `${theme.palette.primary.main} !important`,
+	},
+});
 
 class Input extends Component {
 	render() {
-		const { classes, theme, label, type, value, onChange, error, disabled, styles } = this.props;
+		const { classes, label, type, value, onChange, error, disabled, styles } = this.props;
 
 		return (
 			<div className={classNames(classes.root, styles)}>
-				<FormControl classes={{ root: classes.root }} variant="outlined" error={error ? true : false}>
-					<InputLabel ref={ref => this.InputRef = ReactDOM.findDOMNode(ref)}>
-						{label}
-					</InputLabel>
-					<OutlinedInput
-						inputProps={{
-							style: { color: theme.palette.secondary.main }
-						}}
+				<FormControl
+					classes={{ root: classes.root }}
+					variant="standard"
+					error={error ? true : false}>
+					<TextField
+						label={label}
 						value={value}
-						type={type ? type : 'text'}
 						onChange={e => onChange(e.target.value)}
-						labelWidth={this.InputRef ? this.InputRef.offsetWidth : 0}
+						variant="standard"
+						placeholder=""
 						disabled={disabled}
-					>
-					</OutlinedInput>
+						InputLabelProps={{
+							classes: {
+								root: classes.inputLabel,
+							},
+						}}
+						InputProps={{
+							classes: {
+								root: classes.textField,
+							},
+						}}
+						type={type ? type : 'text'}
+					/>
 					<FormHelperText id="component-error-text">{error}</FormHelperText>
 				</FormControl>
 			</div>

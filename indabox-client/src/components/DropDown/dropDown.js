@@ -18,7 +18,7 @@ class DropDown extends Component {
 
 		return (
 			<div className={classNames(classes.root, styles)}>
-				<FormControl classes={{ root: classes.root }} variant={variant || 'outlined'} >
+				<FormControl classes={{ root: classes.root }} variant={variant || 'standard'} >
 					<TextField
 						select
 						InputLabelProps={{
@@ -29,7 +29,7 @@ class DropDown extends Component {
 								color: theme.palette.secondary.main,
 							}, inputClasses),
 						}}
-						variant={variant || 'outlined'}
+						variant={variant || 'standard'}
 						label={label}
 						value={value}
 						onChange={e => onChange(e.target.value)}
