@@ -8,7 +8,6 @@ const {
 require('../models/quota');
 require('../models/payment');
 const { hashPassword } = require('../services/crypto');
-const APIError = require('../services/error');
 
 class UsersController {
     /**
@@ -25,7 +24,7 @@ class UsersController {
 
             res.json(users);
         } catch (e) {
-            next(new APIError(e));
+            next(e);
         }
     }
 
@@ -73,7 +72,7 @@ class UsersController {
 
             res.json(user);
         } catch (e) {
-            next(new APIError(e));
+            next(e);
         }
     }
 
@@ -101,7 +100,7 @@ class UsersController {
 
             res.json(user);
         } catch (e) {
-            next(new APIError(e));
+            next(e);
         }
     }
 
@@ -160,7 +159,7 @@ class UsersController {
 
             res.json(user);
         } catch (e) {
-            next(new APIError(e));
+            next(e);
         }
     }
 

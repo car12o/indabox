@@ -12,19 +12,35 @@ class MbReferences {
      */
     static async create(req, res, next) {
         try {
-            let { quotas } = req.body;
-            quotas = await Quota.find({ _id: { $in: quotas } });
+            const { quotas } = req.body;
+            const dbQuotas = await Quota.find({ _id: { $in: quotas } });
 
-            const value = quotas.reduce((accum, quota) => accum + quota.value, 0);
+            const belongs = Quota.belongsSameUser(dbQuotas);
+            if (!belongs) {
+                throw new APIError('Every quota must belong to the same user', {
+                    payload: { quotas },
+                });
+            }
 
+            const quotasWithPayment = Quota.getWithPayment(dbQuotas);
+            if (quotasWithPayment.length > 0) {
+                throw new APIError('Some quotas have already payment', {
+                    payload: {
+                        quotas,
+                        quotasWithPayment,
+                    },
+                });
+            }
+
+            const value = dbQuotas.reduce((accum, quota) => accum + quota.value, 0);
             const { reference, refId } = await MbReference.generate(value);
             const mbReference = await MbReference.create({
                 value, quotas, reference, refId,
             });
 
-            res.json(_.omit('_doc.quotas', mbReference));
+            res.json(_.omit('quotas', mbReference.toObject()));
         } catch (e) {
-            next(new APIError(e));
+            next(e);
         }
     }
 }

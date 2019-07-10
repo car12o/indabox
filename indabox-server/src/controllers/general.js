@@ -23,7 +23,7 @@ class GeneralController {
 
             res.json(req.session.json());
         } catch (e) {
-            next(new APIError(e));
+            next(e);
         }
     }
 
@@ -63,7 +63,7 @@ class GeneralController {
 
             res.json(req.session.json());
         } catch (e) {
-            next(new APIError(e));
+            next(e);
         }
     }
 

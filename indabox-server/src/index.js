@@ -6,7 +6,7 @@ const morgan = require('morgan');
 const logger = require('./services/logging');
 const { mongo, redis } = require('./services/database');
 const Auth = require('./middleware/auth');
-const router = require('./router');
+const router = require('./routes/router');
 const { port, database } = require('../config/default.json');
 
 // Security ...

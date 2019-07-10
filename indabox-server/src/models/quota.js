@@ -7,6 +7,26 @@ const Quota = mongoose.Schema({
     payment: { type: mongoose.Schema.Types.ObjectId, ref: 'Payment', default: null },
 }, { timestamps: true });
 
+Quota.static('belongsSameUser', (quotas) => {
+    const result = quotas.reduce((accum, mbReference) => {
+        const { user } = mbReference;
+        if (!accum[user]) {
+            return Object.assign({}, accum, { [user]: true });
+        }
+        return accum;
+    }, {});
+
+    return Object.keys(result).length === 1;
+});
+
+Quota.static('getWithPayment', dbQuotas => dbQuotas.reduce((accum, quota) => {
+    if (quota.payment) {
+        const { _id } = quota;
+        accum.push(_id);
+    }
+    return accum;
+}, []));
+
 module.exports = {
     Quota: mongoose.model('Quota', Quota, 'quotas'),
 };
