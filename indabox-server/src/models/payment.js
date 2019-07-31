@@ -1,3 +1,4 @@
+const Joi = require('joi');
 const mongoose = require('mongoose');
 
 const paymentStatus = {
@@ -36,8 +37,19 @@ const Payment = mongoose.Schema({
     mbReference: { type: mongoose.Schema.Types.ObjectId, ref: 'MbReference', default: null },
 }, { timestamps: true });
 
+const paymentCreateSchema = Joi.object().keys({
+    type: Joi.string().valid(...Object.values(paymentTypes)).required(),
+    quotas: Joi.array().items(Joi.string()).required(),
+});
+
+const paymentInvoiceSchema = Joi.object().keys({
+    invoiceEmited: Joi.boolean().required(),
+});
+
 module.exports = {
     Payment: mongoose.model('Payment', Payment, 'payments'),
+    paymentCreateSchema,
+    paymentInvoiceSchema,
     paymentStatus,
     paymentTypes,
 };

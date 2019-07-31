@@ -76,6 +76,107 @@ const User = mongoose.Schema({
     payments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Payment', default: null }],
 }, { timestamps: true });
 
+User.static('fetch', function fetch(_id) {
+    return this.findOne({ _id })
+        .select('-password')
+        .populate([
+            {
+                path: 'quotas',
+                select: '-user',
+                populate: {
+                    path: 'payment',
+                    select: ['status', 'updatedAt'],
+                },
+            },
+            {
+                path: 'payments',
+                select: '-user',
+                populate: [
+                    {
+                        path: 'quotas',
+                        select: 'year',
+                    },
+                    {
+                        path: 'mbReference',
+                        select: '-refId',
+                    },
+                    {
+                        path: 'createdBy',
+                        select: 'firstName',
+                    },
+                    {
+                        path: 'updatedBy',
+                        select: 'firstName',
+                    },
+                ],
+            },
+            {
+                path: 'createdBy',
+                select: 'firstName',
+            },
+            {
+                path: 'updatedBy',
+                select: 'firstName',
+            },
+            {
+                path: 'deletedBy',
+                select: 'firstName',
+            },
+        ]);
+});
+
+User.static('patch', function patch(_id, user) {
+    return this.findOneAndUpdate(
+        { _id },
+        user,
+        { new: true },
+    ).select('-password')
+        .populate([
+            {
+                path: 'quotas',
+                select: '-user',
+                populate: {
+                    path: 'payment',
+                    select: ['status', 'updatedAt'],
+                },
+            },
+            {
+                path: 'payments',
+                select: '-user',
+                populate: [
+                    {
+                        path: 'quotas',
+                        select: 'year',
+                    },
+                    {
+                        path: 'mbReference',
+                        select: '-refId',
+                    },
+                    {
+                        path: 'createdBy',
+                        select: 'firstName',
+                    },
+                    {
+                        path: 'updatedBy',
+                        select: 'firstName',
+                    },
+                ],
+            },
+            {
+                path: 'createdBy',
+                select: 'firstName',
+            },
+            {
+                path: 'updatedBy',
+                select: 'firstName',
+            },
+            {
+                path: 'deletedBy',
+                select: 'firstName',
+            },
+        ]);
+});
+
 const userSchema = Joi.object().keys({
     role: Joi.object().keys({
         label: Joi.string().valid(...fp.transform((accum, v) => accum.push(v.label), [], userRoles)),

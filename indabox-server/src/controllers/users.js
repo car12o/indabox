@@ -37,38 +37,7 @@ class UsersController {
     static async get(req, res, next) {
         try {
             const { userId } = req.params;
-            const user = await User.findOne({ _id: userId })
-                .select('-password')
-                .populate([
-                    {
-                        path: 'quotas',
-                        select: '-user',
-                        populate: {
-                            path: 'payment',
-                            select: ['status', 'updatedAt'],
-                        },
-                    },
-                    {
-                        path: 'payments',
-                        select: '-user',
-                        populate: {
-                            path: 'quotas',
-                            select: 'year',
-                        },
-                    },
-                    {
-                        path: 'createdBy',
-                        select: 'firstName',
-                    },
-                    {
-                        path: 'updatedBy',
-                        select: 'firstName',
-                    },
-                    {
-                        path: 'deletedBy',
-                        select: 'firstName',
-                    },
-                ]);
+            const user = await User.fetch(userId);
 
             res.json(user);
         } catch (e) {
@@ -121,41 +90,7 @@ class UsersController {
 
             body.updatedBy = fp.get('session.user._id', req);
 
-            const user = await User.findOneAndUpdate(
-                { _id: userId },
-                body,
-                { new: true },
-            ).select('-password')
-                .populate([
-                    {
-                        path: 'quotas',
-                        select: '-user',
-                        populate: {
-                            path: 'payment',
-                            select: ['status', 'updatedAt'],
-                        },
-                    },
-                    {
-                        path: 'payments',
-                        select: '-user',
-                        populate: {
-                            path: 'quotas',
-                            select: 'year',
-                        },
-                    },
-                    {
-                        path: 'createdBy',
-                        select: 'firstName',
-                    },
-                    {
-                        path: 'updatedBy',
-                        select: 'firstName',
-                    },
-                    {
-                        path: 'deletedBy',
-                        select: 'firstName',
-                    },
-                ]);
+            const user = await User.patch(userId, req.body);
 
             res.json(user);
         } catch (e) {
