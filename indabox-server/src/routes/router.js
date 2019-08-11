@@ -19,10 +19,11 @@ users.post('/', Auth.authorization(userRoles.admin), validation(userCreateSchema
 users.patch('/:userId', Auth.authorization(userRoles.holder), validation(userSchema), UsersController.update);
 
 /**
- * mbReferences ...
+ * payments ...
  */
 payments.post('/', Auth.authorization(userRoles.admin), validation(paymentCreateSchema), Payment.create);
-payments.post('/invoice/:id', Auth.authorization(userRoles.admin),
+payments.delete('/:id', Auth.authorization(userRoles.admin), Payment.delete);
+payments.patch('/invoice/:id', Auth.authorization(userRoles.admin),
     validation(paymentInvoiceSchema), Payment.updateInvoice);
 
 /**

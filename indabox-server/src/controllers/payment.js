@@ -1,3 +1,4 @@
+const fp = require('lodash/fp');
 const { User } = require('../models/user');
 const { Quota } = require('../models/quota');
 const { Payment, paymentTypes, paymentStatus } = require('../models/payment');
@@ -50,10 +51,16 @@ class PaymentController {
             const payment = await Payment.create({
                 type,
                 value,
-                status: {
-                    label: paymentStatus.unpaid.label,
-                    value: paymentStatus.unpaid.value,
-                },
+                status: type === paymentTypes.manual
+                    ? {
+                        label: paymentStatus.paid.label,
+                        value: paymentStatus.paid.value,
+                    }
+                    : {
+                        label: paymentStatus.unpaid.label,
+                        value: paymentStatus.unpaid.value,
+                    },
+                paymentDate: type === paymentTypes.manual ? Date.now() : null,
                 createdBy: _id,
                 updatedBy: _id,
                 user,
@@ -63,9 +70,30 @@ class PaymentController {
 
             await Quota.updateMany({ _id: quotasId }, { payment: payment.id });
             await User.findByIdAndUpdate(user, { $push: { payments: payment.id } });
-            const dbUser = await User.fetch(payment.user);
+            const dbUser = await User.fetch(user);
 
             res.json(dbUser);
+        } catch (e) {
+            next(e);
+        }
+    }
+
+    /**
+     * create ...
+     * @param {Object} req
+     * @param {Object} res
+     * @param {Object} next
+     */
+    static async delete(req, res, next) {
+        try {
+            const { id } = req.params;
+            const updatedBy = fp.get('session.user._id', req);
+
+            const payment = await Payment.findByIdAndUpdate(id, { deletedAt: Date.now(), updatedBy }, { new: true });
+            await Quota.updateMany({ payment: id }, { payment: null });
+            const user = await User.fetch(payment.user);
+
+            res.json(user);
         } catch (e) {
             next(e);
         }
@@ -81,8 +109,9 @@ class PaymentController {
         try {
             const { id } = req.params;
             const { invoiceEmited } = req.body;
+            const updatedBy = fp.get('session.user._id', req);
 
-            const payment = await Payment.findByIdAndUpdate(id, { invoiceEmited }, { new: true });
+            const payment = await Payment.findByIdAndUpdate(id, { invoiceEmited, updatedBy }, { new: true });
             const user = await User.fetch(payment.user);
 
             res.json(user);

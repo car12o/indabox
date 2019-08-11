@@ -91,6 +91,7 @@ User.static('fetch', function fetch(_id) {
             {
                 path: 'payments',
                 select: '-user',
+                match: { deletedAt: null },
                 populate: [
                     {
                         path: 'quotas',
@@ -143,6 +144,7 @@ User.static('patch', function patch(_id, user) {
             {
                 path: 'payments',
                 select: '-user',
+                match: { deletedAt: null },
                 populate: [
                     {
                         path: 'quotas',

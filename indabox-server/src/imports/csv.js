@@ -99,6 +99,7 @@ const readFile = async () => {
                                     label: paymentStatus.paid.label,
                                     value: paymentStatus.paid.value,
                                 },
+                                paymentDate: Date.now(),
                                 quotas: [quotaDB.id],
                                 user: userDB.id,
                             });

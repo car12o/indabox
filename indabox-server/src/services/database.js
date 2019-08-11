@@ -44,6 +44,7 @@ module.exports = {
                 label: userRoles.root.label,
                 value: userRoles.root.value,
             },
+            firstName: 'root',
         }),
     },
     redis: {
