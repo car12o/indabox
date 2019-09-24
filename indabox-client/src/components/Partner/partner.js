@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import classNames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
@@ -7,7 +8,7 @@ import SwipeableViews from 'react-swipeable-views';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import Stamps from '../Stamps';
+import Stamp from '../Stamp/stamp';
 import Identification from './Identification/identification';
 import Contact from './Contact/contact';
 import Notes from './Notes/notes';
@@ -35,7 +36,8 @@ const quotasRows = [
 	{ id: 'year', numeric: false, disablePadding: false, label: 'ANO' },
 	{ id: 'payment.status.label', numeric: false, disablePadding: false, label: 'ESTADO', default: 'Por pagar', color: true },
 	{ id: 'value', numeric: false, disablePadding: false, label: 'VALOR', symbol: '€' },
-	{ id: 'payment.updatedAt', numeric: false, disablePadding: false, label: 'DATA DE PAGAMENTO', default: '', },
+	{ id: 'payment.createdAt', numeric: false, disablePadding: false, label: 'DATA DE CRIAÇÃO', default: '', },
+	{ id: 'payment.paymentDate', numeric: false, disablePadding: false, label: 'DATA DE PAGAMENTO', default: '', },
 ];
 
 const styles = theme => ({
@@ -56,8 +58,11 @@ const styles = theme => ({
 		display: 'flex',
 		marginTop: '25px',
 	},
+	stampsRow: {
+		width: '300px'
+	},
 	stampsLast: {
-		marginLeft: '150px',
+		marginLeft: '100px',
 	},
 	tabsContainer: {
 		backgroundColor: theme.palette.background.paper,
@@ -78,10 +83,7 @@ const styles = theme => ({
 	},
 	tabSelected: {
 		fontWeight: 'bold',
-	},
-	classLabel: {
-		marginRight: '15px',
-	},
+	}
 });
 
 class Partner extends Component {
@@ -92,12 +94,19 @@ class Partner extends Component {
 	};
 
 	render() {
-		const { classes, partner, profile, tab, handleChange, setProperty,
+		const { classes, partner, profile, tab, handleChange, setProperty, togglePartnerQuoteSelected,
 			setPaymentInvoiceStatus, identification, contacts, notes, quotas } = this.props;
 
 		const theme = {
 			direction: 'ltl',
 		};
+
+		const selectedQuotes = partner.quotas.reduce((accum, quote) => {
+			if (quote.selected) {
+				accum.push(quote.id);
+			}
+			return accum;
+		}, []);
 
 		return (
 			<div className={classes.container}>
@@ -106,21 +115,26 @@ class Partner extends Component {
 						<PaperHeader classes={classes} partner={partner} profile={profile} />
 					</Typography>
 					<div className={classes.stampsContainer}>
-						<Stamps
-							firstLabel="Adicionado por"
-							firstValue={partner.createdBy}
-							secoundLabel="em"
-							secoundValue={partner.createdAt}
-							classLabel={classes.classLabel}
-						/>
-						<Stamps
-							classes={{ root: classes.stampsLast }}
-							firstLabel="Actualizado por"
-							firstValue={partner.updatedBy}
-							secoundLabel="em"
-							secoundValue={partner.updatedAt}
-							classLabel={classes.classLabel}
-						/>
+						<div className={classes.stampsRow}>
+							<Stamp
+								label="Adicionado por"
+								value={partner.createdBy}
+							/>
+							<Stamp
+								label="em"
+								value={partner.createdAt}
+							/>
+						</div>
+						<div className={classNames(classes.stampsRow, classes.stampsLast) }>
+							<Stamp
+								label="Actualizado por"
+								value={partner.updatedBy}
+							/>
+							<Stamp
+								label="em"
+								value={partner.updatedAt}
+							/>
+						</div>
 					</div>
 				</Paper>
 
@@ -159,16 +173,18 @@ class Partner extends Component {
 						index={tab}
 					>
 						<TabContainer
-							selected={this.state.quotes.selected}
+							selected={selectedQuotes}
 							buttons={quotas.buttons}
-							disabled={!this.state.quotes.selected.length}
+							disabled={!selectedQuotes.length}
 						>
 							{partner.quotas.length > 0
 								? <TableSelect
 									rows={quotasRows}
 									data={partner.quotas}
 									onClick={() => { }}
-									onSelect={(selected) => this.setState({ quotes: { selected } })}
+									selected={selectedQuotes}
+									isSelectable={quota => !quota.payment}
+									onSelect={ids => togglePartnerQuoteSelected(ids)}
 									order="desc"
 									orderBy="year"
 									rowsPerPageOptions={[12]}

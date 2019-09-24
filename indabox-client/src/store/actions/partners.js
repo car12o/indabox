@@ -88,10 +88,31 @@ export function setPartnerProperty(path, value) {
 	}
 }
 
-export function setPaymentInvoiceStatus(paymentId, status) {
-	return {
-		type: 'SET_PAYMENT_INVOICE_STATUS',
-		paymentId,
-		status,
+export function generatePayment(type, quotas) {
+	const req = {
+		type: 'UPDATE_PARTNER',
+		url: '/payments',
+		method: 'POST',
+		body: { type, quotas },
 	};
+
+	return request(req);
+}
+
+export function togglePartnerQuoteSelected(ids) {
+	return {
+		type: 'TOGGLE_PARTNER_QUOTE_SELECTED',
+		ids,
+	};
+}
+
+export function setPaymentInvoiceStatus(paymentId, status) {
+	const req = {
+		type: 'SET_PAYMENT_INVOICE_STATUS',
+		url: `/payments/invoice/${paymentId}`,
+		method: 'PATCH',
+		body: { invoiceEmited: status },
+	};
+
+	return request(req);
 }

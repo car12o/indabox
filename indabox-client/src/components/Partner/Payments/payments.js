@@ -17,7 +17,7 @@ const invoices = [
 	{ label: 'Não emitida', value: false },
 ];
 
-const styles = theme => ({
+const styles = {
 	root: {
 		width: '100%',
 		backgroundColor: 'transparent',
@@ -44,7 +44,7 @@ const styles = theme => ({
 	dropdown: {
 		marginBottom: '-5px'
 	},
-});
+};
 
 class Quotas extends Component {
 	state = {

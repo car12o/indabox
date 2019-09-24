@@ -85,13 +85,14 @@ User.static('fetch', function fetch(_id) {
                 select: '-user',
                 populate: {
                     path: 'payment',
-                    select: ['status', 'updatedAt'],
+                    select: ['status', 'createdAt', 'paymentDate'],
                 },
             },
             {
                 path: 'payments',
                 select: '-user',
                 match: { deletedAt: null },
+                options: { sort: { updatedAt: -1 } },
                 populate: [
                     {
                         path: 'quotas',

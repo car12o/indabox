@@ -10,8 +10,8 @@ import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Checkbox from '@material-ui/core/Checkbox';
-import EnhancedTableHead from './EnhancedTableHead';
-import EnhancedTableToolbar from './EnhancedTableToolbar';
+import EnhancedTableHead from './EnhancedTableHead/enhancedTableHead';
+import EnhancedTableToolbar from './EnhancedTableToolbar/enhancedTableToolbar';
 
 function desc(a, b) {
 	let cmpA = a;
@@ -82,7 +82,14 @@ class Partners extends React.Component {
 
 	handleSelectAllClick = event => {
 		if (event.target.checked) {
-			const selected = this.props.data.map(n => n.id)
+			const selected = this.props.data.reduce((accum, n) => {
+				if (this.props.isSelectable && !this.props.isSelectable(n)) {
+					return accum;
+				}
+
+				accum.push(n.id);
+				return accum;
+			}, []);
 			this.setState(() => ({ selected }));
 			this.onSelect(selected);
 			return;
@@ -131,9 +138,14 @@ class Partners extends React.Component {
 	}
 
 	render() {
-		const { classes, data, onClick, rows, tableToolbarTitle, hover, rowsPerPageOptions } = this.props;
+		const { classes, data, onClick, rows, tableToolbarTitle, hover, rowsPerPageOptions, isSelectable } = this.props;
 		const order = this.state.order || this.props.order || 'asc';
 		const orderBy = this.state.orderBy || this.props.orderBy || 'number';
+
+		// TODO: quick & ugly, fix this asap
+		if (this.props.selected && this.props.selected.length !== this.state.selected.length) {
+			this.setState({ selected: this.props.selected });
+		}
 
 
 		const { selected, rowsPerPage, page } = this.state;
@@ -156,14 +168,19 @@ class Partners extends React.Component {
 							orderBy={orderBy}
 							onSelectAllClick={this.handleSelectAllClick}
 							onRequestSort={this.handleRequestSort}
-							rowCount={data.length}
+							rowCount={isSelectable ? data.reduce((accum, n) => {
+								if (isSelectable(n)) {
+									accum += 1;
+								}
+								return accum;
+							}, 0) : data.length}
 						/>
 						<TableBody>
 							{stableSort(data, getSorting(order, orderBy), orderBy)
 								.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
 								.map(n => {
 									let error = false;
-									const isSelected = this.isSelected(n.id);
+									const isSelected = isSelectable ? n.selected : this.isSelected(n.id);
 									const row = rows.find(row => row.color);
 									if (row) {
 										error = fp.has(row.id, n) ? false : true;
@@ -181,11 +198,14 @@ class Partners extends React.Component {
 											selected={isSelected}
 										>
 											<TableCell padding="checkbox">
-												<Checkbox
-													classes={{ root: classes.tableCheckbox }}
-													checked={isSelected}
-													onClick={event => this.handleClick(event, n.id)}
-												/>
+												{!isSelectable || (isSelectable && isSelectable(n))
+													? <Checkbox
+														classes={{ root: classes.tableCheckbox }}
+														checked={isSelected}
+														onClick={event => this.handleClick(event, n.id)}
+													/>
+													: ''
+												}
 											</TableCell>
 											{rows.map((row, i) => (
 												<TableCell

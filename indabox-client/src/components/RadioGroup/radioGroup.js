@@ -6,7 +6,7 @@ import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 
-const styles = theme => ({
+const styles = {
     formControl: {
         width: '100%',
     },
@@ -17,7 +17,7 @@ const styles = theme => ({
     cursorDefault: {
         cursor: 'default',
     }
-});
+};
 
 class RadioButtonsGroup extends React.Component {
     render() {

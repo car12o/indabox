@@ -69,7 +69,7 @@ class PaymentController {
             });
 
             await Quota.updateMany({ _id: quotasId }, { payment: payment.id });
-            await User.findByIdAndUpdate(user, { $push: { payments: payment.id } });
+            await User.findByIdAndUpdate(user, { $push: { payments: payment.id }, updatedBy: _id });
             const dbUser = await User.fetch(user);
 
             res.json(dbUser);
@@ -112,9 +112,8 @@ class PaymentController {
             const updatedBy = fp.get('session.user._id', req);
 
             const payment = await Payment.findByIdAndUpdate(id, { invoiceEmited, updatedBy }, { new: true });
-            const user = await User.fetch(payment.user);
 
-            res.json(user);
+            res.json(payment);
         } catch (e) {
             next(e);
         }

@@ -26,10 +26,14 @@ const createQuotas = quotas => {
             year: quota.year || '',
             value: quota.value || 0,
             payment: quota.payment
-                ? Object.assign({}, quota.payment, { updatedAt: formatDate(quota.payment.updatedAt) })
+                ? Object.assign({}, quota.payment, {
+                    createdAt: formatDate(quota.payment.createdAt) || '',
+                    paymentDate: formatDate(quota.payment.paymentDate) || '',
+                })
                 : null,
             createdAt: formatDate(quota.createdAt),
             updatedAt: formatDate(quota.updatedAt),
+            selected: false,
         }));
     }
 
@@ -50,6 +54,7 @@ const createPayments = payments => {
             mbReference: payment.mbReference || null,
             type: payment.type || 'Importado',
             value: payment.value || 0,
+            paymentDate: formatDate(payment.paymentDate),
             createdBy: getBys(payment.createdBy),
             updatedBy: getBys(payment.updatedBy),
             createdAt: formatDate(payment.createdAt),

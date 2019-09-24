@@ -42,10 +42,23 @@ function setPartnerProperty(state, action) {
 	return fp.set(`selected.${path}`, value, state);
 }
 
+function togglePartnerQuotaSelected(state, action) {
+	const { quotas } = state.selected;
+	const { ids } = action;
+
+	const newQuotas = quotas.map(quota =>
+		Object.assign({}, quota, { selected: ids.includes(quota.id) ? true : false }),
+	);
+
+	return fp.set('selected.quotas', newQuotas, state);
+}
+
 function setPaymentInvoiceStatus(state, action) {
+	const { _id, invoiceEmited } = action.body;
+
 	const payments = state.selected.payments.map(payment => {
-		if (action.paymentId === payment.id) {
-			return fp.set('invoiceEmited', action.status, payment);
+		if (_id === payment.id) {
+			return fp.set('invoiceEmited', invoiceEmited, payment);
 		}
 		return payment;
 	});
@@ -57,6 +70,7 @@ const handlers = {
 	UPDATE_PARTNERS_LIST: updatePartnersList,
 	UPDATE_PARTNER: updatePartner,
 	SET_PARTNER_PROPERTY: setPartnerProperty,
+	TOGGLE_PARTNER_QUOTE_SELECTED: togglePartnerQuotaSelected,
 	SET_PAYMENT_INVOICE_STATUS: setPaymentInvoiceStatus,
 };
 
