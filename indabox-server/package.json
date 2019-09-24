@@ -68,6 +68,10 @@
         2,
         "double"
       ],
+      "indent": [
+        "error",
+        2
+      ],
       "no-param-reassign": [
         2,
         {

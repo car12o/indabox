@@ -20,10 +20,57 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "eslint ."
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": "react-app",
+    "rules": {
+      "no-console": 1,
+      "max-len": [
+        2,
+        120
+      ],
+      "semi": [
+        2,
+        "never"
+      ],
+      "comma-dangle": [
+        2,
+        "never"
+      ],
+      "quotes": [
+        2,
+        "double"
+      ],
+      "indent": [
+        "error",
+        2
+      ],
+      "no-param-reassign": [
+        2,
+        {
+          "props": false
+        }
+      ],
+      "object-curly-newline": [
+        "error",
+        {
+          "ObjectExpression": {
+            "consistent": true
+          },
+          "ObjectPattern": {
+            "consistent": true
+          },
+          "ImportDeclaration": {
+            "consistent": true
+          },
+          "ExportDeclaration": {
+            "consistent": true
+          }
+        }
+      ]
+    }
   },
   "browserslist": [
     ">0.2%",

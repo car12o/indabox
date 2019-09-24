@@ -1,5 +1,5 @@
 #quotas-component::after {
-    content: '';
+    content: "";
     top: 1px;
     position: absolute;
     height: 55px;
