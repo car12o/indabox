@@ -9,4 +9,3 @@ indabox-server/logs/*
 # client
 indabox-client/build
 indabox-client/*.log
-*.lock
