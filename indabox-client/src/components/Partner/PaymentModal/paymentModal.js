@@ -4,6 +4,7 @@ import { withStyles } from "@material-ui/core/styles"
 import DialogTitle from "@material-ui/core/DialogTitle"
 import Dialog from "@material-ui/core/Dialog"
 import Stamp from "../../Stamp/stamp"
+import TabContainer from "../TabContainer/tabContainer"
 
 const styles = {
   titleContainer: {
@@ -26,9 +27,13 @@ const styles = {
     margin: "15px"
   },
   bodyContainer: {
-    margin: "15px 50px"
+    padding: "15px 60px 25px 60px"
   },
   stamp: {
+    overflowWrap: "break-word",
+    maxWidth: "200px"
+  },
+  stampLeft: {
     marginLeft: "50px"
   },
   paymentDetails: {
@@ -54,12 +59,11 @@ class SimpleDialog extends React.Component {
   }
 
   render() {
-    const { classes, onClose, selectedValue, payment, ...other } = this.props
+    const { classes, onClose, selectedValue, payment, paymentActions, ...other } = this.props
     const { createdBy, createdAt, paymentDate, type, status, quotas, value, mbReference } = payment || {}
 
     return (
       <Dialog
-        classes={{ root: classes.root }}
         aria-labelledby="simple-dialog-title"
         onClose={this.handleClose}
         {...other}
@@ -67,15 +71,20 @@ class SimpleDialog extends React.Component {
         <DialogTitle classes={{ root: classes.titleContainer }}>
           <p className={classes.title}>Detalhes do pagamento</p>
         </DialogTitle>
-        <div className={classNames(classes.bodyContainer, classes.bodyColumn)}>
+        <TabContainer
+          classes={{ body: classes.bodyContainer }}
+          buttons={mbReference ? paymentActions.buttons : null}
+          selected={payment ? { onClose, id: payment.id } : null}
+        >
           <div className={classes.bodyRow}>
             <Stamp
+              classes={{ root: classes.stamp }}
               label="Criado por:"
               value={createdBy}
               flexColumn
             />
             <Stamp
-              classes={{ root: classes.stamp }}
+              classes={{ root: classNames(classes.stamp, classes.stampLeft) }}
               label="Tipo:"
               value={type}
               flexColumn
@@ -84,12 +93,13 @@ class SimpleDialog extends React.Component {
           </div>
           <div className={classes.bodyRow}>
             <Stamp
+              classes={{ root: classes.stamp }}
               label="Data criação:"
               value={createdAt}
               flexColumn
             />
             <Stamp
-              classes={{ root: classes.stamp }}
+              classes={{ root: classNames(classes.stamp, classes.stampLeft) }}
               label="Data pagamento:"
               value={paymentDate}
               flexColumn
@@ -97,6 +107,7 @@ class SimpleDialog extends React.Component {
           </div>
           <div className={classes.bodyRow}>
             <Stamp
+              classes={{ root: classes.stamp }}
               label="Estado:"
               value={status ? status.label : ""}
               flexColumn
@@ -104,12 +115,13 @@ class SimpleDialog extends React.Component {
           </div>
           <div className={classes.bodyRow}>
             <Stamp
+              classes={{ root: classes.stamp }}
               label="Quotas:"
               value={quotas ? quotas.map(q => q.year).join(",") : ""}
               flexColumn
             />
             <Stamp
-              classes={{ root: classes.stamp }}
+              classes={{ root: classNames(classes.stamp, classes.stampLeft) }}
               label="Valor total:"
               value={`${value}€`}
               flexColumn
@@ -152,7 +164,7 @@ class SimpleDialog extends React.Component {
               )
             }
           })()}
-        </div>
+        </TabContainer>
       </Dialog>
     )
   }

@@ -2,8 +2,8 @@ import React, { Component } from "react"
 import { connect } from "react-redux"
 import LinearProgress from "@material-ui/core/LinearProgress"
 import {
-  getPartner, setPartnerProperty, setPaymentInvoiceStatus, generatePayment,
-  updatePartnerIdentification, updatePartnerContact, updatePartnerNotes, togglePartnerQuoteSelected
+  getPartner, setPartnerProperty, setPaymentInvoiceStatus, generatePayment, updatePartnerIdentification,
+  updatePartnerContact, updatePartnerNotes, togglePartnerQuoteSelected, cancelPayment
 } from "../../store/actions/partners"
 import PartnerComponent from "../../components/Partner/partner"
 
@@ -86,6 +86,18 @@ class Partner extends Component {
             fn: quotas => this.props.generatePayment("Referencia MB", quotas)
           }
         ]
+      },
+      payments: {
+        buttons: [
+          {
+            label: "Cancelar referencia MB",
+            color: "primary",
+            fn: ({ onClose, id }) => {
+              this.props.cancelPayment(id)
+              onClose()
+            }
+          }
+        ]
       }
     }
   }
@@ -119,10 +131,11 @@ class Partner extends Component {
         setProperty={setProperty}
         togglePartnerQuoteSelected={togglePartnerQuoteSelected}
         setPaymentInvoiceStatus={setPaymentInvoiceStatus}
-        identification={this.state.identification}
-        contacts={this.state.contacts}
-        notes={this.state.notes}
-        quotas={this.state.quotas}
+        identificationTab={this.state.identification}
+        contactsTab={this.state.contacts}
+        notesTab={this.state.notes}
+        quotasTab={this.state.quotas}
+        paymentsTab={this.state.payments}
       />
     )
   }
@@ -139,6 +152,7 @@ const mapDispatchToProps = dispatch => ({
   updatePartnerNotes: data => dispatch(updatePartnerNotes(data)),
   setProperty: (...args) => dispatch(setPartnerProperty(...args)),
   generatePayment: (...args) => dispatch(generatePayment(...args)),
+  cancelPayment: (...args) => dispatch(cancelPayment(...args)),
   togglePartnerQuoteSelected: (...args) => dispatch(togglePartnerQuoteSelected(...args)),
   setPaymentInvoiceStatus: (...args) => dispatch(setPaymentInvoiceStatus(...args))
 })

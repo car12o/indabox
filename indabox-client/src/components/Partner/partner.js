@@ -67,11 +67,17 @@ const styles = theme => ({
   stampsLast: {
     marginLeft: "100px"
   },
-  tabsContainer: {
+  tabsWrapper: {
     backgroundColor: theme.palette.background.paper,
     width: "100%",
     marginTop: "25px",
     boxShadow: "0px 2px 4px -1px rgba(0,0,0,0.2), 0px 4px 5px 0px rgba(0,0,0,0.14), 0px 1px 10px 0px rgba(0,0,0,0.12)"
+  },
+  tabContainer: {
+    height: "760px"
+  },
+  tabContainerBody: {
+    height: "695px"
   },
   emptyDataTitle: {
     padding: "30px 15px",
@@ -98,7 +104,7 @@ class Partner extends Component {
 
   render() {
     const { classes, partner, profile, tab, handleChange, setProperty, togglePartnerQuoteSelected,
-      setPaymentInvoiceStatus, identification, contacts, notes, quotas } = this.props
+      setPaymentInvoiceStatus, identificationTab, contactsTab, notesTab, quotasTab, paymentsTab } = this.props
 
     const theme = {
       direction: "ltl"
@@ -141,7 +147,7 @@ class Partner extends Component {
           </div>
         </Paper>
 
-        <div className={classes.tabsContainer}>
+        <div className={classes.tabsWrapper}>
           <AppBar className={classes.tabsAppBar} position="static" color="default">
             <Tabs
               value={tab}
@@ -176,8 +182,9 @@ class Partner extends Component {
             index={tab}
           >
             <TabContainer
+              classes={{ root: classes.tabContainer }}
               selected={selectedQuotes}
-              buttons={quotas.buttons}
+              buttons={quotasTab.buttons}
               disabled={!selectedQuotes.length}
             >
               {partner.quotas.length > 0
@@ -194,40 +201,44 @@ class Partner extends Component {
                 />
                 : <Typography classes={{ root: classes.emptyDataTitle }}>Nao existem quotas ...</Typography>}
             </TabContainer>
-            <TabContainer>
+            <TabContainer classes={{ root: classes.tabContainer }}>
               <Payments
                 setPaymentInvoiceStatus={setPaymentInvoiceStatus}
                 data={partner.payments}
+                paymentActions={paymentsTab}
               />
             </TabContainer>
             <TabContainer
-              buttons={identification.buttons}
-              selected={identification.action}
+              classes={{ root: classes.tabContainer, body: classes.tabContainerBody }}
+              buttons={identificationTab.buttons}
+              selected={identificationTab.action}
             >
               <Identification
                 partner={partner}
                 setProperty={setProperty}
-                disabled={identification.disabled}
+                disabled={identificationTab.disabled}
               />
             </TabContainer>
             <TabContainer
-              buttons={contacts.buttons}
-              selected={contacts.action}
+              classes={{ root: classes.tabContainer, body: classes.tabContainerBody }}
+              buttons={contactsTab.buttons}
+              selected={contactsTab.action}
             >
               <Contact
                 partner={partner}
                 setProperty={setProperty}
-                disabled={contacts.disabled}
+                disabled={contactsTab.disabled}
               />
             </TabContainer>
             <TabContainer
-              buttons={notes.buttons}
-              selected={notes.action}
+              classes={{ root: classes.tabContainer, body: classes.tabContainerBody }}
+              buttons={notesTab.buttons}
+              selected={notesTab.action}
             >
               <Notes
                 partner={partner}
                 setProperty={setProperty}
-                disabled={notes.disabled}
+                disabled={notesTab.disabled}
               />
             </TabContainer>
           </SwipeableViews>

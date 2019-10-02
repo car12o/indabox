@@ -3,12 +3,8 @@ import { withStyles } from "@material-ui/core/styles"
 import Button from "@material-ui/core/Button"
 
 const styles = (theme) => ({
-  root: {
-    height: "765px"
-  },
-  body: {
-    height: "700px"
-  },
+  root: {},
+  body: {},
   footer: {
     height: "65px",
     backgroundColor: theme.palette.background.default,

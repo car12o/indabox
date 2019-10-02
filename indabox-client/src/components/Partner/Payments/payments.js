@@ -54,7 +54,7 @@ class Quotas extends Component {
   }
 
   render() {
-    const { classes, data, setPaymentInvoiceStatus } = this.props
+    const { classes, data, setPaymentInvoiceStatus, paymentActions } = this.props
 
     if (data.length < 1) {
       return (
@@ -111,6 +111,7 @@ class Quotas extends Component {
         <PaymentModal
           open={this.state.modal.open}
           payment={this.state.modal.payment}
+          paymentActions={paymentActions}
           onClose={() => this.setState({
             modal: {
               open: false

@@ -99,6 +99,16 @@ export function generatePayment(type, quotas) {
   return request(req)
 }
 
+export function cancelPayment(paymentId) {
+  const req = {
+    type: "UPDATE_PARTNER",
+    url: `/payments/${paymentId}`,
+    method: "DELETE"
+  }
+
+  return request(req)
+}
+
 export function togglePartnerQuoteSelected(ids) {
   return {
     type: "TOGGLE_PARTNER_QUOTE_SELECTED",
