@@ -62,71 +62,62 @@ const parseRow = (line) => {
 }
 
 const readFile = async () => {
-  const arg = process.argv.find(elem => elem.includes("path="))
+  const arg = process.argv.find((elem) => elem.includes("path="))
   if (!arg) {
     throw new Error("Invalid path. try [npm run import -- path={path}]")
   }
 
-  try {
-    await mongo.connect(database.mongo)
-    // eslint-disable-next-line no-unused-vars
-    const [_, path] = arg.split("=")
-    const rl = readline.createInterface({
-      input: fs.createReadStream(path)
-    })
+  await mongo.connect(database.mongo)
+  // eslint-disable-next-line no-unused-vars
+  const [_, path] = arg.split("=")
+  const rl = readline.createInterface({
+    input: fs.createReadStream(path)
+  })
 
-    rl.on("line", async (line) => {
-      rl.pause()
+  rl.on("line", async (line) => {
+    rl.pause()
 
-      try {
-        const { user, quotas } = parseRow(line)
-        if (user.firstName) {
-          const userDB = new User(Object.assign({}, user, { id: Types.ObjectId() }))
+    const { user, quotas } = parseRow(line)
+    if (user.firstName) {
+      const userDB = new User({ ...user, id: Types.ObjectId() })
 
-          await Promise.all(quotas.map(async (quota) => {
-            const quotaDB = new Quota(Object.assign(
-              {},
-              quota,
-              { id: Types.ObjectId() },
-              { user: userDB.id },
-            ))
+      await Promise.all(quotas.map(async (quota) => {
+        const quotaDB = new Quota({
+          ...quota,
+          id: Types.ObjectId(),
+          user: userDB.id
+        })
 
-            if (quotaDB.value) {
-              const payment = await Payment.create({
-                type: paymentTypes.imported,
-                value: quotaDB.value,
-                status: {
-                  label: paymentStatus.paid.label,
-                  value: paymentStatus.paid.value
-                },
-                paymentDate: Date.now(),
-                quotas: [quotaDB.id],
-                user: userDB.id
-              })
+        if (quotaDB.value) {
+          const payment = await Payment.create({
+            type: paymentTypes.imported,
+            value: quotaDB.value,
+            status: {
+              label: paymentStatus.paid.label,
+              value: paymentStatus.paid.value
+            },
+            paymentDate: Date.now(),
+            quotas: [quotaDB.id],
+            user: userDB.id
+          })
 
-              quotaDB.payment = payment.id
-              userDB.payments.push(payment.id)
-            }
-
-            userDB.quotas.push(quotaDB.id)
-            await quotaDB.save()
-          }))
-
-          await userDB.save()
+          quotaDB.payment = payment.id
+          userDB.payments.push(payment.id)
         }
-      } catch (error) {
-        throw error
-      }
 
-      rl.resume()
-    }).on("close", () => {
-      // eslint-disable-next-line no-console
-      console.log("Import finished")
-      process.exit("Import finished")
-    })
-  } catch (error) {
-    throw error
-  }
+        userDB.quotas.push(quotaDB.id)
+        await quotaDB.save()
+      }))
+
+      await userDB.save()
+    }
+
+    rl.resume()
+  }).on("close", () => {
+    // eslint-disable-next-line no-console
+    console.log("Import finished")
+    process.exit("Import finished")
+  })
 }
 
 readFile()

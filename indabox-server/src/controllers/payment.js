@@ -47,7 +47,7 @@ class PaymentController {
 
       const { user } = dbQuotas[0]
       const { _id } = req.session.user
-      const quotasId = dbQuotas.map(quota => quota.id)
+      const quotasId = dbQuotas.map((quota) => quota.id)
       const payment = await Payment.create({
         type,
         value,

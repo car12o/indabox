@@ -23,7 +23,7 @@ app.use(morgan("dev"))
 // Database ...
 mongo.connect(database.mongo)
   .then(() => log.info("Successfully connected to mongo"))
-  .catch(e => log.error(e))
+  .catch((e) => log.error(e))
 
 redis.connect(database.redis)
 

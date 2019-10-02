@@ -1,7 +1,8 @@
 const winston = require("winston")
 const { name } = require("../../config/default.json")
 
-const errorStackFormat = winston.format(info => Object.assign({}, info, {
+const errorStackFormat = winston.format((info) => ({
+  ...info,
   stack: info.stack,
   message: info.message,
   payload: info.payload

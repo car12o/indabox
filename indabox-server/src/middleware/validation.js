@@ -5,7 +5,7 @@ const APIError = require("../services/error")
  * validation ...
  * @param {object} schema
  */
-const validation = schema => async (req, res, next) => {
+const validation = (schema) => async (req, res, next) => {
   try {
     await Joi.validate(req.body, schema, {
       abortEarly: false
@@ -15,7 +15,7 @@ const validation = schema => async (req, res, next) => {
     const payload = e.details.reduce((acc, err) => {
       const { key } = err.context
       const path = err.path.join(".")
-      if (!acc.find(elem => elem.path === path)) {
+      if (!acc.find((elem) => elem.path === path)) {
         acc.push({
           key,
           path,

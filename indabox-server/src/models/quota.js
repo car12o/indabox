@@ -11,7 +11,7 @@ Quota.static("belongsSameUser", (quotas) => {
   const result = quotas.reduce((accum, mbReference) => {
     const { user } = mbReference
     if (!accum[user]) {
-      return Object.assign({}, accum, { [user]: true })
+      return { ...accum, [user]: true }
     }
     return accum
   }, {})
@@ -19,7 +19,7 @@ Quota.static("belongsSameUser", (quotas) => {
   return Object.keys(result).length === 1
 })
 
-Quota.static("getWithPayment", dbQuotas => dbQuotas.reduce((accum, quota) => {
+Quota.static("getWithPayment", (dbQuotas) => dbQuotas.reduce((accum, quota) => {
   if (quota.payment) {
     const { _id } = quota
     accum.push(_id)
