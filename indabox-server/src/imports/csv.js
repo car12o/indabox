@@ -2,7 +2,7 @@ const fs = require("fs")
 const readline = require("readline")
 const { Types } = require("mongoose")
 const { mongo } = require("../services/database")
-const { database } = require("../../config/default.json")
+const config = require("../../config/default.json")
 const { User } = require("../models/user")
 const { Quota } = require("../models/quota")
 const { Payment, paymentStatus, paymentTypes } = require("../models/payment")
@@ -67,7 +67,7 @@ const readFile = async () => {
     throw new Error("Invalid path. try [npm run import -- path={path}]")
   }
 
-  await mongo.connect(database.mongo)
+  await mongo.connect(config)
   // eslint-disable-next-line no-unused-vars
   const [_, path] = arg.split("=")
   const rl = readline.createInterface({

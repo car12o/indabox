@@ -2,6 +2,13 @@
   "name": "indabox-client",
   "version": "0.1.0",
   "private": true,
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "lint": "eslint ."
+  },
   "dependencies": {
     "@material-ui/core": "^3.9.2",
     "@material-ui/icons": "^3.0.2",
@@ -16,60 +23,12 @@
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0"
   },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "lint": "eslint ."
+  "devDependencies": {
+    "eslint-config-car12o": "github:car12o/eslint-config-car12o"
   },
   "eslintConfig": {
-    "extends": "react-app",
     "rules": {
-      "no-console": 1,
-      "max-len": [
-        2,
-        120
-      ],
-      "semi": [
-        2,
-        "never"
-      ],
-      "comma-dangle": [
-        2,
-        "never"
-      ],
-      "quotes": [
-        2,
-        "double"
-      ],
-      "indent": [
-        "error",
-        2
-      ],
-      "no-param-reassign": [
-        2,
-        {
-          "props": false
-        }
-      ],
-      "object-curly-newline": [
-        "error",
-        {
-          "ObjectExpression": {
-            "consistent": true
-          },
-          "ObjectPattern": {
-            "consistent": true
-          },
-          "ImportDeclaration": {
-            "consistent": true
-          },
-          "ExportDeclaration": {
-            "consistent": true
-          }
-        }
-      ]
+      "padded-blocks": [2, "always"]
     }
   },
   "browserslist": [

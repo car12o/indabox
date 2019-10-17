@@ -7,7 +7,7 @@ const logger = require("./services/logging")
 const { mongo, redis } = require("./services/database")
 const Auth = require("./middleware/auth")
 const router = require("./routes/router")
-const { port, database } = require("../config/default.json")
+const config = require("../config/default.json")
 
 // Security ...
 app.use(helmet())
@@ -21,11 +21,11 @@ log = logger
 app.use(morgan("dev"))
 
 // Database ...
-mongo.connect(database.mongo)
+mongo.connect(config)
   .then(() => log.info("Successfully connected to mongo"))
-  .catch((e) => log.error(e))
+  .catch(() => log.error("Failed to connect to mongo"))
 
-redis.connect(database.redis)
+redis.connect(config)
 
 // Middleware
 app.use(Auth.handleToken)
@@ -33,6 +33,6 @@ app.use(Auth.handleToken)
 // Routes ...
 app.use(router)
 
-app.listen(port || 8080, () => {
-  log.info(`Listening and serving HTTP on port: ${port}`)
+app.listen(process.env.APP_PORT || config.APP_PORT, () => {
+  log.info(`Listening and serving HTTP on port: ${process.env.APP_PORT || config.APP_PORT}`)
 })

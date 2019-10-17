@@ -1,3 +1,4 @@
+/* eslint-disable no-await-in-loop */
 const mongoose = require("mongoose")
 const redis = require("redis")
 const { promisify } = require("util")
@@ -7,38 +8,51 @@ const { hashPassword } = require("../services/crypto")
 module.exports = {
   mongo: {
     connect: async function connect(config) {
-      const {
-        DB_USER,
-        DB_PASSWORD,
-        ROOT_EMAIL,
-        ROOT_PASSWORD
-      } = process.env
+      const MONGO_HOST = process.env.MONGO_HOST || config.MONGO_HOST
+      const MONGO_USER = process.env.MONGO_USER || config.MONGO_USER
+      const MONGO_PASSWORD = process.env.MONGO_PASSWORD || config.MONGO_PASSWORD
 
-      await mongoose.connect(
-        `mongodb://${DB_USER}:${DB_PASSWORD}@${config.host}:\
-                ${config.port}/${config.name}?authSource=admin`,
-        {
-          useNewUrlParser: true,
-          useCreateIndex: true,
-          socketTimeoutMS: 0,
-          keepAlive: true,
-          reconnectTries: 30
+      const connectionString = MONGO_HOST
+        .replace("{MONGO_USER}", MONGO_USER)
+        .replace("{MONGO_PASSWORD}", MONGO_PASSWORD)
+
+      let connected = false
+      let tries = 0
+      while (!connected) {
+        try {
+          log.info(`Trying to connect to mongo: ${tries}`)
+          await mongoose.connect(connectionString, {
+            useNewUrlParser: true,
+            useCreateIndex: true,
+            socketTimeoutMS: 0,
+            keepAlive: true,
+            reconnectTries: 30,
+            useUnifiedTopology: true
+          })
+
+          connected = true
+        } catch (error) {
+          log.error(error)
+          if (tries === 5) {
+            throw error
+          }
+
+          tries += 1
+          await new Promise((resolve) => setTimeout(resolve, 2000))
         }
-      )
-
-      const root = {
-        email: ROOT_EMAIL,
-        password: ROOT_PASSWORD
       }
 
-      const hasAdmin = await this.hasAdmin(root)
+      const ROOT_EMAIL = process.env.ROOT_EMAIL || config.ROOT_EMAIL
+      const ROOT_PASSWORD = process.env.ROOT_PASSWORD || config.ROOT_PASSWORD
+
+      const hasAdmin = await this.hasAdmin(ROOT_EMAIL)
       if (!hasAdmin) {
-        this.createAdmin(root)
+        this.createAdmin(ROOT_EMAIL, ROOT_PASSWORD)
         log.info("Created admin user")
       }
     },
-    hasAdmin: ({ email }) => User.findOne({ email }),
-    createAdmin: ({ email, password }) => User.create({
+    hasAdmin: (email) => User.findOne({ email }),
+    createAdmin: (email, password) => User.create({
       email,
       password: hashPassword(password),
       role: {
@@ -52,10 +66,14 @@ module.exports = {
     client: undefined,
     connect: (config) => {
       if (this.client === undefined) {
+        const REDIS_HOST = process.env.REDIS_HOST || config.REDIS_HOST
+        const REDIS_PORT = process.env.REDIS_PORT || config.REDIS_PORT
+        const REDIS_PASSWORD = process.env.REDIS_PASSWORD || config.REDIS_PASSWORD
+
         this.client = redis.createClient({
-          host: config.host,
-          port: config.port,
-          password: process.env.REDIS_PASSWORD
+          host: REDIS_HOST,
+          port: REDIS_PORT,
+          password: REDIS_PASSWORD
         })
       }
 

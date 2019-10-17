@@ -1,15 +1,15 @@
 {
-    "name": "indabox-server",
-    "port": 8080,
-    "database": {
-        "mongo": {
-            "host": "indabox-mongo",
-            "port": 27017,
-            "name": "indabox-server"
-        },
-        "redis": {
-            "host": "indabox-redis",
-            "port": 6379
-        }
-    }
+    "APP_NAME": "indabox-server",
+    "APP_PORT": 3000,
+    "ROOT_EMAIL": "root@gmail.com",
+    "ROOT_PASSWORD": "roopw",
+    "MONGO_HOST": "mongodb://{MONGO_USER}:{MONGO_PASSWORD}@$0.0.0.0:27017/indabox-server?authSource=admin",
+    "MONGO_USER": "mongouser",
+    "MONGO_PASSWORD": "mongopw",
+    "REDIS_HOST": "0.0.0.0",
+    "REDIS_PORT": 6379,
+    "REDIS_PASSWORD": "redispw",
+    "IFTHEN_ENTETY": "12345",
+    "IFTHEN_SUBENTETY": "123",
+    "IFTHEN_KEY": "1234-1234-1234-1234"
 }

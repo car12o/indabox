@@ -1,8 +1,10 @@
 const mongoose = require("mongoose")
+const confg = require("../../config/default.json")
 const { getPaymentRef } = require("../services/payment")
 const APIError = require("../services/error")
 
-const { IFTHEN_ENTETY, IFTHEN_SUBENTETY } = process.env
+const IFTHEN_ENTETY = process.env.IFTHEN_ENTETY || confg.IFTHEN_ENTETY
+const IFTHEN_SUBENTETY = process.env.IFTHEN_SUBENTETY || confg.IFTHEN_SUBENTETY
 
 const MbReference = mongoose.Schema({
   ententy: { type: String, default: IFTHEN_ENTETY },

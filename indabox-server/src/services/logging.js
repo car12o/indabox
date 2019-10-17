@@ -1,5 +1,5 @@
 const winston = require("winston")
-const { name } = require("../../config/default.json")
+const config = require("../../config/default.json")
 
 const errorStackFormat = winston.format((info) => ({
   ...info,
@@ -14,27 +14,24 @@ const logger = winston.createLogger({
     winston.format.timestamp(),
     errorStackFormat(),
   ),
-  defaultMeta: { service: name },
+  defaultMeta: { service: process.env.APP_NAME || config.APP_NAME },
   transports: [
-    new winston.transports.File({ filename: "./logs/error.log", level: "error" }),
-    new winston.transports.File({ filename: "./logs/combined.log" })
+    new winston.transports.File({ filename: "./logs/combined.log" }),
+    new winston.transports.Console({
+      format: winston.format.combine(
+        winston.format.colorize({
+          all: true,
+          colors: {
+            debug: "white",
+            error: "red",
+            info: "green",
+            warn: "yellow"
+          }
+        }),
+        winston.format.simple(),
+      )
+    })
   ]
 })
-if (process.env.NODE_ENV !== "production") {
-  logger.add(new winston.transports.Console({
-    format: winston.format.combine(
-      winston.format.colorize({
-        all: true,
-        colors: {
-          debug: "white",
-          error: "red",
-          info: "green",
-          warn: "yellow"
-        }
-      }),
-      winston.format.simple(),
-    )
-  }))
-}
 
 module.exports = logger

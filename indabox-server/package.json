@@ -38,63 +38,13 @@
   },
   "devDependencies": {
     "eslint": "^5.12.1",
-    "eslint-config-airbnb-base": "^13.1.0",
-    "eslint-plugin-import": "^2.15.0",
+    "eslint-config-car12o": "github:car12o/eslint-config-car12o",
     "nodemon": "^1.18.9"
   },
   "eslintConfig": {
-    "extends": "airbnb-base",
-    "env": {
-      "node": true
-    },
+    "extends": "car12o",
     "globals": {
       "log": true
-    },
-    "rules": {
-      "no-console": 1,
-      "max-len": [
-        2,
-        120
-      ],
-      "semi": [
-        2,
-        "never"
-      ],
-      "comma-dangle": [
-        2,
-        "never"
-      ],
-      "quotes": [
-        2,
-        "double"
-      ],
-      "indent": [
-        "error",
-        2
-      ],
-      "no-param-reassign": [
-        2,
-        {
-          "props": false
-        }
-      ],
-      "object-curly-newline": [
-        "error",
-        {
-          "ObjectExpression": {
-            "consistent": true
-          },
-          "ObjectPattern": {
-            "consistent": true
-          },
-          "ImportDeclaration": {
-            "consistent": true
-          },
-          "ExportDeclaration": {
-            "consistent": true
-          }
-        }
-      ]
     }
   }
 }
