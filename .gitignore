@@ -1,7 +1,8 @@
 node_modules
 .vscode
 !.gitkeep
-_data
+data
+data_dev
 
 # server
 indabox-server/logs/*
