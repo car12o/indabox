@@ -55,7 +55,7 @@ class UsersController {
     try {
       const { password, role, ...body } = req.body
 
-      body.role = userRoles[role]
+      body.role = userRoles[role.toLocaleLowerCase()]
 
       if (password) {
         body.password = hashPassword(password)

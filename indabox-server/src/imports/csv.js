@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 const fs = require("fs")
 const readline = require("readline")
 const { Types } = require("mongoose")
@@ -6,6 +7,9 @@ const config = require("../../config/default.json")
 const { User } = require("../models/user")
 const { Quota } = require("../models/quota")
 const { Payment, paymentStatus, paymentTypes } = require("../models/payment")
+const logger = require("../services/logging")
+
+log = logger
 
 const parseQuotaValue = (value) => {
   const parsed = parseFloat(value)
@@ -15,12 +19,10 @@ const parseQuotaValue = (value) => {
 const parseRow = (line) => {
   const [
     number,
-    // eslint-disable-next-line no-unused-vars
     _,
     firstName,
     address,
     phone,
-    // eslint-disable-next-line no-unused-vars
     _1,
     mobile,
     email,
@@ -68,7 +70,6 @@ const readFile = async () => {
   }
 
   await mongo.connect(config)
-  // eslint-disable-next-line no-unused-vars
   const [_, path] = arg.split("=")
   const rl = readline.createInterface({
     input: fs.createReadStream(path)
@@ -78,7 +79,7 @@ const readFile = async () => {
     rl.pause()
 
     const { user, quotas } = parseRow(line)
-    if (user.firstName) {
+    if (user.firstName && user.firstName !== "Nome") {
       const userDB = new User({ ...user, id: Types.ObjectId() })
 
       await Promise.all(quotas.map(async (quota) => {
@@ -114,8 +115,7 @@ const readFile = async () => {
 
     rl.resume()
   }).on("close", () => {
-    // eslint-disable-next-line no-console
-    console.log("Import finished")
+    log.info("Import finished")
     process.exit("Import finished")
   })
 }
