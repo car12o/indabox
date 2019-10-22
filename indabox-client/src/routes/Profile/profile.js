@@ -1,10 +1,13 @@
-
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import {
   setUserProperty, getUser, updateUserIdentification,
   updateUserContact, updateUserNotes
 } from "../../store/actions/user"
+// import {
+//   getPartner, setPartnerProperty, setPaymentInvoiceStatus, generatePayment, updatePartnerIdentification,
+//   updatePartnerContact, updatePartnerNotes, togglePartnerQuoteSelected, cancelPayment
+// } from "../../store/actions/user"
 import PartnerComponent from "../../components/Partner/partner"
 
 class Profile extends Component {
@@ -79,15 +82,21 @@ class Profile extends Component {
         action: "updateUserNotes"
       },
       quotas: {
-        buttons: [
-          // eslint-disable-next-line no-console
-          { label: "Pagar manualmente", color: "primary", fn: (v) => console.log(v) },
-          // eslint-disable-next-line no-console
-          { label: "Gerar referencia MB", color: "primary", fn: (v) => console.log(v) }
-        ]
+        buttons: null
+      },
+      payments: {
+        buttons: null
       }
     }
   }
+
+  // async componentWillMount() {
+  //   const { match, getPartner: _getPartner } = this.props
+
+  //   this.setState({ loading: true })
+  //   await _getPartner(match.params.id)
+  //   this.setState({ loading: false })
+  // }
 
   state = this.initialState(0)
 
@@ -96,7 +105,12 @@ class Profile extends Component {
   }
 
   render() {
-    const { user, setProperty } = this.props
+    const {
+      user,
+      setProperty
+      //   togglePartnerQuoteSelected: _togglePartnerQuoteSelected,
+      //   setPaymentInvoiceStatus: _setPaymentInvoiceStatus
+    } = this.props
 
     return (
       <PartnerComponent
@@ -104,11 +118,13 @@ class Profile extends Component {
         partner={user}
         handleChange={this.handleChange}
         setProperty={setProperty}
-        // setPaymentInvoiceStatus={setPaymentInvoiceStatus}
-        identification={this.state.identification}
-        contacts={this.state.contacts}
-        notes={this.state.notes}
-        quotas={this.state.quotas}
+        //   togglePartnerQuoteSelected={_togglePartnerQuoteSelected}
+        //   setPaymentInvoiceStatus={_setPaymentInvoiceStatus}
+        identificationTab={this.state.identification}
+        contactsTab={this.state.contacts}
+        notesTab={this.state.notes}
+        quotasTab={this.state.quotas}
+        paymentsTab={this.state.payments}
       />
     )
   }
@@ -118,13 +134,16 @@ const mapStateToProps = (state) => ({
   user: state.user
 })
 
-
 const mapDispatchToProps = (dispatch) => ({
-  setProperty: (...args) => dispatch(setUserProperty(...args)),
   getUser: (id) => dispatch(getUser(id)),
   updateUserIdentification: (data) => dispatch(updateUserIdentification(data)),
   updateUserContact: (data) => dispatch(updateUserContact(data)),
-  updateUserNotes: (data) => dispatch(updateUserNotes(data))
+  updateUserNotes: (data) => dispatch(updateUserNotes(data)),
+  setProperty: (...args) => dispatch(setUserProperty(...args))
+  //   generatePayment: (...args) => dispatch(generatePayment(...args)),
+  //   cancelPayment: (...args) => dispatch(cancelPayment(...args)),
+  //   togglePartnerQuoteSelected: (...args) => dispatch(togglePartnerQuoteSelected(...args)),
+  //   setPaymentInvoiceStatus: (...args) => dispatch(setPaymentInvoiceStatus(...args))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Profile)
