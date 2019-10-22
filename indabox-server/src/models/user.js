@@ -91,7 +91,6 @@ User.static("fetch", function fetch(_id) {
       {
         path: "payments",
         select: "-user",
-        match: { deletedAt: null },
         options: { sort: { updatedAt: -1 } },
         populate: [
           {
@@ -108,6 +107,10 @@ User.static("fetch", function fetch(_id) {
           },
           {
             path: "updatedBy",
+            select: "firstName"
+          },
+          {
+            path: "deletedBy",
             select: "firstName"
           }
         ]

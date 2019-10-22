@@ -52,6 +52,9 @@ const styles = (theme) => ({
     overflowX: "auto"
   },
   tableRow: {
+    height: "49px"
+  },
+  tableRowHover: {
     cursor: "pointer"
   },
   tableRowError: {
@@ -188,7 +191,7 @@ class Partners extends React.Component {
 
                   return (
                     <TableRow
-                      className={classNames({ [classes.tableRow]: hover })}
+                      className={classNames(classes.tableRow, { [classes.tableRowHover]: hover })}
                       hover={hover}
                       onClick={() => onClick(n)}
                       role="checkbox"

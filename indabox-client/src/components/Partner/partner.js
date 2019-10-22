@@ -186,7 +186,7 @@ class Partner extends Component {
             index={tab}
           >
             <TabContainer
-              classes={{ root: classes.tabContainer }}
+              classes={{ root: classes.tabContainer, body: classes.tabContainerBody }}
               selected={selectedQuotes}
               buttons={quotasTab.buttons}
               disabled={!selectedQuotes.length}

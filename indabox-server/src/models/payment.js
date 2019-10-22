@@ -34,6 +34,7 @@ const Payment = mongoose.Schema({
   updatedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null },
   paymentDate: { type: Date, default: null },
   deletedAt: { type: Date, default: null },
+  deletedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null },
   user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   quotas: [{ type: mongoose.Schema.Types.ObjectId, ref: "Quota" }],
   mbReference: { type: mongoose.Schema.Types.ObjectId, ref: "MbReference", default: null }

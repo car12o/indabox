@@ -60,7 +60,8 @@ class SimpleDialog extends React.Component {
 
   render() {
     const { classes, onClose, selectedValue, payment, paymentActions, ...other } = this.props
-    const { createdBy, createdAt, paymentDate, type, status, quotas, value, mbReference } = payment || {}
+    const { paymentDate, type, status, quotas, value, mbReference,
+      createdAt, createdBy, deletedAt } = payment || {}
 
     return (
       <Dialog
@@ -73,7 +74,7 @@ class SimpleDialog extends React.Component {
         </DialogTitle>
         <TabContainer
           classes={{ body: classes.bodyContainer }}
-          buttons={mbReference ? paymentActions.buttons : null}
+          buttons={mbReference && !paymentDate && !deletedAt ? paymentActions.buttons : null}
           selected={payment ? { onClose, id: payment.id } : null}
         >
           <div className={classes.bodyRow}>
@@ -112,6 +113,17 @@ class SimpleDialog extends React.Component {
               value={status ? status.label : ""}
               flexColumn
             />
+            {(() => (deletedAt
+              ? (
+                <Stamp
+                  classes={{ root: classNames(classes.stamp, classes.stampLeft) }}
+                  label="Data cancelamento:"
+                  value={deletedAt}
+                  flexColumn
+                />
+              )
+              : null
+            ))()}
           </div>
           <div className={classes.bodyRow}>
             <Stamp

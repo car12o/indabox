@@ -9,12 +9,12 @@ const formatDate = (date) => {
   return null
 }
 
-const getBys = (by) => {
+const getBys = (by, def = undefined) => {
   if (by) {
     const { firstName, _id } = by
     return firstName || _id
   }
-  return "Importado"
+  return def !== undefined ? def : "Importado"
 }
 
 /**
@@ -63,10 +63,12 @@ const createPayments = (payments) => {
         type: payment.type || "Importado",
         value: payment.value || 0,
         paymentDate: formatDate(payment.paymentDate),
-        createdBy: getBys(payment.createdBy),
-        updatedBy: getBys(payment.updatedBy),
         createdAt: formatDate(payment.createdAt),
-        updatedAt: formatDate(payment.updatedAt)
+        createdBy: getBys(payment.createdBy),
+        updatedAt: formatDate(payment.updatedAt),
+        updatedBy: getBys(payment.updatedBy),
+        deletedAt: formatDate(payment.deletedAt),
+        deletedBy: getBys(payment.deletedBy, null)
       }
     })
   }

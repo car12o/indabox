@@ -89,7 +89,11 @@ class PaymentController {
       const { id } = req.params
       const updatedBy = fp.get("session.user._id", req)
 
-      const payment = await Payment.findByIdAndUpdate(id, { deletedAt: Date.now(), updatedBy }, { new: true })
+      const payment = await Payment.findByIdAndUpdate(
+        id,
+        { status: paymentStatus.canceled, deletedAt: Date.now(), updatedBy, deletedBy: updatedBy },
+        { new: true }
+      )
       await Quota.updateMany({ payment: id }, { payment: null })
       const user = await User.fetch(payment.user)
 
