@@ -3,9 +3,9 @@ const config = require("../../config/default.json")
 
 const errorStackFormat = winston.format((info) => ({
   ...info,
-  stack: info.stack,
   message: info.message,
-  payload: info.payload
+  payload: info.payload,
+  stack: info.stack
 }))
 
 const logger = winston.createLogger({
@@ -13,6 +13,7 @@ const logger = winston.createLogger({
   format: winston.format.combine(
     winston.format.timestamp(),
     errorStackFormat(),
+    winston.format.json()
   ),
   defaultMeta: { service: process.env.APP_NAME || config.APP_NAME },
   transports: [

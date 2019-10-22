@@ -48,7 +48,8 @@ router.use((req, res, next) => {
 // eslint-disable-next-line no-unused-vars
 router.use((err, req, res, next) => {
   log.error(err)
-  const { message, status, payload } = err
+  const { message, payload } = err
+  const status = err.status || 500
   res.status(status).json({
     status,
     message,

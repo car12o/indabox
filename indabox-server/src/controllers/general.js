@@ -13,7 +13,7 @@ class GeneralController {
     try {
       const { user } = req.session
       if (!user) {
-        next(new APIError("Internal server error"))
+        throw new APIError("Internal server error")
       }
 
       const { _id } = user
@@ -39,23 +39,23 @@ class GeneralController {
       const user = await User.findOne({ email })
 
       if (!user) {
-        next(new APIError("ValidationError", {
+        throw new APIError("ValidationError", {
           status: 400,
           payload: [{
             path: "email",
             err: "Invalid email"
           }]
-        }))
+        })
       }
 
       if (!verifyHash(password, user.password)) {
-        next(new APIError("ValidationError", {
+        throw new APIError("ValidationError", {
           status: 400,
           payload: [{
             path: "password",
             err: "Invalid password"
           }]
-        }))
+        })
       }
 
       req.session.setLogged(true)
