@@ -5,11 +5,12 @@ import FormControl from "@material-ui/core/FormControl"
 import FormHelperText from "@material-ui/core/FormHelperText"
 import TextField from "@material-ui/core/TextField"
 
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
     width: "100%",
     marginBottom: "8px"
   },
+  container: {},
   textField: {
     color: `${theme.palette.secondary.main} !important`
   },
@@ -20,18 +21,18 @@ const styles = theme => ({
 
 class Input extends Component {
   render() {
-    const { classes, label, type, value, onChange, error, disabled, styles } = this.props
+    const { classes, label, type, value, onChange, error, disabled } = this.props
 
     return (
-      <div className={classNames(classes.root, styles)}>
+      <div className={classNames(classes.root, classes.container)}>
         <FormControl
           classes={{ root: classes.root }}
           variant="standard"
-          error={error ? true : false}>
+          error={Boolean(error)}>
           <TextField
             label={label}
             value={value}
-            onChange={e => onChange(e.target.value)}
+            onChange={(e) => onChange(e.target.value)}
             variant="standard"
             placeholder=""
             disabled={disabled}
@@ -45,7 +46,7 @@ class Input extends Component {
                 root: classes.textField
               }
             }}
-            type={type ? type : "text"}
+            type={type || "text"}
           />
           <FormHelperText id="component-error-text">{error}</FormHelperText>
         </FormControl>

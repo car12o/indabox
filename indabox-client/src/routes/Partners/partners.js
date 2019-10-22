@@ -36,7 +36,7 @@ class Partners extends React.Component {
         tableToolbarTitle="Sócios"
         rows={rows}
         data={partners.list}
-        onClick={n => history.push(`/partners/${n.id}`)}
+        onClick={(n) => history.push(`/partners/${n.id}`)}
         order="desc"
         orderBy="number.value"
         hover
@@ -45,11 +45,11 @@ class Partners extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   partners: state.partners
 })
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   getPartners: () => dispatch(getPartners())
 })
 

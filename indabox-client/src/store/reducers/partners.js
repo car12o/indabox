@@ -3,7 +3,7 @@ import { createUser } from "../../services/transform"
 
 function updatePartnersList(state, action) {
   if (action.status === 200) {
-    return fp.set("list", action.body.map(partner => createUser(partner)), state)
+    return fp.set("list", action.body.map((partner) => createUser(partner)), state)
   }
 
   return state
@@ -46,9 +46,7 @@ function togglePartnerQuotaSelected(state, action) {
   const { quotas } = state.selected
   const { ids } = action
 
-  const newQuotas = quotas.map(quota =>
-    Object.assign({}, quota, { selected: ids.includes(quota.id) ? true : false }),
-  )
+  const newQuotas = quotas.map((quota) => ({ ...quota, selected: ids.includes(quota.id) }))
 
   return fp.set("selected.quotas", newQuotas, state)
 }
@@ -56,7 +54,7 @@ function togglePartnerQuotaSelected(state, action) {
 function setPaymentInvoiceStatus(state, action) {
   const { _id, invoiceEmited } = action.body
 
-  const payments = state.selected.payments.map(payment => {
+  const payments = state.selected.payments.map((payment) => {
     if (_id === payment.id) {
       return fp.set("invoiceEmited", invoiceEmited, payment)
     }

@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
+    "start": "SKIP_PREFLIGHT_CHECK=true react-scripts start",
+    "build": "SKIP_PREFLIGHT_CHECK=true react-scripts build",
+    "test": "SKIP_PREFLIGHT_CHECK=true react-scripts test",
+    "eject": "SKIP_PREFLIGHT_CHECK=true react-scripts eject",
     "lint": "eslint ."
   },
   "dependencies": {
@@ -24,12 +24,14 @@
     "redux-thunk": "^2.3.0"
   },
   "devDependencies": {
+    "eslint": "^6.5.1",
     "eslint-config-car12o": "github:car12o/eslint-config-car12o"
   },
   "eslintConfig": {
-    "rules": {
-      "padded-blocks": [2, "always"]
-    }
+    "extends": [
+      "react-app",
+      "car12o"
+    ]
   },
   "browserslist": [
     ">0.2%",

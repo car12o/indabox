@@ -12,7 +12,9 @@ class Profile extends Component {
     return [
       { label: "Voltar", color: "secondary", fn: () => this.props.history.goBack() },
       {
-        label: "Editar", color: "primary", fn: () => {
+        label: "Editar",
+        color: "primary",
+        fn: () => {
           this.setState({
             [key]: {
               disabled: false,
@@ -28,7 +30,9 @@ class Profile extends Component {
   edit(key) {
     return [
       {
-        label: "Cancelar", color: "secondary", fn: () => {
+        label: "Cancelar",
+        color: "secondary",
+        fn: () => {
           this.props.getUser(this.props.user.id)
           this.setState({
             [key]: {
@@ -40,7 +44,9 @@ class Profile extends Component {
         }
       },
       {
-        label: "Gravar", color: "primary", fn: action => {
+        label: "Gravar",
+        color: "primary",
+        fn: (action) => {
           this.props[action](this.props.user)
           this.setState({
             [key]: {
@@ -74,7 +80,9 @@ class Profile extends Component {
       },
       quotas: {
         buttons: [
+          // eslint-disable-next-line no-console
           { label: "Pagar manualmente", color: "primary", fn: (v) => console.log(v) },
+          // eslint-disable-next-line no-console
           { label: "Gerar referencia MB", color: "primary", fn: (v) => console.log(v) }
         ]
       }
@@ -106,17 +114,17 @@ class Profile extends Component {
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   user: state.user
 })
 
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   setProperty: (...args) => dispatch(setUserProperty(...args)),
-  getUser: id => dispatch(getUser(id)),
-  updateUserIdentification: data => dispatch(updateUserIdentification(data)),
-  updateUserContact: data => dispatch(updateUserContact(data)),
-  updateUserNotes: data => dispatch(updateUserNotes(data))
+  getUser: (id) => dispatch(getUser(id)),
+  updateUserIdentification: (data) => dispatch(updateUserIdentification(data)),
+  updateUserContact: (data) => dispatch(updateUserContact(data)),
+  updateUserNotes: (data) => dispatch(updateUserNotes(data))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Profile)

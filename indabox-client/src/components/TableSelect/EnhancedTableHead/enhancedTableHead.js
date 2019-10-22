@@ -21,7 +21,7 @@ const styles = {
 }
 
 class EnhancedTableHead extends React.Component {
-  createSortHandler = property => event => {
+  createSortHandler = (property) => (event) => {
     this.props.onRequestSort(event, property)
   }
 
@@ -40,7 +40,7 @@ class EnhancedTableHead extends React.Component {
             />
           </TableCell>
           {rows.map(
-            row => (
+            (row) => (
               <TableCell
                 classes={{ head: classes.tableCell }}
                 key={row.id}

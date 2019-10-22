@@ -12,7 +12,9 @@ class Partner extends Component {
     return [
       { label: "Voltar", color: "secondary", fn: () => this.props.history.goBack() },
       {
-        label: "Editar", color: "primary", fn: () => {
+        label: "Editar",
+        color: "primary",
+        fn: () => {
           this.setState({
             [key]: {
               disabled: false,
@@ -28,7 +30,9 @@ class Partner extends Component {
   edit(key) {
     return [
       {
-        label: "Cancelar", color: "secondary", fn: () => {
+        label: "Cancelar",
+        color: "secondary",
+        fn: () => {
           this.props.getPartner(this.props.partner.id)
           this.setState({
             [key]: {
@@ -40,7 +44,9 @@ class Partner extends Component {
         }
       },
       {
-        label: "Gravar", color: "primary", fn: action => {
+        label: "Gravar",
+        color: "primary",
+        fn: (action) => {
           this.props[action](this.props.partner)
           this.setState({
             [key]: {
@@ -78,12 +84,12 @@ class Partner extends Component {
           {
             label: "Pagar manualmente",
             color: "primary",
-            fn: quotas => this.props.generatePayment("Manual", quotas)
+            fn: (quotas) => this.props.generatePayment("Manual", quotas)
           },
           {
             label: "Gerar referencia MB",
             color: "primary",
-            fn: quotas => this.props.generatePayment("Referencia MB", quotas)
+            fn: (quotas) => this.props.generatePayment("Referencia MB", quotas)
           }
         ]
       },
@@ -103,10 +109,10 @@ class Partner extends Component {
   }
 
   async componentWillMount() {
-    const { match, getPartner } = this.props
+    const { match, getPartner: _getPartner } = this.props
 
     this.setState({ loading: true })
-    await getPartner(match.params.id)
+    await _getPartner(match.params.id)
     this.setState({ loading: false })
   }
 
@@ -121,7 +127,12 @@ class Partner extends Component {
       return (<LinearProgress />)
     }
 
-    const { partner, setProperty, togglePartnerQuoteSelected, setPaymentInvoiceStatus } = this.props
+    const {
+      partner,
+      setProperty,
+      togglePartnerQuoteSelected: _togglePartnerQuoteSelected,
+      setPaymentInvoiceStatus: _setPaymentInvoiceStatus
+    } = this.props
 
     return (
       <PartnerComponent
@@ -129,8 +140,8 @@ class Partner extends Component {
         partner={partner}
         handleChange={this.handleChange}
         setProperty={setProperty}
-        togglePartnerQuoteSelected={togglePartnerQuoteSelected}
-        setPaymentInvoiceStatus={setPaymentInvoiceStatus}
+        togglePartnerQuoteSelected={_togglePartnerQuoteSelected}
+        setPaymentInvoiceStatus={_setPaymentInvoiceStatus}
         identificationTab={this.state.identification}
         contactsTab={this.state.contacts}
         notesTab={this.state.notes}
@@ -141,15 +152,15 @@ class Partner extends Component {
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   partner: state.partners.selected
 })
 
-const mapDispatchToProps = dispatch => ({
-  getPartner: id => dispatch(getPartner(id)),
-  updatePartnerIdentification: data => dispatch(updatePartnerIdentification(data)),
-  updatePartnerContact: data => dispatch(updatePartnerContact(data)),
-  updatePartnerNotes: data => dispatch(updatePartnerNotes(data)),
+const mapDispatchToProps = (dispatch) => ({
+  getPartner: (id) => dispatch(getPartner(id)),
+  updatePartnerIdentification: (data) => dispatch(updatePartnerIdentification(data)),
+  updatePartnerContact: (data) => dispatch(updatePartnerContact(data)),
+  updatePartnerNotes: (data) => dispatch(updatePartnerNotes(data)),
   setProperty: (...args) => dispatch(setPartnerProperty(...args)),
   generatePayment: (...args) => dispatch(generatePayment(...args)),
   cancelPayment: (...args) => dispatch(cancelPayment(...args)),

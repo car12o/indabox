@@ -35,15 +35,19 @@ function PaperHeader({ profile, partner, classes }) {
 const quotasRows = [
   { id: "year", numeric: false, disablePadding: false, label: "ANO" },
   {
-    id: "payment.status.label", numeric: false, disablePadding: false, label: "ESTADO",
-    default: "Por pagar", color: true
+    id: "payment.status.label",
+    numeric: false,
+    disablePadding: false,
+    label: "ESTADO",
+    default: "Por pagar",
+    color: true
   },
   { id: "value", numeric: false, disablePadding: false, label: "VALOR", symbol: "€" },
   { id: "payment.createdAt", numeric: false, disablePadding: false, label: "DATA DE CRIAÇÃO", default: "" },
   { id: "payment.paymentDate", numeric: false, disablePadding: false, label: "DATA DE PAGAMENTO", default: "" }
 ]
 
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
     ...theme.mixins.gutters(),
     paddingTop: theme.spacing.unit * 2,
@@ -193,8 +197,8 @@ class Partner extends Component {
                   data={partner.quotas}
                   onClick={() => { }}
                   selected={selectedQuotes}
-                  isSelectable={quota => !quota.payment}
-                  onSelect={ids => togglePartnerQuoteSelected(ids)}
+                  isSelectable={(quota) => !quota.payment}
+                  onSelect={(ids) => togglePartnerQuoteSelected(ids)}
                   order="desc"
                   orderBy="year"
                   rowsPerPageOptions={[12]}

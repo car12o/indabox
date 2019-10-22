@@ -4,15 +4,15 @@ import Checkbox from "@material-ui/core/Checkbox"
 
 class CheckBox extends Component {
   render() {
-    const { label, onChange, value, disabled, styles } = this.props
+    const { classes, label, onChange, value, disabled } = this.props
 
     return (
-      <div className={styles}>
+      <div className={classes.root}>
         <FormControlLabel
           control={
             <Checkbox
               checked={value}
-              onChange={disabled ? () => { } : e => onChange(!value)}
+              onChange={disabled ? () => { } : () => onChange(!value)}
               disableRipple={disabled}
             />
           }

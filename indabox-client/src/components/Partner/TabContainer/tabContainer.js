@@ -27,18 +27,17 @@ class TabContainer extends Component {
         </div>
         {buttons
           ? <div className={classes.footer}>
-            {buttons.map((button, i) =>
-              <Button
-                key={i}
-                classes={{ contained: classes.buttons }}
-                color={button.color}
-                size="large"
-                variant="contained"
-                onClick={() => button.fn(selected)}
-                disabled={disabled}
-              >
-                {button.label}
-              </Button>)}
+            {buttons.map((button, i) => (<Button
+              key={i}
+              classes={{ contained: classes.buttons }}
+              color={button.color}
+              size="large"
+              variant="contained"
+              onClick={() => button.fn(selected)}
+              disabled={disabled}
+            >
+              {button.label}
+            </Button>))}
           </div>
           : ""
         }

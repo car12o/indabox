@@ -22,7 +22,7 @@ import Partner from "../Partner/partner"
 import Profile from "../Profile/profile"
 
 const drawerWidth = 240
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
     display: "flex"
   },
@@ -130,11 +130,8 @@ class Home extends Component {
   }
 
   handleMenuClick = (link) => {
-    const menus = this.state.menus.map(menu => menu.link === link
-      ? Object.assign({}, menu, { selected: true })
-      : Object.assign({}, menu, { selected: false })
-    )
-    this.setState(Object.assign({}, this.state, { menus }))
+    const menus = this.state.menus.map((menu) => ({ ...menu, selected: menu.link === link }))
+    this.setState({ ...this.state, menus })
   }
 
   handleDrawerOpen = () => {
@@ -167,7 +164,7 @@ class Home extends Component {
             <img src="/assets/logo.png" alt="" />
           </div>
           <List>
-            {menus.map(menu => (
+            {menus.map((menu) => (
               <Link className={classes.link} to={menu.link} key={menu.label}>
                 <ListItem
                   className={classNames(classes.listItem, {

@@ -36,7 +36,7 @@ request({
   method: "GET",
   url: "/state",
   body: null
-})(res => {
+})((res) => {
   const store = createStore(res)
 
   ReactDOM.render((

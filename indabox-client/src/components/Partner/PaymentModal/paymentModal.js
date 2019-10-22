@@ -54,7 +54,7 @@ class SimpleDialog extends React.Component {
     this.props.onClose(this.props.selectedValue)
   }
 
-  handleListItemClick = value => {
+  handleListItemClick = (value) => {
     this.props.onClose(value)
   }
 
@@ -117,7 +117,7 @@ class SimpleDialog extends React.Component {
             <Stamp
               classes={{ root: classes.stamp }}
               label="Quotas:"
-              value={quotas ? quotas.map(q => q.year).join(",") : ""}
+              value={quotas ? quotas.map((q) => q.year).join(",") : ""}
               flexColumn
             />
             <Stamp
@@ -163,6 +163,7 @@ class SimpleDialog extends React.Component {
                 </div>
               )
             }
+            return null
           })()}
         </TabContainer>
       </Dialog>

@@ -1,3 +1,4 @@
+/* eslint-disable class-methods-use-this */
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import { logout } from "../../store/actions/user"
@@ -10,7 +11,7 @@ class Logout extends Component {
   componentWillUpdate(props) {
     const { user, history } = props
     if (!user.logged) {
-      return history.push("/")
+      history.push("/")
     }
   }
 
@@ -20,11 +21,11 @@ class Logout extends Component {
 }
 
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   user: state.user
 })
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   logout: () => dispatch(logout())
 })
 

@@ -14,8 +14,8 @@ import EnhancedTableHead from "./EnhancedTableHead/enhancedTableHead"
 import EnhancedTableToolbar from "./EnhancedTableToolbar/enhancedTableToolbar"
 
 function desc(a, b) {
-  let cmpA = a
-  let cmpB = b
+  const cmpA = a
+  const cmpB = b
 
   if (cmpB < cmpA) {
     return -1
@@ -34,7 +34,7 @@ function stableSort(array, cmp, path) {
     if (order !== 0) return order
     return a[1] - b[1]
   })
-  return stabilizedThis.map(el => el[0])
+  return stabilizedThis.map((el) => el[0])
 }
 
 function getSorting(order, orderBy) {
@@ -70,7 +70,7 @@ class Partners extends React.Component {
   }
 
   handleRequestSort = (event, property) => {
-    let orderBy = property
+    const orderBy = property
     let order = this.state.order === "desc" ? "desc" : "asc"
 
     if (this.state.orderBy === orderBy) {
@@ -80,7 +80,7 @@ class Partners extends React.Component {
     this.setState({ order, orderBy })
   }
 
-  handleSelectAllClick = event => {
+  handleSelectAllClick = (event) => {
     if (event.target.checked) {
       const selected = this.props.data.reduce((accum, n) => {
         if (this.props.isSelectable && !this.props.isSelectable(n)) {
@@ -125,11 +125,11 @@ class Partners extends React.Component {
     this.setState({ page })
   }
 
-  handleChangeRowsPerPage = event => {
+  handleChangeRowsPerPage = (event) => {
     this.setState({ rowsPerPage: event.target.value })
   }
 
-  isSelected = id => this.state.selected.indexOf(id) !== -1
+  isSelected = (id) => this.state.selected.indexOf(id) !== -1
 
   onSelect(selected) {
     if (this.props.onSelect) {
@@ -178,12 +178,12 @@ class Partners extends React.Component {
             <TableBody>
               {stableSort(data, getSorting(order, orderBy), orderBy)
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map(n => {
+                .map((n) => {
                   let error = false
                   const isSelected = isSelectable ? n.selected : this.isSelected(n.id)
-                  const row = rows.find(row => row.color)
+                  const row = rows.find((_row) => _row.color)
                   if (row) {
-                    error = fp.has(row.id, n) ? false : true
+                    error = !fp.has(row.id, n)
                   }
 
                   return (
@@ -202,18 +202,18 @@ class Partners extends React.Component {
                           ? <Checkbox
                             classes={{ root: classes.tableCheckbox }}
                             checked={isSelected}
-                            onClick={event => this.handleClick(event, n.id)}
+                            onClick={(event) => this.handleClick(event, n.id)}
                           />
                           : ""
                         }
                       </TableCell>
-                      {rows.map((row, i) => (
+                      {rows.map((_row, i) => (
                         <TableCell
                           key={i}
                           align="left"
                           className={classNames({ [classes.tableRowError]: error })}
                         >
-                          {`${fp.getOr(row.default, row.id, n)}${row.symbol ? row.symbol : ""}`}
+                          {`${fp.getOr(_row.default, _row.id, n)}${_row.symbol ? _row.symbol : ""}`}
                         </TableCell>
                       ))}
                     </TableRow>

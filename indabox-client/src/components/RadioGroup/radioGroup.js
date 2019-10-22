@@ -7,6 +7,7 @@ import FormControl from "@material-ui/core/FormControl"
 import FormControlLabel from "@material-ui/core/FormControlLabel"
 
 const styles = {
+  root: {},
   formControl: {
     width: "100%"
   },
@@ -21,24 +22,23 @@ const styles = {
 
 class RadioButtonsGroup extends React.Component {
   render() {
-    const { classes, styles, formControlLabels, value, handleChange, disabled } = this.props
+    const { classes, formControlLabels, value, handleChange, disabled } = this.props
 
     return (
-      <div className={styles}>
+      <div className={classes.root}>
         <FormControl component="fieldset" className={classes.formControl}>
           <RadioGroup
             className={classes.group}
             value={value}
-            onChange={disabled ? () => { } : e => handleChange(e.target.value)}
+            onChange={disabled ? () => { } : (e) => handleChange(e.target.value)}
           >
-            {formControlLabels.map((props, i) =>
-              <FormControlLabel
-                key={i}
-                classes={{ root: classNames(props.classes, { [classes.cursorDefault]: disabled }) }}
-                value={props.value}
-                control={<Radio classes={{ root: classNames({ [classes.cursorDefault]: disabled }) }} />}
-                label={props.label}
-              />)}
+            {formControlLabels.map((props, i) => (<FormControlLabel
+              key={i}
+              classes={{ root: classNames(props.classes, { [classes.cursorDefault]: disabled }) }}
+              value={props.value}
+              control={<Radio classes={{ root: classNames({ [classes.cursorDefault]: disabled }) }} />}
+              label={props.label}
+            />))}
           </RadioGroup>
         </FormControl>
       </div>

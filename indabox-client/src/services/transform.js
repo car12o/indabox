@@ -1,4 +1,5 @@
 import fp from "lodash/fp"
+
 const transform = fp.transform.convert({ cap: false })
 
 const formatDate = (date) => {
@@ -10,7 +11,8 @@ const formatDate = (date) => {
 
 const getBys = (by) => {
   if (by) {
-    return by.firstName || by._id
+    const { firstName, _id } = by
+    return firstName || _id
   }
   return "Importado"
 }
@@ -19,22 +21,26 @@ const getBys = (by) => {
  * createQuotas ...
  * @param {object} quotas
  */
-const createQuotas = quotas => {
+const createQuotas = (quotas) => {
   if (quotas) {
-    return quotas.map(quota => ({
-      id: quota._id || "",
-      year: quota.year || "",
-      value: quota.value || 0,
-      payment: quota.payment
-        ? Object.assign({}, quota.payment, {
-          createdAt: formatDate(quota.payment.createdAt) || "",
-          paymentDate: formatDate(quota.payment.paymentDate) || ""
-        })
-        : null,
-      createdAt: formatDate(quota.createdAt),
-      updatedAt: formatDate(quota.updatedAt),
-      selected: false
-    }))
+    return quotas.map((quota) => {
+      const { _id } = quota
+      return {
+        id: _id || "",
+        year: quota.year || "",
+        value: quota.value || 0,
+        payment: quota.payment
+          ? {
+            ...quota.payment,
+            createdAt: formatDate(quota.payment.createdAt) || "",
+            paymentDate: formatDate(quota.payment.paymentDate) || ""
+          }
+          : null,
+        createdAt: formatDate(quota.createdAt),
+        updatedAt: formatDate(quota.updatedAt),
+        selected: false
+      }
+    })
   }
 
   return []
@@ -44,22 +50,25 @@ const createQuotas = quotas => {
  * createPayments ...
  * @param {object} payments
  */
-const createPayments = payments => {
+const createPayments = (payments) => {
   if (payments) {
-    return payments.map(payment => ({
-      id: payment._id || "",
-      status: payment.status || null,
-      invoiceEmited: payment.invoiceEmited || false,
-      quotas: payment.quotas || [],
-      mbReference: payment.mbReference || null,
-      type: payment.type || "Importado",
-      value: payment.value || 0,
-      paymentDate: formatDate(payment.paymentDate),
-      createdBy: getBys(payment.createdBy),
-      updatedBy: getBys(payment.updatedBy),
-      createdAt: formatDate(payment.createdAt),
-      updatedAt: formatDate(payment.updatedAt)
-    }))
+    return payments.map((payment) => {
+      const { _id } = payment
+      return {
+        id: _id || "",
+        status: payment.status || null,
+        invoiceEmited: payment.invoiceEmited || false,
+        quotas: payment.quotas || [],
+        mbReference: payment.mbReference || null,
+        type: payment.type || "Importado",
+        value: payment.value || 0,
+        paymentDate: formatDate(payment.paymentDate),
+        createdBy: getBys(payment.createdBy),
+        updatedBy: getBys(payment.updatedBy),
+        createdAt: formatDate(payment.createdAt),
+        updatedAt: formatDate(payment.updatedAt)
+      }
+    })
   }
 
   return []
@@ -70,7 +79,7 @@ const createPayments = payments => {
  * createUser ...
  * @param {object} user
  */
-const createUser = user => ({
+const createUser = (user) => ({
   logged: user.logged || false,
   id: fp.getOr("", "_id", user),
   role: {
@@ -228,7 +237,7 @@ const createUser = user => ({
  */
 const cleanUserToSubmit = (user, keys) => {
   const data = keys
-    ? keys.reduce((accm, k) => Object.assign({}, accm, { [k]: user[k] }), {})
+    ? keys.reduce((accm, k) => ({ ...accm, [k]: user[k] }), {})
     : user
 
   const result = transform((accum, prop, key) => {

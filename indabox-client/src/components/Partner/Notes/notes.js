@@ -5,7 +5,7 @@ import TextArea from "../../TextArea/textArea"
 import "./styles.css"
 
 
-const styles = (theme) => ({
+const styles = {
   root: {
     display: "flex",
     flexDirection: "column"
@@ -20,7 +20,7 @@ const styles = (theme) => ({
     width: "800px",
     margin: "25px 50px"
   }
-})
+}
 
 class PartnerDetails extends Component {
   render() {
@@ -30,11 +30,11 @@ class PartnerDetails extends Component {
       <div id="partner-details" className={classes.root}>
         <Typography classes={{ root: classes.title }}>NOTAS</Typography>
         <TextArea
+          classes={{ container: classes.textArea }}
           label={partner.notes.label}
           value={partner.notes.value}
-          onChange={value => setProperty("notes", value)}
+          onChange={(value) => setProperty("notes", value)}
           disabled={disabled}
-          styles={classes.textArea}
         />
       </div>
     )

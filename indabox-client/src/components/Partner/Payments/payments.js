@@ -91,17 +91,17 @@ class Quotas extends Component {
                   {row.type}
                 </TableCell>
                 <TableCell align="right">{row.createdBy}</TableCell>
-                <TableCell align="right">{row.quotas.map(quota => quota.year).join(",")}</TableCell>
+                <TableCell align="right">{row.quotas.map((quota) => quota.year).join(",")}</TableCell>
                 <TableCell align="right">{row.status.label}</TableCell>
                 <TableCell align="right">{row.value}€</TableCell>
-                <TableCell className={classes.lastCell} align="right" onClick={e => e.stopPropagation()}>
+                <TableCell className={classes.lastCell} align="right" onClick={(e) => e.stopPropagation()}>
                   <Dropdown
+                    classes={{ container: classes.dropdown }}
                     inputClasses={{ fontSize: "13px" }}
                     value={row.invoiceEmited}
-                    onChange={value => setPaymentInvoiceStatus(row.id, value)}
+                    onChange={(value) => setPaymentInvoiceStatus(row.id, value)}
                     options={invoices}
                     variant="standard"
-                    styles={classes.dropdown}
                   />
                 </TableCell>
               </TableRow>
