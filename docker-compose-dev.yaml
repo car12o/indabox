@@ -1,0 +1,65 @@
+version: '3.7'
+
+networks:
+  indabox:
+
+services:
+
+  indabox-server:
+      image: node:11.8-alpine
+      container_name: indabox-server
+      command: npm run dev
+      working_dir: /home/indabox-server
+      depends_on:
+        - indabox-redis
+        - indabox-mongo
+      networks:
+        - indabox
+      ports:
+        - 3000:3000
+      restart: unless-stopped
+      volumes:
+        - ./indabox-server:/home/indabox-server
+
+  indabox-client:
+    image: node:11.8-alpine
+    container_name: indabox-client
+    command: npm run start
+    working_dir: /home/indabox-client
+    depends_on:
+      - indabox-server
+    environment:
+        REACT_APP_API_URL: http://0.0.0.0:3000
+    networks:
+      - indabox
+    ports:
+      - 80:3000
+    restart: unless-stopped
+    volumes:
+      - ./indabox-client:/home/indabox-client
+
+  indabox-mongo:
+    image: mongo:4.1.7
+    container_name: indabox-mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: rootpw
+    networks:
+        - indabox
+    ports:
+      - 27017:27017
+    restart: unless-stopped
+    volumes:
+      - ./data_dev/indabox-mongo:/data/db
+
+  indabox-redis:
+    image: redis:5.0.3
+    container_name: indabox-redis
+    command: redis-server --appendonly yes --requirepass rootpw
+    networks:
+      - indabox
+    ports:
+      - 6379:6379
+    restart: unless-stopped
+    volumes:
+      - ./data_dev/indabox-redis:/data
