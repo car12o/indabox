@@ -1,5 +1,5 @@
 const uuidv4 = require("uuid/v1")
-const { redis } = require("./database")
+const { redis } = require("./database/database")
 
 class Session {
   /**

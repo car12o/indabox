@@ -2,8 +2,8 @@
 const mongoose = require("mongoose")
 const redis = require("redis")
 const { promisify } = require("util")
-const { User, userRoles } = require("../models/user")
-const { hashPassword } = require("../services/crypto")
+const { User, userRoles } = require("../../models/user")
+const { hashPassword } = require("../crypto")
 
 module.exports = {
   mongo: {

@@ -16,7 +16,7 @@ services:
       networks:
         - indabox
       ports:
-        - 3000:3000
+        - "3000:3000"
       restart: unless-stopped
       volumes:
         - ./indabox-server:/home/indabox-server
@@ -33,7 +33,7 @@ services:
     networks:
       - indabox
     ports:
-      - 80:3000
+      - "80:3000"
     restart: unless-stopped
     volumes:
       - ./indabox-client:/home/indabox-client
@@ -47,7 +47,7 @@ services:
     networks:
         - indabox
     ports:
-      - 27017:27017
+      - "27017:27017"
     restart: unless-stopped
     volumes:
       - ./data_dev/indabox-mongo:/data/db
@@ -59,7 +59,7 @@ services:
     networks:
       - indabox
     ports:
-      - 6379:6379
+      - "6379:6379"
     restart: unless-stopped
     volumes:
       - ./data_dev/indabox-redis:/data
