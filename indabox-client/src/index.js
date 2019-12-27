@@ -7,10 +7,11 @@ import CssBaseline from "@material-ui/core/CssBaseline"
 import request from "./services/request"
 import createStore from "./store"
 import PrivateRoute from "./components/PrivateRoute/privateRoute"
+import "./styles.css"
 // import * as serviceWorker from "./serviceWorker"
 
 // Routes
-import Home from "./routes/Home/home"
+import Main from "./routes/Main/main"
 import Login from "./routes/Login/login"
 import Logout from "./routes/Logout/logout"
 
@@ -47,7 +48,7 @@ request({
           <Switch>
             <Route path="/login" component={Login} />
             <PrivateRoute path="/logout" component={Logout} store={store} />
-            <PrivateRoute path="/" component={Home} store={store} />
+            <PrivateRoute path="/" component={Main} store={store} />
           </Switch>
         </MuiThemeProvider>
       </Router>

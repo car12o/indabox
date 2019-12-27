@@ -2,7 +2,7 @@
   "name": "indabox-server",
   "version": "1.0.0",
   "description": "associates managements system - server",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",

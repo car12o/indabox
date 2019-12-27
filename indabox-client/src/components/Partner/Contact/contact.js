@@ -156,7 +156,7 @@ class PartnerDetails extends Component {
           </div>
           <div className={classNames(
             classes.column,
-            { [classes.hide]: !partner.billing.active },
+            { [classes.hide]: !partner.billing.active }
           )}>
             <Typography classes={{ root: classes.columnTitle }} color="secondary" >
               Dados de faturação

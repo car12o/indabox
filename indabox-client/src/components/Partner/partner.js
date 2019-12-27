@@ -158,6 +158,7 @@ class Partner extends Component {
               onChange={handleChange}
               indicatorColor="primary"
               textColor="primary"
+              variant="fullWidth"
             >
               <Tab
                 classes={{ textColorPrimary: classes.tab, selected: classes.tabSelected }}

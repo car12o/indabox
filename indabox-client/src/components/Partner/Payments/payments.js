@@ -22,7 +22,9 @@ const styles = {
     width: "100%",
     backgroundColor: "transparent",
     overflowX: "auto",
-    boxShadow: "none"
+    boxShadow: "none",
+    position: "relative",
+    zIndex: 0
   },
   emptyDataTitle: {
     padding: "30px 15px",

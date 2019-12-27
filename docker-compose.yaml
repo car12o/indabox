@@ -10,7 +10,6 @@ services:
       build:
         context: ./indabox-server
       container_name: indabox-server
-      command: npm run start
       working_dir: /home/indabox-server
       depends_on:
         - indabox-redis

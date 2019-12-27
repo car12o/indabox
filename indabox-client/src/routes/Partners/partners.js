@@ -1,48 +1,64 @@
-import React from "react"
+import React, { useState, useEffect } from "react"
 import { connect } from "react-redux"
+import { withStyles } from "@material-ui/core/styles"
 import LinearProgress from "@material-ui/core/LinearProgress"
+import Paper from "@material-ui/core/Paper"
 import { getPartners } from "../../store/actions/partners"
-import TableSelect from "../../components/TableSelect/tableSelect"
+import Title from "../../components/Title/Title"
+import Table from "../../components/Table/Table"
 
-class Partners extends React.Component {
-  async componentWillMount() {
-    this.setState({ loading: true })
-    await this.props.getPartners()
-    this.setState({ loading: false })
+const styles = {
+  root: {
+    background: "#fff"
+  }
+}
+
+const rows = [
+  { id: "number", numeric: false, disablePadding: true, label: "Nº de sócio", width: "5%" },
+  { id: "firstName", numeric: false, disablePadding: false, label: "Nome", width: "20%" },
+  { id: "lastName", numeric: false, disablePadding: false, label: "Apelido", width: "20%" },
+  { id: "nif", numeric: false, disablePadding: false, label: "NIF", width: "15%" },
+  { id: "email", numeric: false, disablePadding: false, label: "Endereço de email", width: "25%" },
+  { id: "role", numeric: false, disablePadding: false, label: "Tipo de sócio", width: "15%" }
+]
+
+const Partners = ({ classes, history, partners, get }) => {
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    get()
+  }, [])
+
+  useEffect(() => {
+    setLoading(!partners.list.length)
+  }, [partners.list])
+
+  if (loading) {
+    return (<LinearProgress />)
   }
 
-  state = {
-    loading: false
-  }
-
-  render() {
-    if (this.state.loading) {
-      return (<LinearProgress />)
-    }
-
-    const { history, partners } = this.props
-
-    const rows = [
-      { id: "number.value", numeric: false, disablePadding: true, label: "Nº de sócio" },
-      { id: "firstName.value", numeric: false, disablePadding: false, label: "Nome" },
-      { id: "lastName.value", numeric: false, disablePadding: false, label: "Apelido" },
-      { id: "nif.value", numeric: false, disablePadding: false, label: "NIF" },
-      { id: "email.value", numeric: false, disablePadding: false, label: "Endereço de email" },
-      { id: "role.value.label", numeric: false, disablePadding: false, label: "Tipo de sócio" }
-    ]
-
-    return (
-      <TableSelect
-        tableToolbarTitle="Sócios"
+  return (
+    <Paper className={classes.root} elevation={1}>
+      <Title label="Sócios" />
+      <Table
         rows={rows}
-        data={partners.list}
-        onClick={(n) => history.push(`/partners/${n.id}`)}
-        order="desc"
-        orderBy="number.value"
-        hover
+        data={partners.list.map(({ id, number, firstName, lastName, nif, email, role }) => ({
+          id,
+          number: number.value,
+          firstName: firstName.value,
+          lastName: lastName.value,
+          nif: nif.value,
+          email: email.value,
+          role: role.value.label
+        }))}
+        orderBy="firstName"
+        onRowClick={(partner) => history.push(`/partners/${partner.id}`)}
+        rowsPerPage={15}
+        rowsPerPageOptions={[15, 30, 60]}
+        noDataLabel="Sem dados ..."
       />
-    )
-  }
+    </Paper>
+  )
 }
 
 const mapStateToProps = (state) => ({
@@ -50,7 +66,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => ({
-  getPartners: () => dispatch(getPartners())
+  get: () => dispatch(getPartners())
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(Partners)
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Partners))

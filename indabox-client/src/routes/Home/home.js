@@ -1,213 +1,116 @@
-import React, { Component } from "react"
-import { Route, Link } from "react-router-dom"
-import { connect } from "react-redux"
-import classNames from "classnames"
+import React, { useState } from "react"
 import { withStyles } from "@material-ui/core/styles"
-import Drawer from "@material-ui/core/Drawer"
-import List from "@material-ui/core/List"
-import ListItem from "@material-ui/core/ListItem"
-import ListItemText from "@material-ui/core/ListItemText"
-import ListItemIcon from "@material-ui/core/ListItemIcon"
-import PeopleIcon from "@material-ui/icons/People"
-import PersonIcon from "@material-ui/icons/Person"
-import ExitToAppIcon from "@material-ui/icons/ExitToApp"
-import ArrowBackIcon from "@material-ui/icons/ArrowBack"
-import ArrowForward from "@material-ui/icons/ArrowForward"
-import HomeIcon from "@material-ui/icons/Home"
-import Test from "../../components/Test"
+import Paper from "@material-ui/core/Paper"
+import Tabs from "@material-ui/core/Tabs"
+import Tab from "@material-ui/core/Tab"
+import SwipeableViews from "react-swipeable-views"
+import Title from "../../components/Title/Title"
+import Table from "../../components/Table/Table"
 
-// Routes ...
-import Partners from "../Partners/partners"
-import Partner from "../Partner/partner"
-import Profile from "../Profile/profile"
-
-const drawerWidth = 240
 const styles = (theme) => ({
   root: {
-    display: "flex"
+    background: "#fff"
   },
-  drawer: {
-    width: drawerWidth,
-    flexShrink: 0,
-    whiteSpace: "nowrap"
+  tabs: {
+    color: theme.palette.secondary.main
   },
-  drawerOpen: {
-    width: drawerWidth,
-    transition: theme.transitions.create("width", {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen
-    })
-  },
-  drawerClose: {
-    transition: theme.transitions.create("width", {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen
-    }),
-    overflowX: "hidden",
-    width: theme.spacing.unit * 7 + 1,
-    [theme.breakpoints.up("sm")]: {
-      width: theme.spacing.unit * 9 + 1
-    }
-  },
-  drawerHeader: {
-    display: "flex",
-    justifyContent: "center",
-    padding: "30px 0",
-    transition: "padding 0.2s ease"
-  },
-  drawerHeaderClose: {
-    padding: "30px 6px",
-    justifyContent: "normal"
-  },
-  drawerIconContainer: {
-    display: "flex",
-    alignSelf: "flex-end",
-    flexGrow: 2
-  },
-  drawerIcon: {
-    alignSelf: "flex-end",
-    margin: "20px",
-    color: theme.palette.primary.main,
-    cursor: "pointer"
-  },
-  listItem: {
-    padding: "18px 30px",
-    transition: "padding 0.2s ease"
-  },
-  listItemClosed: {
-    padding: "18px 24px"
-  },
-  selected: {
-    color: theme.palette.primary.main
-  },
-  content: {
-    flexGrow: 1,
-    padding: theme.spacing.unit * 3,
-    paddingLeft: (theme.spacing.unit * 7) + (theme.spacing.unit * 5),
-    width: "100%",
-    transition: theme.transitions.create("padding-left", {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.enteringScreen
-    })
-  },
-  contentShift: {
-    paddingLeft: (theme.spacing.unit * 28) + (theme.spacing.unit * 5),
-    transition: theme.transitions.create("padding-left", {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen
-    })
-  },
-  link: {
-    textDecoration: "none"
+  tabSelected: {
+    fontWeight: "bold"
   }
 })
 
-class Home extends Component {
-  state = {
-    open: true,
-    menus: [
-      {
-        label: "Início",
-        icon: <HomeIcon />,
-        link: "/"
-      },
-      {
-        label: "Sócios",
-        icon: <PeopleIcon />,
-        link: "/partners"
-      },
-      {
-        label: "A minha conta",
-        icon: <PersonIcon />,
-        link: "/profile"
-      },
-      {
-        label: "Sair",
-        icon: <ExitToAppIcon />,
-        link: "/logout"
-      }
-    ]
-  }
+// ##################################################################
+const rows = [
+  { id: "name", numeric: false, disablePadding: true, label: "Dessert (100g serving)" },
+  { id: "calories", numeric: true, disablePadding: false, label: "Calories" },
+  { id: "fat", numeric: true, disablePadding: false, label: "Fat (g)" },
+  { id: "carbs", numeric: true, disablePadding: false, label: "Carbs (g)" },
+  { id: "protein", numeric: true, disablePadding: false, label: "Protein (g)" }
+]
 
-  handleMenuClick = (link) => {
-    const menus = this.state.menus.map((menu) => ({ ...menu, selected: menu.link === link }))
-    this.setState({ ...this.state, menus })
-  }
-
-  handleDrawerOpen = () => {
-    this.setState({ open: true })
-  }
-
-  handleDrawerClose = () => {
-    this.setState({ open: false })
-  }
-
-  render() {
-    const { classes, location } = this.props
-    const { open, menus } = this.state
-
-    return (
-      <div className={classes.root}>
-        <Drawer
-          variant="permanent"
-          classes={{
-            paper: classNames({
-              [classes.drawerOpen]: open,
-              [classes.drawerClose]: !open
-            })
-          }}
-          open={open}
-        >
-          <div className={classNames(classes.drawerHeader, {
-            [classes.drawerHeaderClose]: !open
-          })}>
-            <img src="/assets/logo.png" alt="" />
-          </div>
-          <List>
-            {menus.map((menu) => (
-              <Link className={classes.link} to={menu.link} key={menu.label}>
-                <ListItem
-                  className={classNames(classes.listItem, {
-                    [classes.listItemClosed]: !open
-                  })} button
-                  onClick={() => this.handleMenuClick(menu.link)}
-                >
-                  <ListItemIcon
-                    className={location.pathname === menu.link ? classes.selected : ""} >
-                    {menu.icon}
-                  </ListItemIcon>
-                  <ListItemText
-                    classes={{ primary: location.pathname === menu.link ? classes.selected : "" }}
-                    primary={menu.label}
-                  />
-                </ListItem>
-              </Link>
-            ))}
-          </List>
-          <div className={classes.drawerIconContainer}>
-            {open
-              ? <ArrowBackIcon
-                className={classes.drawerIcon}
-                fontSize="large"
-                onClick={() => this.handleDrawerClose()} />
-              : <ArrowForward
-                className={classes.drawerIcon}
-                fontSize="large"
-                onClick={() => this.handleDrawerOpen()} />
-            }
-          </div>
-        </Drawer>
-        <main className={classNames(classes.content, {
-          [classes.contentShift]: open
-        })}>
-          <Route path="/" exact component={Test} />
-          <Route path="/partners" exact component={Partners} />
-          <Route path="/partners/:id" component={Partner} />
-          <Route path="/profile" component={Profile} />
-        </main>
-      </div>
-    )
-  }
+let counter = 0
+function createData(name, calories, fat, carbs, protein) {
+  counter += 1
+  return { id: counter, name, calories, fat, carbs, protein }
 }
 
-export default connect()(withStyles(styles)(Home))
+const data = [
+  createData("Cupcake", 305, 3.7, 67, 4.3),
+  createData("Donut", 452, 25.0, 51, 4.9),
+  createData("Eclair", 262, 16.0, 24, 6.0),
+  createData("Frozen yoghurt", 159, 6.0, 24, 4.0),
+  createData("Gingerbread", 356, 16.0, 49, 3.9),
+  createData("Honeycomb", 408, 3.2, 87, 6.5),
+  createData("Ice cream sandwich", 237, 9.0, 37, 4.3),
+  createData("Jelly Bean", 375, 0.0, 94, 0.0),
+  createData("KitKat", 518, 26.0, 65, 7.0),
+  createData("Lollipop", 392, 0.2, 98, 0.0),
+  createData("Marshmallow", 318, 0, 81, 2.0),
+  createData("Nougat", 360, 19.0, 9, 37.0),
+  createData("Oreo", 437, 18.0, 63, 4.0)
+]
+
+// const actions = [
+//   { label: "Adicionar", onClick: (selected) => console.log(selected) },
+//   { label: "Remover", onClick: (selected) => console.log(selected) }
+// ]
+
+// ##################################################################
+
+const Home = ({ classes }) => {
+  const [index, setIndex] = useState(0)
+
+  return (
+    <Paper className={classes.root} elevation={1}>
+      <Title label="Administração" />
+      <Tabs
+        value={index}
+        indicatorColor="primary"
+        textColor="primary"
+        variant="fullWidth"
+        onChange={(_, i) => setIndex(i)}
+      >
+        <Tab
+          classes={{ textColorPrimary: classes.tabs, selected: classes.tabSelected }}
+          label="Pagamentos recebidos"
+        />
+        <Tab
+          classes={{ textColorPrimary: classes.tabs, selected: classes.tabSelected }}
+          label="Pagamentos emitidos"
+        />
+        <Tab
+          classes={{ textColorPrimary: classes.tabs, selected: classes.tabSelected }}
+          label="Quotas em falta"
+        />
+      </Tabs>
+      <SwipeableViews index={index}>
+        <Table
+          rows={rows}
+          data={data}
+          orderBy="name"
+          // actions={actions}
+          // onRowClick={(e) => console.log(e)}
+          noDataLabel="Sem dados ..."
+        />
+        <Table
+          rows={rows}
+          data={data}
+          orderBy="name"
+          // actions={actions}
+          // onRowClick={(e) => console.log(e)}
+          noDataLabel="Sem dados ..."
+        />
+        <Table
+          rows={rows}
+          data={data}
+          orderBy="name"
+          // actions={actions}
+          // onRowClick={(e) => console.log(e)}
+          noDataLabel="Sem dados ..."
+        />
+      </SwipeableViews>
+    </Paper>
+  )
+}
+
+export default withStyles(styles)(Home)
