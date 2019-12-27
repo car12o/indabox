@@ -81,7 +81,7 @@ const TableBody = ({
               )
             }
             return (
-              <TableCell key={i} align="right">{n[row.id]}</TableCell>
+              <TableCell key={i}>{n[row.id]}</TableCell>
             )
           })}
         </TableRow>
