@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 const fs = require("fs")
 const readline = require("readline")
 const { Types } = require("mongoose")
@@ -22,8 +23,8 @@ const parseLine = (line) => {
     specialty,
     specialtySessions,
     addressRoad,
-    addressPostCode,
     addressCity,
+    addressPostCode,
     addressCountry,
     phone,
     mobile,
@@ -33,17 +34,16 @@ const parseLine = (line) => {
     billingName,
     billingNif,
     billingAddressRoad,
-    billingAddressPostCode,
     billingAddressCity,
+    billingAddressPostCode,
     billingAddressCountry,
-    quota2010,
-    payment2010,
-    quota2011,
-    payment2011,
-    quota2012,
-    payment2012,
-    quota2013,
-    payment2013,
+    _,
+    _1,
+    _2,
+    _3,
+    _4,
+    _5,
+    _6,
     quota2014,
     payment2014,
     quota2015,
@@ -55,7 +55,9 @@ const parseLine = (line) => {
     quota2018,
     payment2018,
     quota2019,
-    payment2019
+    payment2019,
+    quota2020,
+    payment2020
   ] = line.split(",")
 
   const user = {
@@ -92,16 +94,13 @@ const parseLine = (line) => {
   }
 
   const quotas = [
-    { year: 2010, value: quota2010, payment: payment2010 },
-    { year: 2011, value: quota2011, payment: payment2011 },
-    { year: 2012, value: quota2012, payment: payment2012 },
-    { year: 2013, value: quota2013, payment: payment2013 },
     { year: 2014, value: quota2014, payment: payment2014 },
     { year: 2015, value: quota2015, payment: payment2015 },
     { year: 2016, value: quota2016, payment: payment2016 },
     { year: 2017, value: quota2017, payment: payment2017 },
     { year: 2018, value: quota2018, payment: payment2018 },
-    { year: 2019, value: quota2019, payment: payment2019 }
+    { year: 2019, value: quota2019, payment: payment2019 },
+    { year: 2020, value: quota2020, payment: payment2020 }
   ]
 
   return { user, quotas }
@@ -145,17 +144,12 @@ const buildData = (line) => {
   return { user: _user, quotas: _quotas, payments: _payments }
 }
 
-const writeData = async ({ user, quotas, payments }) => {
-  await user.save()
-  await Promise.all([
+const writeData = async (users) => {
+  await Promise.all(users.map(({ user, quotas, payments }) => Promise.all([
+    user.save(),
     ...quotas.map((quota) => quota.save()),
     ...payments.map((payment) => payment.save())
-  ])
-}
-
-const next = async (rl, data) => {
-  await writeData(data)
-  rl.resume()
+  ])))
 }
 
 (async () => {
@@ -164,7 +158,7 @@ const next = async (rl, data) => {
     if (!arg) {
       throw new Error("Invalid path. try [npm run import -- path={path}]")
     }
-    // eslint-disable-next-line no-unused-vars
+
     const [_, path] = arg.split("=")
 
     await mongo.connect(config)
@@ -173,11 +167,14 @@ const next = async (rl, data) => {
       input: fs.createReadStream(path)
     })
 
+    const data = []
     rl.on("line", (line) => {
       rl.pause()
-      const data = buildData(line)
-      next(rl, data)
-    }).on("close", () => {
+      const user = buildData(line)
+      data.push(user)
+      rl.resume()
+    }).on("close", async () => {
+      await writeData(data)
       log.info("Import finished")
       process.exit()
     })
