@@ -62,7 +62,8 @@ const Home = ({ classes }) => {
 
   return (
     <Paper className={classes.root} elevation={1}>
-      <Title label="Administração" />
+      Dashboard
+      {/* <Title label="Administração" />
       <Tabs
         value={index}
         indicatorColor="primary"
@@ -108,7 +109,7 @@ const Home = ({ classes }) => {
           // onRowClick={(e) => console.log(e)}
           noDataLabel="Sem dados ..."
         />
-      </SwipeableViews>
+      </SwipeableViews> */}
     </Paper>
   )
 }
