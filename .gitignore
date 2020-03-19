@@ -5,8 +5,8 @@ data
 data_dev
 
 # server
-indabox-server/logs/*
+server/logs/*
 
 # client
-indabox-client/build
-indabox-client/*.log
+client/build
+client/*.log

@@ -3,7 +3,7 @@
     "APP_PORT": 3000,
     "ROOT_EMAIL": "root@gmail.com",
     "ROOT_PASSWORD": "rootpw",
-    "MONGO_HOST": "mongodb://root:rootpw@indabox-mongo:27017/indabox-server?authSource=admin",
+    "MONGO_HOST": "mongodb://root:rootpw@mongo:27017/indabox?authSource=admin",
     "MONGO_USER": "root",
     "MONGO_PASSWORD": "rootpw",
     "REDIS_HOST": "indabox-redis",
