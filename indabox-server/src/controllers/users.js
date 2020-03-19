@@ -90,7 +90,7 @@ class UsersController {
 
       body.updatedBy = fp.get("session.user._id", req)
 
-      const user = await User.patch(userId, req.body)
+      const user = await User.patch(userId, body)
 
       res.json(user)
     } catch (e) {

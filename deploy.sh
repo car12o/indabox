@@ -17,7 +17,7 @@ fi
 
 log "Building docker images"
 export TAG=$TAG
-export REACT_APP_API_URL="http://193.70.43.66:3000"
+export REACT_APP_API_URL="https://associados.sppsm.org/api"
 docker-compose build
 
 log "Pruning docker images"
