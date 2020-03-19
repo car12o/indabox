@@ -1,6 +1,5 @@
 {
   "name": "indabox-server",
-  "version": "1.0.0",
   "description": "associates managements system - server",
   "main": "src/index.js",
   "scripts": {

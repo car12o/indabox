@@ -5,25 +5,174 @@ executors:
     docker:
       - image: circleci/node:11.8-stretch
 
+commands:
+  docker-images-save:
+    steps:
+      - run:
+          name: Compress docker images
+          command: |
+                  docker save -o indabox-server.tar docker.pkg.github.com/car12o/indabox/server:${CIRCLE_TAG} &&
+                  docker save -o indabox-client.tar docker.pkg.github.com/car12o/indabox/client:${CIRCLE_TAG}
+      - persist_to_workspace:
+          root: .
+          paths:
+            - indabox-server.tar
+            - indabox-client.tar
+
+  docker-images-load:
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Load docker images
+          command: |
+                  docker load -i indabox-server.tar &&
+                  docker load -i indabox-client.tar
+      - export-tag
+
+  export-tag:
+    steps:
+      - run:
+          name: Export TAG
+          command: echo 'export TAG=${CIRCLE_TAG}' >> ${BASH_ENV}
+
 jobs:
   setup:
-  executor: node
-  steps:
-    - checkout
-    - run:
-        name: Install dependencies
-        command: |
-                cd server && npm i &&
-                cd ../client && npm i
-    - persist_to_workspace:
-        root: .
-        paths:
-          - client
-          - server
-          - docker-compose.yml
+    executor: node
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: |
+                  cd server && npm i &&
+                  cd ../client && npm i
+      - persist_to_workspace:
+          root: .
+          paths:
+            - client
+            - server
+            - docker-compose.yml
+
+  run:
+    executor: node
+    parameters:
+      package:
+        type: string
+      script:
+        type: string
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Running lint
+          command: cd << parameters.package >> && npm run << parameters.script >>
+
+  docker-build:
+    machine: true
+    steps:
+      - attach_workspace:
+          at: .
+      - export-tag
+      - run:
+          name: Build docker images
+          command: docker-compose build
+      - docker-images-save
+
+  docker-push:
+    machine: true
+    steps:
+      - docker-images-load
+      - run:
+          name: Docker login
+          command: docker login docker.pkg.github.com -u ${DOCKER_USER} -p ${DOCKER_PASSWORD}
+      - run:
+          name: Push docker images to registry
+          command: |
+                  docker push docker.pkg.github.com/car12o/indabox/server:${CIRCLE_TAG} &&
+                  docker push docker.pkg.github.com/car12o/indabox/client:${CIRCLE_TAG}
+
+  deploy:
+    machine: true
+    parameters:
+      dir:
+        type: string
+    steps:
+      - attach_workspace:
+          at: .
+      - add_ssh_keys:
+          fingerprints:
+            - "2b:9b:ca:a3:28:be:8e:a9:49:a7:b4:fe:eb:53:11:d8"
+      - run:
+          name: Copy docker-compose
+          command: scp docker-compose.yml root@${CLUSTER_IP}:<< parameters.dir >>/docker-compose.yml
+      - run:
+          name: Deploy
+          command: |
+                  ssh -o "StrictHostKeyChecking no" root@${CLUSTER_IP} "export TAG=${CIRCLE_TAG} && docker-compose -f << parameters.dir >>/docker-compose.yml pull" &&
+                  ssh -o "StrictHostKeyChecking no" root@${CLUSTER_IP} "export TAG=${CIRCLE_TAG} && docker-compose -f << parameters.dir >>/docker-compose.yml down" &&
+                  ssh -o "StrictHostKeyChecking no" root@${CLUSTER_IP} "export TAG=${CIRCLE_TAG} && docker-compose -f << parameters.dir >>/docker-compose.yml up -d"
 
 workflows:
   version: 2
   main:
     jobs:
-      - setup
+      - setup:
+          filters:
+            branches:
+              only: /.*/
+            tags:
+              only: /.*/
+
+      - run:
+          name: server-lint
+          package: server
+          script: lint
+          requires:
+            - setup
+          filters:
+            branches:
+              only: /.*/
+            tags:
+              only: /.*/
+
+      - run:
+          name: client-lint
+          package: client
+          script: lint
+          requires:
+            - setup
+          filters:
+            branches:
+              only: /.*/
+            tags:
+              only: /.*/
+
+      - docker-build:
+          requires:
+            - server-lint
+            - client-lint
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /.*/
+
+      - docker-push:
+          requires:
+            - docker-build
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /.*/
+
+      - deploy:
+          dir: "/root/indabox"
+          requires:
+            - docker-push
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /.*/
+

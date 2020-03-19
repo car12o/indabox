@@ -1,5 +1,5 @@
 FROM node:11.8-alpine
-WORKDIR /home/indabox-server
+WORKDIR /home/server
 RUN apk add git
 COPY . .
 RUN npm i

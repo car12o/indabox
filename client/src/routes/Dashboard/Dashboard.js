@@ -62,7 +62,7 @@ export const Dashboard = () => {
 
   return (
     <Paper className={classes.root} elevation={1}>
-      <Title label="Administração" />
+      <Title label="Administração ..." />
       {/* <Tabs
         value={index}
         indicatorColor="primary"
