@@ -1,59 +1,18 @@
 import React from "react"
 import ReactDOM from "react-dom"
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom"
-import { Provider } from "react-redux"
-import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles"
-import CssBaseline from "@material-ui/core/CssBaseline"
-import request from "./services/request"
-import createStore from "./store"
-import PrivateRoute from "./components/PrivateRoute/privateRoute"
+import { CssBaseline } from "@material-ui/core"
+import { ThemeProvider } from "@material-ui/core/styles"
+import { App } from "./App"
+import { Provider } from "./store"
+import { theme } from "./theme"
 import "./styles.css"
-// import * as serviceWorker from "./serviceWorker"
 
-// Routes
-import Main from "./routes/Main/main"
-import Login from "./routes/Login/login"
-import Logout from "./routes/Logout/logout"
-
-const theme = createMuiTheme({
-  palette: {
-    primary: { main: "#DA2155" },
-    secondary: { main: "#525F7E", light: "#E5E5E5" },
-    text: {
-      primary: "#323C4E",
-      secondary: "#DA2155"
-    },
-    background: {
-      default: "#F0F2F4"
-    }
-  },
-  typography: {
-    useNextVariants: true
-  }
-})
-
-request({
-  type: "INITIAL-STATE",
-  method: "GET",
-  url: "/state",
-  body: null
-})((res) => {
-  const store = createStore(res)
-
-  ReactDOM.render((
-    <Provider store={store}>
-      <Router>
-        <MuiThemeProvider theme={theme}>
-          <CssBaseline />
-          <Switch>
-            <Route path="/login" component={Login} />
-            <PrivateRoute path="/logout" component={Logout} store={store} />
-            <PrivateRoute path="/" component={Main} store={store} />
-          </Switch>
-        </MuiThemeProvider>
-      </Router>
+ReactDOM.render(
+  <ThemeProvider theme={theme}>
+    <CssBaseline />
+    <Provider>
+      <App />
     </Provider>
-  ), document.getElementById("root"))
-})
-
-// serviceWorker.unregister()
+  </ThemeProvider>,
+  document.getElementById("root")
+)

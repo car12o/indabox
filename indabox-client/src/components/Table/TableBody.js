@@ -1,15 +1,25 @@
 import React from "react"
-import { withStyles } from "@material-ui/core/styles"
-import MatTableBody from "@material-ui/core/TableBody"
-import TableRow from "@material-ui/core/TableRow"
-import TableCell from "@material-ui/core/TableCell"
-import Checkbox from "@material-ui/core/Checkbox"
+import { makeStyles } from "@material-ui/core/styles"
+import { TableBody as MatTableBody, TableRow, TableCell, Checkbox } from "@material-ui/core"
 
-const styles = {
+const useStyles = makeStyles((theme) => ({
   tableRow: {
     cursor: "pointer"
+  },
+  tableCell: {
+    whiteSpace: "nowrap",
+    overflow: "hidden"
+  },
+  padStart: {
+    paddingLeft: "35px"
+  },
+  padStartCheckbox: {
+    paddingLeft: "20px"
+  },
+  tableRowHighlight: {
+    color: theme.palette.primary.main
   }
-}
+}))
 
 function stableSort(array, cmp) {
   const stabilizedThis = array.map((el, index) => [el, index])
@@ -35,9 +45,8 @@ function getSorting(order, orderBy) {
   return order === "desc" ? (a, b) => desc(a, b, orderBy) : (a, b) => -desc(a, b, orderBy)
 }
 
-const TableBody = ({
-  classes,
-  rows,
+export const TableBody = ({
+  columns,
   data,
   order,
   orderBy,
@@ -47,46 +56,52 @@ const TableBody = ({
   selected,
   onSelect,
   onRowClick
-}) => (<MatTableBody>
-  {stableSort(data, getSorting(order, orderBy))
-    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-    .map((n) => {
-      const isSelected = selected.includes(n.id)
-      return (
-        <TableRow
-          classes={onRowClick && { root: classes.tableRow }}
-          hover={!!onRowClick}
-          onClick={() => onRowClick && onRowClick(n)}
-          role="checkbox"
-          aria-checked={isSelected}
-          tabIndex={-1}
-          key={n.id}
-          selected={isSelected}
-        >
-          <TableCell padding="checkbox">
-            {selectable && <Checkbox
-              checked={isSelected}
-              onClick={(e) => {
-                onSelect(n.id, isSelected)
-                e.stopPropagation()
-              }}
-            />}
-          </TableCell>
-          {rows.map((row, i) => {
-            if (i === 0) {
-              return (
-                <TableCell key={i} component="th" scope="row" padding="none">
+}) => {
+  const classes = useStyles()
+
+  return (
+    <MatTableBody>
+      {stableSort(data, getSorting(order, orderBy))
+        .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+        .map((n, i) => {
+          const isSelected = selected.includes(n.id)
+          return (
+            <TableRow
+              key={`tableRow-${i}`}
+              classes={onRowClick && { root: classes.tableRow }}
+              hover={!!onRowClick}
+              onClick={() => onRowClick && onRowClick(n)}
+              role="checkbox"
+              aria-checked={isSelected}
+              tabIndex={-1}
+              selected={isSelected}
+            >
+              {selectable && (
+                <TableCell classes={{ root: classes.tableCell }} padding="checkbox">
+                  {n.selectable(n) && (
+                    <Checkbox
+                      classes={{ root: classes.padStartCheckbox }}
+                      checked={isSelected}
+                      onClick={(e) => {
+                        onSelect(n.id, isSelected)
+                        e.stopPropagation()
+                      }}
+                    />)}
+                </TableCell>)}
+              {columns.map((row, z) => (
+                <TableCell
+                  key={`tableCell-${z}`}
+                  classes={n.colored && n.colored(n)
+                    ? { root: `${classes.tableCell} ${!selectable && classes.padStart} ${classes.tableRowHighlight}` }
+                    : { root: `${classes.tableCell} ${!selectable && classes.padStart}` }
+                  }
+                >
                   {n[row.id]}
                 </TableCell>
-              )
-            }
-            return (
-              <TableCell key={i}>{n[row.id]}</TableCell>
-            )
-          })}
-        </TableRow>
-      )
-    })}
-</MatTableBody>)
-
-export default withStyles(styles)(TableBody)
+              ))}
+            </TableRow>
+          )
+        })}
+    </MatTableBody>
+  )
+}

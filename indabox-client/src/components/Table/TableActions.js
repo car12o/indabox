@@ -1,34 +1,39 @@
 import React from "react"
-import { withStyles } from "@material-ui/core/styles"
-import Button from "@material-ui/core/Button"
+import { makeStyles } from "@material-ui/core/styles"
+import { Button } from "@material-ui/core"
 
-const styles = {
+const useStyles = makeStyles({
   root: {
     display: "flex",
     justifyContent: "center",
-    padding: "0 0 15px 0"
+    padding: "20px 0"
   },
   button: {
     margin: "0 20px"
   }
+})
+
+export const TableActions = ({ actions, selected, setSelected }) => {
+  const classes = useStyles()
+
+  return (
+    <div className={classes.root}>
+      {actions.map((action, i) => (
+        <Button
+          key={i}
+          classes={{ root: classes.button }}
+          color="primary"
+          size="large"
+          variant="contained"
+          disabled={selected.length === 0}
+          onClick={() => {
+            setSelected([])
+            action.onClick(selected)
+          }}
+        >
+          {action.label}
+        </Button>
+      ))}
+    </div>
+  )
 }
-
-const TableActions = ({ classes, actions, selected }) => (
-  <div className={classes.root}>
-    {actions.map((action, i) => (
-      <Button
-        key={i}
-        classes={{ root: classes.button }}
-        color="primary"
-        size="large"
-        variant="contained"
-        disabled={selected.length === 0}
-        onClick={() => action.onClick(selected)}
-      >
-        {action.label}
-      </Button>
-    ))}
-  </div>
-)
-
-export default withStyles(styles)(TableActions)

@@ -1,32 +1,26 @@
 import React from "react"
-import { withStyles } from "@material-ui/core/styles"
-import MatTableHead from "@material-ui/core/TableHead"
-import TableRow from "@material-ui/core/TableRow"
-import TableCell from "@material-ui/core/TableCell"
-import TableSortLabel from "@material-ui/core/TableSortLabel"
-import Checkbox from "@material-ui/core/Checkbox"
-import Tooltip from "@material-ui/core/Tooltip"
+import { makeStyles } from "@material-ui/core/styles"
+import { TableHead as MatTableHead, TableRow, TableCell, TableSortLabel, Checkbox, Tooltip } from "@material-ui/core"
+import { ArrowDownward } from "@material-ui/icons"
 
-const styles = {
+const useStyles = makeStyles({
   cell: {
     color: "white",
     fontWeight: "bold",
-    textTransform: "uppercase"
+    textTransform: "uppercase",
+    whiteSpace: "nowrap",
+    overflow: "hidden"
   },
-  sortLabel: {
-    color: "white",
-    "&:hover": {
-      color: "white"
-    },
-    "&:focus": {
-      color: "white"
-    }
+  padStart: {
+    paddingLeft: "35px"
+  },
+  padStartCheckbox: {
+    paddingLeft: "20px"
   }
-}
+})
 
-const TableHead = ({
-  classes,
-  rows,
+export const TableHead = ({
+  columns,
   rowCount,
   order,
   orderBy,
@@ -34,44 +28,50 @@ const TableHead = ({
   selectable,
   numSelected,
   onleSelectAll
-}) => (<MatTableHead classes={{ root: "gradient-background" }}>
-  <TableRow classes={{ root: classes.row }}>
-    <TableCell style={{ width: selectable ? "8%" : 0 }} padding="checkbox">
-      {selectable && <Checkbox
-        classes={{ root: classes.cell }}
-        checked={numSelected === rowCount}
-        onChange={onleSelectAll}
-      />}
-    </TableCell>
-    {rows.map(
-      (row) => (
-        <TableCell
-          key={row.id}
-          classes={{ root: classes.cell }}
-          style={{ width: row.width }}
-          align={row.numeric ? "right" : "left"}
-          padding={row.disablePadding ? "none" : "default"}
-          sortDirection={orderBy === row.id ? order : false}
-        >
-          <Tooltip
-            title="Sort"
-            placement={row.numeric ? "bottom-end" : "bottom-start"}
-            enterDelay={300}
-          >
-            <TableSortLabel
-              classes={{ root: classes.sortLabel }}
-              active={orderBy === row.id}
-              direction={order}
-              onClick={onRequestSort(row.id)}
-            >
-              {row.label}
-            </TableSortLabel>
-          </Tooltip>
-        </TableCell>
-      ),
-      this
-    )}
-  </TableRow>
-</MatTableHead>)
+}) => {
+  const classes = useStyles()
 
-export default withStyles(styles)(TableHead)
+  return (
+    <MatTableHead classes={{ root: "gradient-background" }}>
+      <TableRow classes={{ root: classes.row }}>
+        {selectable && (
+          <TableCell style={{ width: "8%" }} padding="checkbox">
+            <Checkbox
+              classes={{ root: `${classes.cell} ${classes.padStartCheckbox}` }}
+              checked={numSelected === rowCount}
+              onChange={onleSelectAll}
+            />
+          </TableCell>)
+        }
+        {columns.map((row) => (
+          <TableCell
+            key={row.id}
+            classes={{ root: `${classes.cell} ${!selectable && classes.padStart}` }}
+            style={{ width: row.width || "auto" }}
+            align={row.numeric ? "right" : "left"}
+            padding={row.disablePadding ? "none" : "default"}
+            sortDirection={orderBy === row.id ? order : false}
+          >
+            <Tooltip
+              title="Sort"
+              placement={row.numeric ? "bottom-end" : "bottom-start"}
+              enterDelay={300}
+            >
+              <TableSortLabel
+                style={{ color: "white" }}
+                active={orderBy === row.id}
+                direction={order}
+                onClick={onRequestSort(row.id)}
+                IconComponent={({ className }) => (
+                  <ArrowDownward className={className} style={{ color: "white" }} />
+                )}
+              >
+                {row.label}
+              </TableSortLabel>
+            </Tooltip>
+          </TableCell>
+        ))}
+      </TableRow>
+    </MatTableHead>
+  )
+}

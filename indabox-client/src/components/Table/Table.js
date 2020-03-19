@@ -1,17 +1,15 @@
 import React, { useState } from "react"
-import { withStyles } from "@material-ui/core/styles"
-import Typography from "@material-ui/core/Typography"
-import MatTable from "@material-ui/core/Table"
-import TablePagination from "@material-ui/core/TablePagination"
-import TableHead from "./TableHead"
-import TableBody from "./TableBody"
-import TableActions from "./TableActions"
+import { makeStyles } from "@material-ui/core/styles"
+import { Typography, Table as MatTable, TablePagination } from "@material-ui/core"
+import { TableHead } from "./TableHead"
+import { TableBody } from "./TableBody"
+import { TableActions } from "./TableActions"
 
-const styles = {
+const useStyles = makeStyles({
   subtitle: {
     padding: "15px"
   }
-}
+})
 
 function handleRequestSort(order, orderBy, { setOrder, setOrderBy }) {
   return (_orderBy) => () => {
@@ -48,12 +46,11 @@ function handleSelectClick(selected, { setSelected }) {
   }
 }
 
-const Table = ({
-  classes,
-  rows,
+export const Table = ({
+  columns,
   order,
   orderBy,
-  data,
+  data: _data,
   page,
   rowsPerPage,
   rowsPerPageOptions,
@@ -61,12 +58,14 @@ const Table = ({
   actions,
   noDataLabel
 }) => {
+  const data = _data || []
   const [_order, setOrder] = useState(order || "asc")
   const [_orderBy, setOrderBy] = useState(orderBy)
   const [_page, setPage] = useState(page || 0)
   const [_rowsPerPage, setRowsPerPage] = useState(rowsPerPage || 10)
   const [selected, setSelected] = useState([])
 
+  const classes = useStyles()
   const _rowsPerPageOptions = rowsPerPageOptions || [10, 20, 50]
 
   if (data.length === 0) {
@@ -81,7 +80,7 @@ const Table = ({
     <div>
       <MatTable aria-labelledby="tableTitle">
         <TableHead
-          rows={rows}
+          columns={columns}
           rowCount={data.length}
           order={_order}
           orderBy={_orderBy}
@@ -91,7 +90,7 @@ const Table = ({
           onleSelectAll={handleSelectAllClick(data, selected, { setSelected })}
         />
         <TableBody
-          rows={rows}
+          columns={columns}
           data={data}
           order={_order}
           orderBy={_orderBy}
@@ -117,9 +116,8 @@ const Table = ({
       {actions && <TableActions
         actions={actions}
         selected={selected}
+        setSelected={setSelected}
       />}
     </div>
   )
 }
-
-export default withStyles(styles)(Table)

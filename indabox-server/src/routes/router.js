@@ -23,8 +23,10 @@ users.patch("/:userId", Auth.authorization(userRoles.holder), validation(userSch
  */
 payments.post("/", Auth.authorization(userRoles.admin), validation(paymentCreateSchema), Payment.create)
 payments.delete("/:id", Auth.authorization(userRoles.admin), Payment.delete)
-payments.patch("/invoice/:id", Auth.authorization(userRoles.admin),
-  validation(paymentInvoiceSchema), Payment.updateInvoice)
+payments.patch(
+  "/invoice/:id", Auth.authorization(userRoles.admin),
+  validation(paymentInvoiceSchema), Payment.updateInvoice
+)
 
 /**
  * router ...
@@ -32,10 +34,7 @@ payments.patch("/invoice/:id", Auth.authorization(userRoles.admin),
 router.use("/users", users)
 router.use("/payments", payments)
 
-router.get("/titles", Auth.authorization(userRoles.holder), UsersController.getTitles)
-router.get("/roles", Auth.authorization(userRoles.holder), UsersController.getRoles)
-router.get("/countries", Auth.authorization(userRoles.holder), UsersController.getCountries)
-
+router.get("/metadata", Auth.authorization(userRoles.holder), UsersController.getMetadata)
 router.get("/state", Auth.authorization(userRoles.holder), GeneralController.state)
 router.post("/login", validation(userSchema), GeneralController.login)
 router.get("/logout", Auth.authorization(userRoles.holder), GeneralController.logout)

@@ -1,9 +1,0 @@
-#partner-details::after {
-    content: "";
-    top: 1px;
-    position: absolute;
-    height: 55px;
-    width: 100%;
-    background-image: linear-gradient(to right, #DA2155, #6000AC);
-    z-index: -1;
-}

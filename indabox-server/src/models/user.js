@@ -148,7 +148,6 @@ User.static("patch", function patch(_id, user) {
       {
         path: "payments",
         select: "-user",
-        match: { deletedAt: null },
         populate: [
           {
             path: "quotas",

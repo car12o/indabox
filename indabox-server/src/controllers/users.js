@@ -1,9 +1,9 @@
 const fp = require("lodash/fp")
 const {
   User,
-  userTitle,
-  userRoles,
-  userCountries
+  userTitle: titles,
+  userRoles: roles,
+  userCountries: countries
 } = require("../models/user")
 require("../models/quota")
 require("../models/payment")
@@ -55,7 +55,7 @@ class UsersController {
     try {
       const { password, role, ...body } = req.body
 
-      body.role = userRoles[role.toLocaleLowerCase()]
+      body.role = roles[role.toLocaleLowerCase()]
 
       if (password) {
         body.password = hashPassword(password)
@@ -99,39 +99,20 @@ class UsersController {
   }
 
   /**
-   * getTitles ...
+   * getMetadata ...
    * @param {object} req
    * @param {object} res
    */
-  static getTitles(req, res) {
-    res.json({ titles: userTitle })
-  }
-
-  /**
-   * getTitles ...
-   * @param {object} req
-   * @param {object} res
-   */
-  static getRoles(req, res) {
+  static getMetadata(req, res) {
     const { role } = req.session.user
-
-    const result = fp.transform((accum, elem) => {
+    const _roles = fp.transform((accum, elem) => {
       if (elem.value >= role.value) {
         accum.push(elem)
       }
       return accum
-    }, [], userRoles)
+    }, [], roles)
 
-    res.json({ roles: result })
-  }
-
-  /**
-   * getTitles ...
-   * @param {object} req
-   * @param {object} res
-   */
-  static getCountries(req, res) {
-    res.json({ countries: userCountries })
+    res.json({ titles, countries, roles: _roles })
   }
 }
 

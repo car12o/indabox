@@ -1,17 +1,19 @@
 import React from "react"
-import { withStyles } from "@material-ui/core/styles"
-import Typography from "@material-ui/core/Typography"
+import { Typography } from "@material-ui/core"
+import { makeStyles } from "@material-ui/core/styles"
 
-const styles = {
+const useStyles = makeStyles({
   root: {
     padding: "20px 25px 15px 25px"
   }
+})
+
+export const Title = ({ label }) => {
+  const classes = useStyles()
+
+  return (
+    <Typography className={classes.root} variant="h6" id="tableTitle">
+      {label}
+    </Typography>
+  )
 }
-
-const Title = ({ classes, label }) => (
-  <Typography className={classes.root} variant="h6" id="tableTitle">
-    {label}
-  </Typography>
-)
-
-export default withStyles(styles)(Title)
