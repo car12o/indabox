@@ -15,3 +15,15 @@ jobs:
         command: |
                 cd server && npm i &&
                 cd ../client && npm i
+    - persist_to_workspace:
+        root: .
+        paths:
+          - client
+          - server
+          - docker-compose.yml
+
+workflows:
+  version: 2
+  main:
+    jobs:
+      - setup
