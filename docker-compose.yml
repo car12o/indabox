@@ -19,9 +19,7 @@ services:
         APP_PORT: 3000
         ROOT_EMAIL: ${ROOT_EMAIL}
         ROOT_PASSWORD: ${ROOT_PASSWORD}
-        MONGO_HOST: mongodb://{MONGO_USER}:{MONGO_PASSWORD}@mongo:27017/indabox?authSource=admin
-        MONGO_USER: ${MONGO_USER}
-        MONGO_PASSWORD: ${MONGO_PASSWORD}
+        MONGO_CONNECTION_STRING: mongodb://{MONGO_USER}:{MONGO_PASSWORD}@mongo:27017/indabox?authSource=admin
         REDIS_HOST: redis
         REDIS_PORT: 6379
         REDIS_PASSWORD: ${REDIS_PASSWORD}

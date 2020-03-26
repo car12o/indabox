@@ -24,16 +24,16 @@
   },
   "homepage": "https://github.com/car12o/indabox#readme",
   "dependencies": {
+    "@hapi/joi": "^17.1.1",
     "body-parser": "^1.18.3",
     "cors": "^2.8.5",
     "express": "^4.16.4",
+    "express-joi-validation": "^4.0.3",
     "helmet": "^3.15.0",
-    "joi": "^14.3.1",
-    "lodash": "^4.17.11",
-    "mongoose": "^5.4.7",
+    "lodash": "^4.17.15",
+    "mongoose": "^5.9.5",
     "morgan": "^1.9.1",
     "redis": "^2.8.0",
-    "saslprep": "^1.0.3",
     "uuid": "^3.3.2",
     "winston": "^3.2.0"
   },
@@ -43,9 +43,6 @@
     "nodemon": "^1.18.9"
   },
   "eslintConfig": {
-    "extends": "car12o",
-    "globals": {
-      "log": true
-    }
+    "extends": "car12o"
   }
 }

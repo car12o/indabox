@@ -8,7 +8,7 @@ const errorStackFormat = winston.format((info) => ({
   stack: info.stack
 }))
 
-const logger = winston.createLogger({
+const log = winston.createLogger({
   level: "debug",
   format: winston.format.combine(
     winston.format.timestamp(),
@@ -17,7 +17,6 @@ const logger = winston.createLogger({
   ),
   defaultMeta: { service: process.env.APP_NAME || config.APP_NAME },
   transports: [
-    new winston.transports.File({ filename: "./logs/combined.log" }),
     new winston.transports.Console({
       format: winston.format.combine(
         winston.format.colorize({
@@ -35,4 +34,6 @@ const logger = winston.createLogger({
   ]
 })
 
-module.exports = logger
+module.exports = {
+  log
+}

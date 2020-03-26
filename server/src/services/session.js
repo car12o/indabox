@@ -1,83 +1,36 @@
 const uuidv4 = require("uuid/v1")
-const { redis } = require("./database/database")
+const { merge } = require("lodash/fp")
+const { redis } = require("./database")
 
-class Session {
-  /**
-   * init ...
-   * @param {string} authToken
-   */
-  async init(authToken = "") {
-    try {
-      const value = await redis.get(authToken)
-      this.build(value)
-      return this
-    } catch (e) {
-      this.create()
-      return this
-    }
-  }
-
-  /**
-   * create ...
-   */
-  create() {
-    this.token = uuidv4()
-    this.logged = false
-    redis.set(this.token, JSON.stringify(this))
-  }
-
-  /**
-   * build ...
-   * @param {string} value
-   */
-  build(value) {
-    const { token, logged, user } = JSON.parse(value)
-    this.token = token
-    this.logged = logged
-    this.user = user
-  }
-
-  /**
-   * setLogged ...
-   * @param {boolean} value
-   */
-  setLogged(value = false) {
-    this.logged = value
-    redis.set(this.token, JSON.stringify(this))
-  }
-
-  /**
-   * setUser ...
-   * @param {object} value
-   */
-  setUser(value) {
-    this.user = value
-
-    if (value) {
-      const {
-        __v,
-        password,
-        ...user
-      } = value.toObject()
-
-      this.user = user
-    }
-
-    redis.set(this.token, JSON.stringify(this))
-  }
-
-  /**
-   * json ...
-   */
-  json() {
-    const result = { logged: this.logged }
-
-    if (this.user) {
-      Object.assign(result, this.user)
-    }
-
-    return result
-  }
+const redisGet = async (token) => {
+  const values = await redis.get(token)
+  return JSON.parse(values)
 }
 
-module.exports = Session
+const redisSet = async (session) => {
+  const { token } = session
+  const values = JSON.stringify(session)
+  await redis.set(token, values)
+}
+
+async function set(values) {
+  const { password, ..._values } = values
+  const session = merge(this, _values)
+  await redisSet(session)
+}
+
+const get = async (token = uuidv4()) => {
+  let session = await redisGet(token)
+  if (!session) {
+    session = { token, logged: false }
+    await redisSet(session)
+  }
+
+  return { ...session, set: set.bind(session) }
+}
+
+module.exports = {
+  session: {
+    get
+  }
+}
