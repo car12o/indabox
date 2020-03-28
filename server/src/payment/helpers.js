@@ -10,7 +10,18 @@ const paymentTypes = {
   mb: "Referencia MB"
 }
 
+const canPaymentBeCreated = (quotas, quotasId) => {
+  const hasPayment = quotas.some(({ payment }) => payment !== null)
+  return !hasPayment && quotas.length === quotasId.length
+}
+
+const canPaymentBeDeleted = (payment) => payment
+  && payment.status === paymentStatus.unpaid
+  && payment.type === paymentTypes.mb
+
 module.exports = {
   paymentStatus,
-  paymentTypes
+  paymentTypes,
+  canPaymentBeCreated,
+  canPaymentBeDeleted
 }

@@ -4,10 +4,14 @@ const { paymentTypes } = require("./helpers")
 
 const createValidator = validator.body(Joi.object().keys({
   type: Joi.string().valid(...Object.values(paymentTypes)).required(),
-  value: Joi.number().min(0).required(),
   quotas: Joi.array().items(Joi.string().length(24)).required()
 }))
 
+const updateValidator = validator.body(Joi.object().keys({
+  invoiceEmited: Joi.boolean()
+}))
+
 module.exports = {
-  createValidator
+  createValidator,
+  updateValidator
 }

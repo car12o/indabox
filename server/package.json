@@ -7,7 +7,8 @@
     "dev": "nodemon --inspect=0.0.0.0:9229 src/index.js",
     "import": "node src/services/database/import.js",
     "export": "node src/services/database/export.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
+    "test:watch": "jest --watch",
     "lint": "eslint ."
   },
   "repository": {
@@ -40,9 +41,13 @@
   "devDependencies": {
     "eslint": "^5.12.1",
     "eslint-config-car12o": "github:car12o/eslint-config-car12o",
+    "jest": "^25.2.3",
     "nodemon": "^1.18.9"
   },
   "eslintConfig": {
-    "extends": "car12o"
+    "extends": "car12o",
+    "env": {
+      "jest": true
+    }
   }
 }
