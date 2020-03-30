@@ -1,184 +1,127 @@
-// /* eslint-disable no-unused-vars */
-// const fs = require("fs")
-// const readline = require("readline")
-// const { Types } = require("mongoose")
-// const { mongo } = require("./database")
-// const { User } = require("../../models/user")
-// const { Quota } = require("../../models/quota")
-// const { Payment, paymentStatus, paymentTypes } = require("../../models/payment")
-// const config = require("../../../config/default.json")
-// const logger = require("../logging")
+const { compose, split, camelCase, chunk, map, toNumber, filter } = require("lodash/fp")
+const { dirname } = require("path")
+const { readdirSync, createReadStream } = require("fs")
+const { createInterface } = require("readline")
+const { log } = require("../../logging")
+const { User } = require("../../../user")
+const { Quota } = require("../../../quota")
+const { Payment, paymentStatus, paymentTypes } = require("../../../payment")
+const { connect } = require("../mongo")
 
-// log = logger
+const getPayment = (qStatus, value) => {
+  const status = Object.values(qStatus).pop()
+  if (status) {
+    return new Payment({
+      status: paymentStatus.paid,
+      type: paymentTypes.imported,
+      paymentDate: Date.now(),
+      value
+    })
+  }
+  return null
+}
 
-// const parseLine = (line) => {
-//   const [
-//     number,
-//     title,
-//     firstName,
-//     lastName,
-//     nif,
-//     email,
-//     ballotNumber,
-//     specialty,
-//     specialtySessions,
-//     addressRoad,
-//     addressCity,
-//     addressPostCode,
-//     addressCountry,
-//     phone,
-//     mobile,
-//     newsletter,
-//     alerts,
-//     notes,
-//     billingName,
-//     billingNif,
-//     billingAddressRoad,
-//     billingAddressCity,
-//     billingAddressPostCode,
-//     billingAddressCountry,
-//     _,
-//     _1,
-//     _2,
-//     _3,
-//     _4,
-//     _5,
-//     _6,
-//     quota2014,
-//     payment2014,
-//     quota2015,
-//     payment2015,
-//     quota2016,
-//     payment2016,
-//     quota2017,
-//     payment2017,
-//     quota2018,
-//     payment2018,
-//     quota2019,
-//     payment2019,
-//     quota2020,
-//     payment2020
-//   ] = line.split(",")
+const getQuotas = (rawQuotas) => {
+  let quotas = compose(
+    map(([qYear, qStatus]) => {
+      const [values] = Object.entries(qYear)
+      const year = values[0].split("quota")[1]
+      const value = values[1] || 0
+      const payment = getPayment(qStatus, value)
+      return { year, value: toNumber(value), payment }
+    }),
+    chunk(2)
+  )(rawQuotas)
 
-//   const user = {
-//     number,
-//     title,
-//     firstName,
-//     lastName,
-//     nif,
-//     email,
-//     ballotNumber,
-//     specialty,
-//     specialtySessions,
-//     address: {
-//       road: addressRoad,
-//       postCode: addressPostCode,
-//       city: addressCity,
-//       country: addressCountry
-//     },
-//     phone,
-//     mobile,
-//     newsletter: newsletter === "s",
-//     alerts: alerts === "s",
-//     notes,
-//     billing: {
-//       name: billingName,
-//       nif: billingNif,
-//       road: billingAddressRoad,
-//       postCode: billingAddressPostCode,
-//       city: billingAddressCity,
-//       country: billingAddressCountry
-//     },
-//     quotas: [],
-//     payments: []
-//   }
+  const payments = compose(
+    filter(undefined),
+    map(({ payment }) => payment)
+  )(quotas)
 
-//   const quotas = [
-//     { year: 2014, value: quota2014, payment: payment2014 },
-//     { year: 2015, value: quota2015, payment: payment2015 },
-//     { year: 2016, value: quota2016, payment: payment2016 },
-//     { year: 2017, value: quota2017, payment: payment2017 },
-//     { year: 2018, value: quota2018, payment: payment2018 },
-//     { year: 2019, value: quota2019, payment: payment2019 },
-//     { year: 2020, value: quota2020, payment: payment2020 }
-//   ]
+  quotas = quotas.map((quota) => new Quota({ ...quota, payment: quota.payment ? quota.payment._id : null }))
+  return { quotas, payments }
+}
 
-//   return { user, quotas }
-// }
+const createProp = (mainKey, key) => compose(
+  (arr) => camelCase(arr[1]),
+  split(mainKey)
+)(key)
 
-// const buildData = (line) => {
-//   const { user, quotas } = parseLine(line)
-//   const _user = new User({ ...user, id: Types.ObjectId() })
-//   const { _quotas, _payments } = quotas.reduce((acc, quota) => {
-//     const _quota = new Quota({
-//       id: Types.ObjectId(),
-//       year: quota.year,
-//       value: quota.value,
-//       user: _user.id
-//     })
+const getUser = (rawUser, quotas) => {
+  const user = rawUser.reduce((acc, v) => {
+    const [values] = Object.entries(v)
+    const key = values[0]
+    const value = values[1]
 
-//     if (quota.payment && quota.payment.toLocaleLowerCase === "s") {
-//       const _payment = new Payment({
-//         id: Types.ObjectId(),
-//         type: paymentTypes.imported,
-//         value: quota.value,
-//         status: {
-//           label: paymentStatus.paid.label,
-//           value: paymentStatus.paid.value
-//         },
-//         paymentDate: Date.now(),
-//         user: _user.id,
-//         quotas: [_quota.id]
-//       })
+    if (key.includes("address")) {
+      const prop = createProp("address", key)
+      return { ...acc, address: { ...acc.address, [prop]: value } }
+    }
 
-//       acc._payments.push(_payment)
-//       _user.payments.push(_payment.id)
-//       _quota.payment = _payment.id
-//     }
+    if (key.includes("billing")) {
+      const prop = createProp("billing", key)
+      return { ...acc, billing: { ...acc.billing, [prop]: value } }
+    }
 
-//     acc._quotas.push(_quota)
-//     _user.quotas.push(_quota.id)
-//     return acc
-//   }, { _quotas: [], _payments: [] })
+    return { ...acc, [key]: value }
+  }, {})
 
-//   return { user: _user, quotas: _quotas, payments: _payments }
-// }
+  user.quotas = quotas.map(({ _id }) => _id)
+  user.newsletter = !!user.newsletter || false
+  user.alerts = !!user.alerts || false
+  return user
+}
 
-// const writeData = async (users) => {
-//   await Promise.all(users.map(({ user, quotas, payments }) => Promise.all([
-//     user.save(),
-//     ...quotas.map((quota) => quota.save()),
-//     ...payments.map((payment) => payment.save())
-//   ])))
-// }
+let count = 0
+const save = async ({ user, quotas, payments }) => {
+  await User.create(user)
+  await Quota.create(quotas)
+  await Payment.create(payments)
 
-// (async () => {
-//   try {
-//     const arg = process.argv.find((elem) => elem.includes("path="))
-//     if (!arg) {
-//       throw new Error("Invalid path. try [npm run import -- path={path}]")
-//     }
+  count -= 1
+  if (count === 0) {
+    process.exit()
+  }
+}
 
-//     const [_, path] = arg.split("=")
+const COLUMNS = [
+  "number", "title", "firstName", "lastName", "nif", "email", "ballotNumber", "specialty", "specialtySessions",
+  "addressRoad", "addressCity", "addressPostCode", "addressCountry", "phone", "mobile", "newsletter", "alerts",
+  "notes", "billingName", "billingNif", "billingRoad", "billingCity", "billingPostCode", "billingCountry", "quota2010",
+  "quota2010status", "quota2011", "quota2011status", "quota2012", "quota2012status", "quota2013", "quota2013status",
+  "quota2014", "quota2014status", "quota2015", "quota2015status", "quota2016", "quota2016status", "quota2017",
+  "quota2017status", "quota2018", "quota2018status", "quota2019", "quota2019status", "quota2020", "quota2020status"
+]
 
-//     await mongo.connect(config)
+const seedDir = `${dirname(__dirname)}/seed`
+const seedFile = readdirSync(seedDir).pop()
 
-//     const rl = readline.createInterface({
-//       input: fs.createReadStream(path)
-//     })
+connect()
+  .then(() => {
+    log.info("Successfully connected to databases")
 
-//     const data = []
-//     rl.on("line", (line) => {
-//       rl.pause()
-//       const user = buildData(line)
-//       data.push(user)
-//       rl.resume()
-//     }).on("close", async () => {
-//       await writeData(data)
-//       log.info("Import finished")
-//       process.exit()
-//     })
-//   } catch (error) {
-//     log.error(error)
-//   }
-// })()
+    const readStream = createReadStream(`${seedDir}/${seedFile}`)
+    const rl = createInterface(readStream)
+
+    rl.on("line", (line) => {
+      const data = line
+        .split(",")
+        .map((value, i) => (COLUMNS[i] ? ({ [COLUMNS[i]]: value }) : undefined))
+        .filter((value) => value !== undefined)
+
+      if (data.length !== COLUMNS.length) {
+        log.warn(`Skipping: missing data on line [${line}]`)
+        return
+      }
+
+      const rawQuotas = data.slice(24, data.length)
+      const rawUser = data.slice(0, 23)
+
+      const { quotas, payments } = getQuotas(rawQuotas)
+      const user = getUser(rawUser, quotas)
+
+      count += 1
+      save({ user, quotas, payments })
+    })
+  })
+  .catch((error) => log.error(error))

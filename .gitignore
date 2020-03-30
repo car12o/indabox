@@ -1,9 +1,6 @@
 node_modules
 .vscode
-!.gitkeep
-data
-data_dev
-
-# client
-client/build
-client/*.log
+**/seed/*
+**/build
+*.log
+!**/.gitkeep

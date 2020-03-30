@@ -5,8 +5,7 @@
   "scripts": {
     "start": "node src/index.js",
     "dev": "nodemon --inspect=0.0.0.0:9229 src/index.js",
-    "import": "node src/services/database/import.js",
-    "export": "node src/services/database/export.js",
+    "import": "node src/services/database/utils/import.js",
     "test": "jest",
     "test:watch": "jest --watch",
     "lint": "eslint ."
