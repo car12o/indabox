@@ -22,22 +22,22 @@ services:
       volumes:
         - ./server:/home/server
 
-  # client:
-  #   image: node:11.8-alpine
-  #   container_name: indabox-client
-  #   command: npm run start
-  #   working_dir: /home/client
-  #   depends_on:
-  #     - server
-  #   environment:
-  #       REACT_APP_API_URL: http://0.0.0.0:3000
-  #   networks:
-  #     - indabox
-  #   ports:
-  #     - "80:3000"
-  #   restart: unless-stopped
-  #   volumes:
-  #     - ./client:/home/client
+  client:
+    image: node:11.8-alpine
+    container_name: indabox-client
+    command: npm run start
+    working_dir: /home/client
+    depends_on:
+      - server
+    environment:
+        REACT_APP_API_URL: http://0.0.0.0:3000
+    networks:
+      - indabox
+    ports:
+      - "80:3000"
+    restart: unless-stopped
+    volumes:
+      - ./client:/home/client
 
   mongo:
     image: mongo:4.1.7

@@ -1,13 +1,13 @@
 const mongoose = require("mongoose")
 const config = require("../../config/default.json")
 const { log } = require("../services/logging")
-const { userRoles, userTitle, userCountries } = require("./helpers")
+const { userRoles, userTitles, userCountries } = require("./helpers")
 const { hashPassword } = require("../services/crypto")
 
 const _User = new mongoose.Schema({
   role: { type: Number, default: userRoles.holder },
   number: { type: Number, default: 0 },
-  title: { type: String, default: userTitle.dr },
+  title: { type: String, default: userTitles.dr },
   firstName: { type: String, default: "" },
   lastName: { type: String, default: "" },
   nif: { type: String, default: "" },
@@ -45,6 +45,82 @@ const _User = new mongoose.Schema({
   quotas: [{ type: mongoose.Schema.Types.ObjectId, ref: "Quota", default: null }]
 }, {
   timestamps: true
+})
+
+const populate = [
+  {
+    path: "quotas",
+    populate: [
+      {
+        path: "payment",
+        populate: [
+          { path: "createdBy", select: ["_id", "firstName"] },
+          { path: "updatedBy", select: ["_id", "firstName"] },
+          { path: "deletedBy", select: ["_id", "firstName"] }
+        ]
+      }
+    ]
+  },
+  { path: "createdBy", select: ["_id", "firstName"] },
+  { path: "updatedBy", select: ["_id", "firstName"] },
+  { path: "deletedBy", select: ["_id", "firstName"] }
+]
+
+_User.static("get", async function get(filters, { password } = {}) {
+  if (password) {
+    const user = await this.findOne(filters).select("+password").populate(populate).lean()
+    return user
+  }
+
+  const user = await this.findOne(filters).populate(populate).lean()
+  return user
+})
+
+_User.static("getMany", async function getMany(filters) {
+  const users = await this.find(filters).lean()
+  return users
+})
+
+_User.static("store", async function store(doc, user) {
+  if (doc.password) {
+    doc.password = hashPassword(doc.password)
+  }
+
+  const _user = await this.create({
+    ...doc,
+    createdBy: user,
+    updatedBy: user
+  })
+
+  await _user.populate(populate).execPopulate()
+
+  return _user.toObject()
+})
+
+_User.static("update", async function update(filters, doc, user) {
+  if (doc.password) {
+    doc.password = hashPassword(doc.password)
+  }
+
+  const _user = await this.findOneAndUpdate(filters, {
+    ...doc,
+    updatedBy: user
+  }, { new: true }).populate(populate)
+
+  return _user.toObject()
+})
+
+_User.static("del", async function del(id, doc, user) {
+  const _user = await this.findByIdAndUpdate(id, {
+    ...doc,
+    updatedBy: user,
+    deletedAt: Date.now(),
+    deletedBy: user
+  }, { new: true })
+
+  await _user.populate(populate).execPopulate()
+
+  return _user.toObject()
 })
 
 const User = mongoose.model("User", _User)

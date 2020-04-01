@@ -1,22 +1,21 @@
 const { APIError } = require("../services/error")
-const { hashPassword } = require("../services/crypto")
 const { User } = require("./model")
 const { userRoles } = require("./helpers")
 
 const get = async (req, res) => {
-  const users = await User.find()
+  const users = await User.getMany()
   res.json(users)
 }
 
 const getById = async (req, res) => {
-  const { id } = req.params
+  const { _id } = req.params
   const { user } = req.session
 
-  if (user.role > userRoles.admin && id !== user._id) {
+  if (user.role > userRoles.admin && _id !== user._id) {
     throw new APIError("Forbidden", 403)
   }
 
-  const _user = await User.findById(id)
+  const _user = await User.get({ _id })
   res.json(_user)
 }
 
@@ -24,37 +23,21 @@ const create = async (req, res) => {
   const { password, ...body } = req.body
   const { user } = req.session
 
-  const _user = {
-    ...body,
-    password: hashPassword(password),
-    createdBy: user._id,
-    updatedBy: user._id
-  }
-
-  const usr = await User.create(_user)
-  const { password: _, ...rest } = usr.toObject()
+  const _user = await User.store(body, user._id)
+  const { password: _, ...rest } = _user
   res.json(rest)
 }
 
 const update = async (req, res) => {
-  const { body: { password, ...body }, params: { id } } = req
+  const { body, params: { _id } } = req
   const { user } = req.session
 
-  if (user.role > userRoles.admin && id !== user._id) {
+  if (user.role > userRoles.admin && _id !== user._id) {
     throw new APIError("Forbidden", 403)
   }
 
-  const _user = {
-    ...body,
-    updatedBy: user._id
-  }
-
-  if (password) {
-    _user.password = hashPassword(password)
-  }
-
-  const usr = await User.findByIdAndUpdate(id, _user, { new: true })
-  res.json(usr)
+  const _user = await User.update({ _id }, body, user._id)
+  res.json(_user)
 }
 
 module.exports = {

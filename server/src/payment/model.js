@@ -21,6 +21,56 @@ const Payment = mongoose.Schema({
   timestamps: true
 })
 
+const populate = [
+  { path: "createdBy", select: ["_id", "firstName"] },
+  { path: "updatedBy", select: ["_id", "firstName"] },
+  { path: "deletedBy", select: ["_id", "firstName"] }
+]
+
+Payment.static("get", async function get(filters) {
+  const payment = await this.findOne(filters).populate(populate).lean()
+  return payment
+})
+
+Payment.static("getMany", async function getMany(filters) {
+  const payments = await this.find(filters).lean()
+  return payments
+})
+
+Payment.static("store", async function store(doc, user) {
+  const payment = await this.create({
+    ...doc,
+    createdBy: user,
+    updatedBy: user
+  })
+
+  await payment.populate(populate).execPopulate()
+
+  return payment.toObject()
+})
+
+Payment.static("update", async function update(filters, doc, user) {
+  const payment = await this.findOneAndUpdate(filters, {
+    ...doc,
+    updatedBy: user
+  }, { new: true }).populate(populate)
+
+  return payment.toObject()
+})
+
+Payment.static("del", async function del(id, doc, user) {
+  const payment = await this.findByIdAndUpdate(id, {
+    ...doc,
+    updatedBy: user,
+    deletedAt: Date.now(),
+    deletedBy: user
+  }, { new: true })
+
+  await payment.populate(populate).execPopulate()
+
+  return payment.toObject()
+})
+
 module.exports = {
   Payment: mongoose.model("Payment", Payment)
 }

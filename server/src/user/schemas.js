@@ -1,6 +1,6 @@
 const Joi = require("@hapi/joi")
 const { validator } = require("../middleware")
-const { userRoles, userTitle, userCountries } = require("./helpers")
+const { userRoles, userTitles, userCountries } = require("./helpers")
 
 const createValidator = validator.body(Joi.object().keys({
   role: Joi.number().valid(...Object.values(userRoles)).required(),
@@ -22,7 +22,7 @@ const updateValidator = validator.body(Joi.object().keys({
   firstName: Joi.string(),
   lastName: Joi.string(),
   number: Joi.number(),
-  title: Joi.string().valid(...Object.values(userTitle)),
+  title: Joi.string().valid(...Object.values(userTitles)),
   nif: Joi.string().min(9, "UTF-8").max(9, "UTF-8"),
   phone: Joi.string().min(9, "UTF-8").max(15, "UTF-8"),
   mobile: Joi.string().min(9, "UTF-8").max(15, "UTF-8"),

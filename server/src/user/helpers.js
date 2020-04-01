@@ -4,7 +4,7 @@ const userRoles = {
   holder: 20
 }
 
-const userTitle = {
+const userTitles = {
   dr: "Dr.",
   dra: "Dra."
 }
@@ -19,6 +19,6 @@ const userCountries = {
 
 module.exports = {
   userRoles,
-  userTitle,
+  userTitles,
   userCountries
 }
