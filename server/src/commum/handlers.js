@@ -1,7 +1,7 @@
 const { ValidationError } = require("../services/error")
 const { verifyHash } = require("../services/crypto")
 const { User } = require("../user")
-const { userRolesText, userTitles, userCountries } = require("../constants")
+const { userRoles, userRolesText, userTitles, userCountries } = require("../constants")
 
 const login = async (req, res) => {
   const { email, password } = req.body
@@ -29,7 +29,9 @@ const state = async (req, res) => {
 
 const metadata = async (req, res) => {
   res.json({
-    roles: Object.entries(userRolesText).map(([value, label]) => ({ value: Number(value), label })),
+    roles: Object.entries(userRolesText)
+      .map(([value, label]) => ({ value: Number(value), label }))
+      .filter(({ value }) => value !== userRoles.root),
     titles: Object.values(userTitles).map((label) => ({ label, value: label })),
     countries: Object.values(userCountries).map((label) => ({ label, value: label }))
   })

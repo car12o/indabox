@@ -5,6 +5,11 @@ const { paymentTypes, paymentStatus } = require("../constants")
 const { canPaymentBeCreated, canPaymentBeDeleted } = require("./helpers")
 const { createMb, deleteMb } = require("./mb")
 
+const get = async (req, res) => {
+  const payments = await Payment.getMany()
+  res.json(payments)
+}
+
 const create = async (req, res) => {
   const { body } = req
   const { user } = req.session
@@ -66,6 +71,7 @@ const del = async (req, res) => {
 }
 
 module.exports = {
+  get,
   create,
   update,
   del
