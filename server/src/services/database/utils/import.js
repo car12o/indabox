@@ -5,30 +5,33 @@ const { createInterface } = require("readline")
 const { log } = require("../../logging")
 const { User } = require("../../../user")
 const { Quota } = require("../../../quota")
-const { Payment, paymentStatus, paymentTypes } = require("../../../payment")
+const { Payment } = require("../../../payment")
+const { paymentStatus, paymentTypes } = require("../../../constants")
 const { connect } = require("../mongo")
 
-const getPayment = (qStatus, value) => {
+const getPayment = (qStatus, { user, value, year }) => {
   const status = Object.values(qStatus).pop()
   if (status) {
     return new Payment({
       status: paymentStatus.paid,
       type: paymentTypes.imported,
       paymentDate: Date.now(),
+      quotasYear: [year],
+      user,
       value
     })
   }
   return null
 }
 
-const getQuotas = (rawQuotas) => {
+const getQuotas = (rawQuotas, user) => {
   let quotas = compose(
     map(([qYear, qStatus]) => {
       const [values] = Object.entries(qYear)
       const year = values[0].split("quota")[1]
       const value = values[1] || 0
-      const payment = getPayment(qStatus, value)
-      return { year, value: toNumber(value), payment }
+      const payment = getPayment(qStatus, { user, value, year })
+      return { user, year, value: toNumber(value), payment }
     }),
     chunk(2)
   )(rawQuotas)
@@ -47,7 +50,7 @@ const createProp = (mainKey, key) => compose(
   split(mainKey)
 )(key)
 
-const getUser = (rawUser, quotas) => {
+const getUser = (rawUser) => {
   const user = rawUser.reduce((acc, v) => {
     const [values] = Object.entries(v)
     const key = values[0]
@@ -66,10 +69,9 @@ const getUser = (rawUser, quotas) => {
     return { ...acc, [key]: value }
   }, {})
 
-  user.quotas = quotas.map(({ _id }) => _id)
   user.newsletter = !!user.newsletter || false
   user.alerts = !!user.alerts || false
-  return user
+  return new User(user)
 }
 
 let count = 0
@@ -117,8 +119,9 @@ connect()
       const rawQuotas = data.slice(24, data.length)
       const rawUser = data.slice(0, 23)
 
-      const { quotas, payments } = getQuotas(rawQuotas)
-      const user = getUser(rawUser, quotas)
+      const user = getUser(rawUser)
+      const { quotas, payments } = getQuotas(rawQuotas, user._id)
+      user.quotas = quotas.map(({ _id }) => _id)
 
       count += 1
       save({ user, quotas, payments })

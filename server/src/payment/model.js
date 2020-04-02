@@ -6,6 +6,7 @@ const Payment = mongoose.Schema({
   type: { type: String, required: true },
   value: { type: Number, required: true },
   quotasYear: [{ type: Number, required: true }],
+  user: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null },
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null },
   updatedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null },
   deletedAt: { type: Date, default: null },
@@ -23,6 +24,7 @@ const Payment = mongoose.Schema({
 })
 
 const populate = [
+  { path: "user", select: ["_id", "firstName"] },
   { path: "createdBy", select: ["_id", "firstName"] },
   { path: "updatedBy", select: ["_id", "firstName"] },
   { path: "deletedBy", select: ["_id", "firstName"] }
@@ -34,7 +36,7 @@ Payment.static("get", async function get(filters) {
 })
 
 Payment.static("getMany", async function getMany(filters) {
-  const payments = await this.find(filters).lean()
+  const payments = await this.find(filters).populate(populate).lean()
   return payments
 })
 

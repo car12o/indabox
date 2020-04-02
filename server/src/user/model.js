@@ -72,7 +72,11 @@ _User.static("get", async function get(filters, { password } = {}) {
     ? await this.findOne(filters).select("+password").populate(populate).lean()
     : await this.findOne(filters).populate(populate).lean()
 
-  const payments = await Payment.getMany({ _id: { $in: user.quotas.map(({ payment }) => payment && payment._id) } })
+  if (!user) {
+    return null
+  }
+
+  const payments = await Payment.getMany({ user: user._id })
 
   return { ...user, payments }
 })

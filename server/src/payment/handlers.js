@@ -19,7 +19,8 @@ const create = async (req, res) => {
     ..._quotas.reduce((acc, { year, value }) => ({
       value: acc.value + value,
       quotasYear: [...acc.quotasYear, year]
-    }), { value: 0, quotasYear: [] })
+    }), { value: 0, quotasYear: [] }),
+    user: _quotas[0].user
   }
 
   if (_payment.type === paymentTypes.mb) {

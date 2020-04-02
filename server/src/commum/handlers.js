@@ -1,18 +1,19 @@
 const { ValidationError } = require("../services/error")
 const { verifyHash } = require("../services/crypto")
-const { User, userRoles, userTitles, userCountries } = require("../user")
+const { User } = require("../user")
+const { userRoles, userTitles, userCountries } = require("../constants")
 
 const login = async (req, res) => {
   const { email, password } = req.body
-  const user = await User.get({ email }, { password })
-  if (!user || !verifyHash(password, user.password)) {
+  const _user = await User.get({ email }, { password })
+  if (!_user || !verifyHash(password, _user.password)) {
     req.session.set({ logged: false })
     throw new ValidationError([{ message: "Invalid credentials", path: ["email"] }])
   }
 
-  const { password: _, ...session } = user
-  req.session.set({ session, logged: true })
-  res.json({ ...session, logged: true })
+  const { password: _, ...user } = _user
+  req.session.set({ user, logged: true })
+  res.json({ ...user, logged: true })
 }
 
 const logout = async (req, res) => {
