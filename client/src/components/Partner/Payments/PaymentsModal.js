@@ -19,7 +19,7 @@ const useStyles = makeStyles({
   }
 })
 
-export const PaymentsModal = ({ open, onClose, payment, updateUser }) => {
+export const PaymentsModal = ({ open, onClose, payment, updatePaymentAndQuotas }) => {
   const classes = useStyles()
 
   return (
@@ -60,7 +60,7 @@ export const PaymentsModal = ({ open, onClose, payment, updateUser }) => {
           <Stamp
             classes={{ label: classes.minWidth, value: classes.minWidth }}
             label="Estado:"
-            value={payment.status}
+            value={payment.statusText}
           />
           <Stamp
             classes={{ label: classes.minWidth, value: classes.minWidth }}
@@ -80,18 +80,17 @@ export const PaymentsModal = ({ open, onClose, payment, updateUser }) => {
             value={payment.value}
           />
         </div>
-        {payment.mbReference && (
+        {payment.mb && (
           <MbReference
             classes={{ row: classes.row }}
             data={{
-              ...payment.mbReference,
-              payment: {
-                id: payment._id,
-                status: payment.statusValue
-              }
+              ...payment.mb,
+              paymentId: payment._id,
+              value: payment.value,
+              status: payment.status
             }}
             onClose={onClose}
-            updateUser={updateUser}
+            updatePaymentAndQuotas={updatePaymentAndQuotas}
           />
         )}
       </DialogContent>

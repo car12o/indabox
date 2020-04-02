@@ -1,7 +1,7 @@
 const { ValidationError } = require("../services/error")
 const { verifyHash } = require("../services/crypto")
 const { User } = require("../user")
-const { userRoles, userTitles, userCountries } = require("../constants")
+const { userRolesText, userTitles, userCountries } = require("../constants")
 
 const login = async (req, res) => {
   const { email, password } = req.body
@@ -29,9 +29,9 @@ const state = async (req, res) => {
 
 const metadata = async (req, res) => {
   res.json({
-    roles: userRoles,
-    titles: userTitles,
-    countries: userCountries
+    roles: Object.entries(userRolesText).map(([value, label]) => ({ value: Number(value), label })),
+    titles: Object.values(userTitles).map((label) => ({ label, value: label })),
+    countries: Object.values(userCountries).map((label) => ({ label, value: label }))
   })
 }
 

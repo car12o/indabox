@@ -51,9 +51,9 @@ const post = compose(
   (url, body) => fetch(`${BASE_URL}${url}`, { ...OPTIONS, method: "POST", body: JSON.stringify(body) })
 )
 
-const patch = compose(
+const put = compose(
   resolve,
-  (url, body) => fetch(`${BASE_URL}${url}`, { ...OPTIONS, method: "PATCH", body: JSON.stringify(body) })
+  (url, body) => fetch(`${BASE_URL}${url}`, { ...OPTIONS, method: "PUT", body: JSON.stringify(body) })
 )
 
 const del = compose(
@@ -83,7 +83,7 @@ const _ApiProvider = ({ children, history }) => {
     <ApiContext.Provider value={{
       get: wrap(get),
       post: wrap(post),
-      patch: wrap(patch),
+      put: wrap(put),
       del: wrap(del)
     }}>
       {children}

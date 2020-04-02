@@ -1,7 +1,7 @@
 import React from "react"
 import { makeStyles } from "@material-ui/core/styles"
 import { Button } from "@material-ui/core"
-import { del } from "../../../services/api"
+import { useApi } from "../../../services/api"
 import { Stamp } from "../../Stamp/Stamp"
 
 const useStyles = makeStyles({
@@ -28,12 +28,13 @@ const useStyles = makeStyles({
   }
 })
 
-export const MbReference = ({ data, onClose, updateUser }) => {
+export const MbReference = ({ data, onClose, updatePaymentAndQuotas }) => {
   const classes = useStyles()
+  const api = useApi()
 
   const cancelPayment = async () => {
-    const { body } = await del(`/payments/${data.payment.id}`)
-    updateUser(body)
+    const { body } = await api.del(`/payments/${data.paymentId}`)
+    updatePaymentAndQuotas(body)
     onClose()
   }
 
@@ -57,11 +58,11 @@ export const MbReference = ({ data, onClose, updateUser }) => {
         <Stamp
           classes={{ label: classes.label }}
           label="Valor:"
-          value={`${data.value}€`}
+          value={`${data.value}`}
         />
         <Stamp />
       </div>
-      {data.payment.status === 0 && (
+      {data.status === 10 && (
         <Button
           classes={{ root: classes.button }}
           color="primary"

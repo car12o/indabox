@@ -1,6 +1,6 @@
 import React from "react"
 import { formatDate } from "../../../services/transform"
-import { post } from "../../../services/api"
+import { useApi } from "../../../services/api"
 import { Table } from "../../Table/Table"
 
 const columns = [
@@ -11,21 +11,22 @@ const columns = [
   { id: "paymentDate", numeric: false, disablePadding: false, label: "DATA DE PAGAMENTO" }
 ]
 
-export const Quotas = ({ quotas, updateUser, setTabIndex }) => {
+export const Quotas = ({ quotas, paymentStatus, updatePaymentAndQuotas, setTabIndex }) => {
+  const api = useApi()
   const data = quotas.map((quota) => ({
     ...quota,
     id: quota._id,
-    status: quota.payment ? quota.payment.status.label : "Por pagar",
+    status: quota.payment ? paymentStatus[quota.payment.status] : "Não pago",
     value: `${quota.value}€`,
     createdAt: formatDate(quota.createdAt),
     paymentDate: quota.payment && quota.payment.paymentDate ? formatDate(quota.payment.paymentDate) : "",
     selectable: ({ payment }) => !payment,
-    colored: ({ payment }) => !payment || payment.status.value !== 1
+    colored: ({ payment }) => !payment || payment.status === "Não pago"
   }))
 
-  const createPayment = async (body) => {
-    const { body: partner } = await post("/payments", body)
-    updateUser(partner)
+  const createPayment = async (data) => {
+    const { body } = await api.post("/payments", data)
+    updatePaymentAndQuotas(body)
     setTabIndex(1)
   }
 

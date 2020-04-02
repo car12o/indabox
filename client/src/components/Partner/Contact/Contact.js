@@ -2,7 +2,7 @@ import React, { useState, useCallback } from "react"
 import { compose } from "lodash/fp"
 import { Typography, Button } from "@material-ui/core"
 import { makeStyles } from "@material-ui/core/styles"
-import { patch } from "../../../services/api"
+import { useApi } from "../../../services/api"
 import { UserTabHeader } from "../UserTabHeader"
 import { RadioGroup } from "../../RadioGroup/RadioGroup"
 import { Input } from "../../Input/Input"
@@ -48,19 +48,23 @@ const useStyles = makeStyles({
 })
 
 const initState = (user) => ({
-  road: user.address.road,
-  postCode: user.address.postCode,
-  city: user.address.city,
-  country: user.address.country,
   mobile: user.mobile,
   phone: user.phone,
+  address: {
+    road: user.address.road,
+    postCode: user.address.postCode,
+    city: user.address.city,
+    country: user.address.country
+  },
   billing: {
     name: user.billing.name,
     nif: user.billing.nif,
-    road: user.billing.address.road,
-    postCode: user.billing.address.postCode,
-    city: user.billing.address.city,
-    country: user.billing.address.country,
+    address: {
+      road: user.billing.address.road,
+      postCode: user.billing.address.postCode,
+      city: user.billing.address.city,
+      country: user.billing.address.country
+    },
     active: user.billing.active
   },
   errors: { billing: {} },
@@ -73,25 +77,23 @@ export const Contact = ({ user, updateUser, countries }) => {
     initState
   )(user)
   const setState = useCallback((v) => {
-    const { billing, ...values } = v
-    if (billing) {
-      return setter((state) => ({ ...state, ...values, billing: { ...state.billing, ...billing } }))
-    }
-    return setter((state) => ({ ...state, ...values }))
+    const { errors, address, billing, ...values } = v
+    return setter((state) => ({
+      ...state,
+      ...values,
+      address: { ...state.address, ...address || {} },
+      billing: { ...state.billing, ...billing || {} },
+      errors: errors || { address: {}, billing: {} }
+    }))
   }, [setter])
-
   const classes = useStyles()
+  const api = useApi()
 
   const submit = async () => {
-    const { mobile, phone, road, postCode, city, country, billing } = state
-    const { name, nif, road: bRoad, postCode: bPostCode, city: bCity, country: bCountry, active } = billing
+    const { edit, errors, billing, ...rest } = state
+    const data = billing.active ? { ...rest, billing } : rest
 
-    const { body, err } = await patch(`/users/${user._id}`, {
-      mobile,
-      phone,
-      address: { road, postCode, city, country },
-      billing: { name, nif, active, address: { road: bRoad, postCode: bPostCode, city: bCity, country: bCountry } }
-    })
+    const { body, err } = await api.put(`/users/${user._id}`, data)
     if (err) {
       setState({ errors: err })
       return
@@ -112,7 +114,7 @@ export const Contact = ({ user, updateUser, countries }) => {
               { label: "Faturar com esta morada", value: false },
               { label: "Faturar noutro nome", value: true }
             ]}
-            onChange={(active) => setState({ billing: { active }, errors: { billing: {} } })}
+            onChange={(active) => setState({ billing: { active } })}
             disabled={!state.edit}
           />
         </div>
@@ -123,43 +125,43 @@ export const Contact = ({ user, updateUser, countries }) => {
             </Typography>
             <Input
               type="text"
-              value={state.road}
+              value={state.address.road}
               label="Morada"
-              onChange={(road) => setState({ road, errors: { billing: {} } })}
+              onChange={(road) => setState({ address: { road } })}
               disabled={!state.edit}
               error={state.errors.road}
             />
             <div className={classes.row}>
               <Input
                 type="text"
-                value={state.postCode}
+                value={state.address.postCode}
                 label="Código de Postal"
-                onChange={(postCode) => setState({ postCode, errors: { billing: {} } })}
+                onChange={(postCode) => setState({ address: { postCode } })}
                 disabled={!state.edit}
                 error={state.errors.postCode}
               />
               <Input
                 type="text"
-                value={state.city}
+                value={state.address.city}
                 label="Localidade"
-                onChange={(city) => setState({ city, errors: { billing: {} } })}
+                onChange={(city) => setState({ address: { city } })}
                 disabled={!state.edit}
                 error={state.errors.city}
               />
             </div>
             <Dropdown
               classes={{ formControl: classes.dropdown }}
-              value={state.country}
+              value={state.address.country}
               label="País"
-              options={countries.map((c) => ({ label: c, value: c }))}
-              onChange={(country) => setState({ country, errors: { billing: {} } })}
+              options={countries}
+              onChange={(country) => setState({ address: { country } })}
               disabled={!state.edit}
             />
             <Input
               type="text"
               value={state.mobile}
               label="Telemóvel"
-              onChange={(mobile) => setState({ mobile, errors: { billing: {} } })}
+              onChange={(mobile) => setState({ mobile })}
               disabled={!state.edit}
               error={state.errors.mobile}
             />
@@ -167,7 +169,7 @@ export const Contact = ({ user, updateUser, countries }) => {
               type="text"
               value={state.phone}
               label="Telefone"
-              onChange={(phone) => setState({ phone, errors: { billing: {} } })}
+              onChange={(phone) => setState({ phone })}
               disabled={!state.edit}
               error={state.errors.phone}
             />
@@ -180,7 +182,7 @@ export const Contact = ({ user, updateUser, countries }) => {
               type="text"
               value={state.billing.name}
               label="Nome ou Empresa"
-              onChange={(name) => setState({ billing: { name }, errors: { billing: {} } })}
+              onChange={(name) => setState({ billing: { name } })}
               disabled={!state.edit}
               error={state.errors.billing.name}
             />
@@ -188,41 +190,41 @@ export const Contact = ({ user, updateUser, countries }) => {
               type="text"
               value={state.billing.nif}
               label="NIF"
-              onChange={(nif) => setState({ billing: { nif }, errors: { billing: {} } })}
+              onChange={(nif) => setState({ billing: { nif } })}
               disabled={!state.edit}
               error={state.errors.billing.nif}
             />
             <Input
               type="text"
-              value={state.billing.road}
+              value={state.billing.address.road}
               label="Morada"
-              onChange={(road) => setState({ billing: { road }, errors: { billing: {} } })}
+              onChange={(road) => setState({ billing: { address: { road } } })}
               disabled={!state.edit}
               error={state.errors.billing.road}
             />
             <div className={classes.row}>
               <Input
                 type="text"
-                value={state.billing.postCode}
+                value={state.billing.address.postCode}
                 label="Código de Postal"
-                onChange={(postCode) => setState({ billing: { postCode }, errors: { billing: {} } })}
+                onChange={(postCode) => setState({ billing: { address: { postCode } } })}
                 disabled={!state.edit}
                 error={state.errors.billing.postCode}
               />
               <Input
                 type="text"
-                value={state.billing.city}
+                value={state.billing.address.city}
                 label="Localidade"
-                onChange={(city) => setState({ billing: { city }, errors: { billing: {} } })}
+                onChange={(city) => setState({ billing: { address: { city } } })}
                 disabled={!state.edit}
                 error={state.errors.billing.city}
               />
             </div>
             <Dropdown
-              value={state.billing.country}
+              value={state.billing.address.country}
               label="País"
-              options={countries.map((c) => ({ label: c, value: c }))}
-              onChange={(country) => setState({ billing: { country, errors: { billing: {} } } })}
+              options={countries}
+              onChange={(country) => setState({ billing: { address: { country } } })}
               disabled={!state.edit}
             />
           </div>}

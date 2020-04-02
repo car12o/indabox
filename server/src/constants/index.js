@@ -4,6 +4,12 @@ const userRoles = {
   holder: 20
 }
 
+const userRolesText = {
+  [userRoles.root]: "Root",
+  [userRoles.admin]: "Admin",
+  [userRoles.holder]: "Sócio Titular"
+}
+
 const userTitles = {
   dr: "Dr.",
   dra: "Dra."
@@ -31,6 +37,7 @@ const paymentTypes = {
 
 module.exports = {
   userRoles,
+  userRolesText,
   userTitles,
   userCountries,
   paymentStatus,

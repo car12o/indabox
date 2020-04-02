@@ -16,7 +16,13 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-export const UserBody = ({ user, updateUser, updatePayment, titles, roles, countries, errors }) => {
+const paymentStatus = {
+  0: "Pago",
+  10: "Pagamento gerado",
+  20: "Cancelado"
+}
+
+export const UserBody = ({ user, updateUser, updatePaymentAndQuotas, metadata }) => {
   const [tabIndex, setTabIndex] = useState(0)
   const classes = useStyles()
 
@@ -53,31 +59,31 @@ export const UserBody = ({ user, updateUser, updatePayment, titles, roles, count
       {tabIndex === 0 && (
         <Quotas
           quotas={user.quotas}
-          updateUser={updateUser}
+          paymentStatus={paymentStatus}
+          updatePaymentAndQuotas={updatePaymentAndQuotas}
           setTabIndex={setTabIndex}
         />
       )}
       {tabIndex === 1 && (
         <Payments
           payments={user.payments}
-          updateUser={updateUser}
-          updatePayment={updatePayment}
+          paymentStatus={paymentStatus}
+          updatePaymentAndQuotas={updatePaymentAndQuotas}
         />
       )}
       {tabIndex === 2 && (
         <Identification
           user={user}
           updateUser={updateUser}
-          titles={titles}
-          roles={roles}
-          errors={errors}
+          titles={metadata.titles || []}
+          roles={metadata.roles || []}
         />
       )}
       {tabIndex === 3 && (
         <Contact
           user={user}
           updateUser={updateUser}
-          countries={countries}
+          countries={metadata.countries || []}
         />
       )}
       {tabIndex === 4 && (

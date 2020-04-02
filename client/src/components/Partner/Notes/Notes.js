@@ -2,7 +2,7 @@ import React, { useState, useCallback } from "react"
 import { compose } from "lodash/fp"
 import { FormControl, TextField, Button } from "@material-ui/core"
 import { makeStyles } from "@material-ui/core/styles"
-import { patch } from "../../../services/api"
+import { useApi } from "../../../services/api"
 import { UserTabHeader } from "../UserTabHeader"
 
 const useStyles = makeStyles((theme) => ({
@@ -37,9 +37,10 @@ export const Notes = ({ notes: _notes, userId, updateUser }) => {
   )(_notes)
   const setState = useCallback((values) => setter((state) => ({ ...state, ...values })), [setter])
   const classes = useStyles()
+  const api = useApi()
 
   const submit = async () => {
-    const { body, err } = await patch(`/users/${userId}`, { notes })
+    const { body, err } = await api.put(`/users/${userId}`, { notes })
     if (err) {
       setState({ errors: err })
       return

@@ -1,14 +1,16 @@
 import React, { useState, useEffect, useCallback } from "react"
+import { uniqBy } from "lodash/fp"
 import { LinearProgress } from "@material-ui/core"
-import { get } from "../../services/api"
+import { useApi } from "../../services/api"
 import { User } from "../../components/Partner/User"
 
 export const Partner = ({ match }) => {
   const [{ partner, loading }, setState] = useState({ partner: {}, loading: true })
+  const api = useApi()
 
   const fetchPartner = useCallback(async () => {
     const { params: { id } } = match
-    const { body: partner } = await get(`/users/${id}`)
+    const { body: partner } = await api.get(`/users/${id}`)
     setState({ partner, loading: false })
   }, [match])
 
@@ -20,18 +22,23 @@ export const Partner = ({ match }) => {
     setState({ partner, loading: false })
   }
 
-  const updatePayment = ({ _id, invoiceEmited }) => {
-    const payments = partner.payments.map((payment) => (
-      (payment._id === _id && { ...payment, invoiceEmited }) || payment
-    ))
-    setState({ partner: { ...partner, payments }, loading: false })
+  const updatePaymentAndQuotas = ({ payment, quotas: _quotas }) => {
+    const quotas = uniqBy("_id", [..._quotas || [], ...partner.quotas])
+    const payments = uniqBy("_id", [payment, ...partner.payments])
+    setState({ partner: { ...partner, quotas, payments }, loading: false })
   }
 
   return (
     <>
       {loading
         ? <LinearProgress />
-        : <User user={partner} updateUser={updateUser} updatePayment={updatePayment} />
+        : (
+          <User
+            user={partner}
+            updateUser={updateUser}
+            updatePaymentAndQuotas={updatePaymentAndQuotas}
+          />
+        )
       }
     </>
   )

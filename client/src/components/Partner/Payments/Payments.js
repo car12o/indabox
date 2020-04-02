@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import { makeStyles } from "@material-ui/core/styles"
 import { formatDate } from "../../../services/transform"
-import { patch } from "../../../services/api"
+import { useApi } from "../../../services/api"
 import { Table } from "../../Table/Table"
 import { Dropdown } from "../../Dropdown/Dropdown"
 import { PaymentsModal } from "./PaymentsModal"
@@ -9,7 +9,7 @@ import { PaymentsModal } from "./PaymentsModal"
 const columns = [
   { id: "type", numeric: false, disablePadding: false, label: "TIPO" },
   { id: "quotas", numeric: false, disablePadding: false, label: "QUOTAS" },
-  { id: "status", numeric: false, disablePadding: false, label: "ESTADO" },
+  { id: "statusText", numeric: false, disablePadding: false, label: "ESTADO" },
   { id: "value", numeric: false, disablePadding: false, label: "TOTAL" },
   { id: "createdBy", numeric: false, disablePadding: false, label: "CRIADO POR" },
   { id: "createdAt", numeric: false, disablePadding: false, label: "DATA DE CRIAÇÃO" },
@@ -33,19 +33,13 @@ const useStyles = makeStyles({
   }
 })
 
-const parseQuotas = (quotas) => quotas.reduce((accm, { year }) => {
-  if (!accm) {
-    return year
-  }
-  return `${accm},${year}`
-}, "")
-
-const Invoice = ({ id, status, updatePayment }) => {
+const Invoice = ({ id, status, updatePaymentAndQuotas }) => {
   const classes = useStyles()
+  const api = useApi()
 
   const update = async (invoiceEmited) => {
-    const { body } = await patch(`/payments/invoice/${id}`, { invoiceEmited })
-    updatePayment(body)
+    const { body: payment } = await api.put(`/payments/${id}`, { invoiceEmited })
+    updatePaymentAndQuotas({ payment })
   }
 
   return (
@@ -61,15 +55,14 @@ const Invoice = ({ id, status, updatePayment }) => {
   )
 }
 
-export const Payments = ({ payments, updateUser, updatePayment }) => {
+export const Payments = ({ payments, paymentStatus, updatePaymentAndQuotas }) => {
   const [{ open, content }, setModalState] = useState({ open: false, content: {} })
   const classes = useStyles()
 
   const data = payments.map((payment) => ({
     ...payment,
-    quotas: parseQuotas(payment.quotas),
-    status: payment.status.label,
-    statusValue: payment.status.value,
+    quotas: payment.quotasYear.join(","),
+    statusText: paymentStatus[payment.status],
     value: `${payment.value}€`,
     createdBy: payment.createdBy.firstName,
     createdAt: formatDate(payment.createdAt),
@@ -80,10 +73,10 @@ export const Payments = ({ payments, updateUser, updatePayment }) => {
         classes={classes}
         id={payment._id}
         status={payment.invoiceEmited}
-        updatePayment={updatePayment}
+        updatePaymentAndQuotas={updatePaymentAndQuotas}
       />
     ),
-    colored: ({ statusValue }) => statusValue === 2
+    colored: ({ status }) => status === 20
   }))
 
   return (
@@ -100,7 +93,7 @@ export const Payments = ({ payments, updateUser, updatePayment }) => {
         open={open}
         onClose={() => setModalState({ open: false, content: {} })}
         payment={content}
-        updateUser={updateUser}
+        updatePaymentAndQuotas={updatePaymentAndQuotas}
       />
     </>
   )

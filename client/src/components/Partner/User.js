@@ -1,14 +1,15 @@
 import React, { useState, useEffect, useCallback } from "react"
-import { get } from "../../services/api"
+import { useApi } from "../../services/api"
 import { UserHeader } from "./UserHeader"
 import { UserBody } from "./UserBody"
 
-export const User = ({ user, updateUser, updatePayment }) => {
-  const [{ titles, roles, countries }, setState] = useState({})
+export const User = ({ user, updateUser, updatePaymentAndQuotas }) => {
+  const [metadata, setMetadata] = useState({})
+  const api = useApi()
 
   const fetchMetadata = useCallback(async () => {
-    const { body } = await get("/metadata")
-    setState(body)
+    const { body } = await api.get("/metadata")
+    setMetadata(body)
   }, [])
 
   useEffect(() => {
@@ -24,10 +25,8 @@ export const User = ({ user, updateUser, updatePayment }) => {
       <UserBody
         user={user}
         updateUser={updateUser}
-        updatePayment={updatePayment}
-        titles={titles}
-        roles={roles}
-        countries={countries}
+        updatePaymentAndQuotas={updatePaymentAndQuotas}
+        metadata={metadata}
       />
     </>
   )

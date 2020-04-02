@@ -20,35 +20,35 @@ const updateValidator = validator.body(Joi.object().keys({
     "any.only": "password must match"
   }),
   firstName: Joi.string(),
-  lastName: Joi.string(),
+  lastName: Joi.string().allow(""),
   number: Joi.number(),
   title: Joi.string().valid(...Object.values(userTitles)),
-  nif: Joi.string().min(9, "UTF-8").max(9, "UTF-8"),
-  phone: Joi.string().min(9, "UTF-8").max(15, "UTF-8"),
-  mobile: Joi.string().min(9, "UTF-8").max(15, "UTF-8"),
+  nif: Joi.string().min(9, "UTF-8").max(9, "UTF-8").allow(""),
+  phone: Joi.string().min(9, "UTF-8").max(15, "UTF-8").allow(""),
+  mobile: Joi.string().min(9, "UTF-8").max(15, "UTF-8").allow(""),
   address: {
-    road: Joi.string().max(50, "UTF-8"),
-    postCode: Joi.string().min(4, "UTF-8").max(10, "UTF-8"),
-    city: Joi.string().max(30, "UTF-8"),
+    road: Joi.string().max(50, "UTF-8").allow(""),
+    postCode: Joi.string().min(4, "UTF-8").max(10, "UTF-8").allow(""),
+    city: Joi.string().max(30, "UTF-8").allow(""),
     country: Joi.number().valid(...Object.values(userCountries))
   },
   billing: {
     address: {
-      road: Joi.string().max(50, "UTF-8"),
-      postCode: Joi.string().min(4, "UTF-8").max(10, "UTF-8"),
-      city: Joi.string().max(30, "UTF-8"),
-      country: Joi.number().valid(...Object.values(userCountries))
+      road: Joi.string().max(50, "UTF-8").allow(""),
+      postCode: Joi.string().min(4, "UTF-8").max(10, "UTF-8").allow(""),
+      city: Joi.string().max(30, "UTF-8").allow(""),
+      country: Joi.number().valid(...Object.values(userCountries)).allow("")
     },
     name: Joi.string(),
-    nif: Joi.string().min(9, "UTF-8").max(9, "UTF-8"),
+    nif: Joi.string().min(9, "UTF-8").max(9, "UTF-8").allow(""),
     active: Joi.boolean()
   },
-  ballotNumber: Joi.string(),
-  specialty: Joi.string(),
-  specialtySessions: Joi.string(),
+  ballotNumber: Joi.string().allow(""),
+  specialty: Joi.string().allow(""),
+  specialtySessions: Joi.string().allow(""),
   newsletter: Joi.boolean(),
   alerts: Joi.boolean(),
-  notes: Joi.string()
+  notes: Joi.string().allow("")
 }))
 
 module.exports = {

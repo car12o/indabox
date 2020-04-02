@@ -2,7 +2,7 @@ import React, { useState, useCallback } from "react"
 import { compose } from "lodash/fp"
 import { Button } from "@material-ui/core"
 import { makeStyles } from "@material-ui/core/styles"
-import { patch } from "../../../services/api"
+import { useApi } from "../../../services/api"
 import { UserTabHeader } from "../UserTabHeader"
 import { Input } from "../../Input/Input"
 import { Dropdown } from "../../Dropdown/Dropdown"
@@ -32,7 +32,7 @@ const initState = (user) => ({
   title: user.title,
   firstName: user.firstName,
   lastName: user.lastName,
-  role: user.role.value,
+  role: user.role,
   number: user.number,
   nif: user.nif,
   email: user.email,
@@ -54,12 +54,11 @@ export const Identification = ({ user, updateUser, titles, roles }) => {
   )(user)
   const setState = useCallback((values) => setter((state) => ({ ...state, ...values })), [setter])
   const classes = useStyles()
+  const api = useApi()
 
   const submit = async () => {
-    const { edit, errors, ...rest } = state
-    const data = { ...rest, role: roles.find((role) => role.value === rest.role) }
-
-    const { body, err } = await patch(`/users/${user._id}`, data)
+    const { edit, errors, ...data } = state
+    const { body, err } = await api.put(`/users/${user._id}`, data)
     if (err) {
       setState({ errors: err })
       return
@@ -77,7 +76,7 @@ export const Identification = ({ user, updateUser, titles, roles }) => {
           <Dropdown
             value={state.title}
             label="Título"
-            options={titles.map((t) => ({ label: t, value: t }))}
+            options={titles}
             onChange={(title) => setState({ title, errors: {} })}
             disabled={!state.edit}
           />
@@ -102,7 +101,7 @@ export const Identification = ({ user, updateUser, titles, roles }) => {
           <Dropdown
             value={state.role}
             label="Tipo de sócio"
-            options={roles.map((r) => ({ label: r.label, value: r.value }))}
+            options={roles}
             onChange={(role) => setState({ role, errors: {} })}
             disabled={!state.edit}
           />
