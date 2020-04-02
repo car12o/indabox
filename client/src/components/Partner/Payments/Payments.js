@@ -64,7 +64,7 @@ export const Payments = ({ payments, paymentStatus, updatePaymentAndQuotas }) =>
     quotas: payment.quotasYear.join(","),
     statusText: paymentStatus[payment.status],
     value: `${payment.value}€`,
-    createdBy: payment.createdBy.firstName,
+    createdBy: (payment.createdBy && payment.createdBy.firstName) || "Importado",
     createdAt: formatDate(payment.createdAt),
     deletedAt: formatDate(payment.deletedAt),
     paymentDate: formatDate(payment.paymentDate),
