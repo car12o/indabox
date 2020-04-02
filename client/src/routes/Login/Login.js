@@ -3,7 +3,7 @@ import { connect } from "react-redux"
 import { compose } from "lodash/fp"
 import { Paper, Typography, Button } from "@material-ui/core"
 import { makeStyles } from "@material-ui/core/styles"
-import { post } from "../../services/api"
+import { useApi } from "../../services/api"
 import { Input } from "../../components/Input/Input"
 
 const useStyles = makeStyles({
@@ -34,6 +34,7 @@ const _Login = ({ user, history, dispatch }) => {
   )(user)
   const setState = useCallback((values) => setter((state) => ({ ...state, ...values })), [setter])
   const classes = useStyles()
+  const api = useApi()
 
   useEffect(() => {
     if (user.logged) {
@@ -42,13 +43,13 @@ const _Login = ({ user, history, dispatch }) => {
   }, [user])
 
   const submit = async () => {
-    const { body: payload, err } = await post("/login", { email, password })
+    const { body, err } = await api.post("/login", { email, password })
     if (err) {
       setState({ errors: err })
       return
     }
 
-    dispatch({ type: "UPDATE_USER", payload })
+    dispatch({ type: "UPDATE_USER", payload: { ...body, logged: true } })
   }
 
   return (

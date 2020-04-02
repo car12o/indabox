@@ -1,6 +1,6 @@
 const { get, getById, create, update } = require("./handlers")
 const { auth, role } = require("../middleware")
-const { userRoles } = require("./helpers")
+const { userRoles } = require("../constants")
 const { createValidator, updateValidator } = require("./schemas")
 
 const base = "/users"

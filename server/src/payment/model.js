@@ -1,10 +1,11 @@
 const mongoose = require("mongoose")
-const { paymentStatus } = require("./helpers")
+const { paymentStatus } = require("../constants")
 
 const Payment = mongoose.Schema({
   status: { type: Number, default: paymentStatus.unpaid },
   type: { type: String, required: true },
   value: { type: Number, required: true },
+  quotasYear: [{ type: Number, required: true }],
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null },
   updatedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null },
   deletedAt: { type: Date, default: null },

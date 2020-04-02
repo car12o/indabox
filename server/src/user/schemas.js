@@ -1,6 +1,6 @@
 const Joi = require("@hapi/joi")
 const { validator } = require("../middleware")
-const { userRoles, userTitles, userCountries } = require("./helpers")
+const { userRoles, userTitles, userCountries } = require("../constants")
 
 const createValidator = validator.body(Joi.object().keys({
   role: Joi.number().valid(...Object.values(userRoles)).required(),

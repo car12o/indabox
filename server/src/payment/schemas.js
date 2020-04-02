@@ -1,6 +1,6 @@
 const Joi = require("@hapi/joi")
 const { validator } = require("../middleware")
-const { paymentTypes } = require("./helpers")
+const { paymentTypes } = require("../constants")
 
 const createValidator = validator.body(Joi.object().keys({
   type: Joi.string().valid(...Object.values(paymentTypes)).required(),

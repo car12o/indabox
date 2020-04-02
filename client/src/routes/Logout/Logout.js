@@ -1,11 +1,13 @@
 import React, { useEffect } from "react"
 import { connect } from "react-redux"
-import { get } from "../../services/api"
+import { useApi } from "../../services/api"
 import { PageLoading } from "../../components/PageLoading/PageLoading"
 
 const _Logout = ({ dispatch }) => {
+  const api = useApi()
+
   const logout = async () => {
-    await get("/logout")
+    await api.get("/logout")
     dispatch({ type: "RESET_USER" })
   }
 

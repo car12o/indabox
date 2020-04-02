@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react"
 import { createStore, combineReducers } from "redux"
 import { Provider as ReduxProvider } from "react-redux"
 import { compose } from "lodash/fp"
-import { get } from "../services/api"
+import { useApi } from "../services/api"
 import { user } from "./user"
 import { PageLoading } from "../components/PageLoading/PageLoading"
 
@@ -11,14 +11,15 @@ const store = compose(
   combineReducers
 )({ user })
 
-
-export const Provider = ({ children }) => {
+export const StoreProvider = ({ children }) => {
   const [loading, setLoading] = useState(true)
-  const { dispatch } = store
+  const api = useApi()
+  const { dispatch, getState } = store
+  const { user } = getState()
 
   const fetchUser = async () => {
     try {
-      const { body: payload } = await get("/state")
+      const { body: payload } = await api.get("/state", { throw: true })
       dispatch({ type: "UPDATE_USER", payload })
       setLoading(false)
     } catch {
@@ -32,7 +33,7 @@ export const Provider = ({ children }) => {
 
   return (
     <ReduxProvider store={store}>
-      {loading ? <PageLoading /> : children}
+      {loading ? <PageLoading /> : children({ logged: user.logged })}
     </ReduxProvider>
   )
 }

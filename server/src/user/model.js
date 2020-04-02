@@ -1,8 +1,9 @@
 const mongoose = require("mongoose")
 const config = require("../../config/default.json")
 const { log } = require("../services/logging")
-const { userRoles, userTitles, userCountries } = require("./helpers")
+const { userRoles, userTitles, userCountries } = require("../constants")
 const { hashPassword } = require("../services/crypto")
+const { Payment } = require("../payment")
 
 const _User = new mongoose.Schema({
   role: { type: Number, default: userRoles.holder },
@@ -67,13 +68,13 @@ const populate = [
 ]
 
 _User.static("get", async function get(filters, { password } = {}) {
-  if (password) {
-    const user = await this.findOne(filters).select("+password").populate(populate).lean()
-    return user
-  }
+  const user = password
+    ? await this.findOne(filters).select("+password").populate(populate).lean()
+    : await this.findOne(filters).populate(populate).lean()
 
-  const user = await this.findOne(filters).populate(populate).lean()
-  return user
+  const payments = await Payment.getMany({ _id: { $in: user.quotas.map(({ payment }) => payment && payment._id) } })
+
+  return { ...user, payments }
 })
 
 _User.static("getMany", async function getMany(filters) {

@@ -1,14 +1,4 @@
-const paymentStatus = {
-  paid: 0,
-  unpaid: 10,
-  canceled: 20
-}
-
-const paymentTypes = {
-  imported: "Importado",
-  manual: "Manual",
-  mb: "Referencia MB"
-}
+const { paymentStatus, paymentTypes } = require("../constants")
 
 const canPaymentBeCreated = (quotas, quotasId) => {
   const hasPayment = quotas.some(({ payment }) => payment !== null)

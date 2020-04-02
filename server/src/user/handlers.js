@@ -1,6 +1,6 @@
 const { APIError } = require("../services/error")
 const { User } = require("./model")
-const { userRoles } = require("./helpers")
+const { userRoles } = require("../constants")
 
 const get = async (req, res) => {
   const users = await User.getMany()

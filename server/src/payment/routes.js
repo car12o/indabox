@@ -1,6 +1,6 @@
 const { create, update, del } = require("./handlers")
 const { auth, role } = require("../middleware")
-const { userRoles } = require("../user")
+const { userRoles } = require("../constants")
 const { createValidator, updateValidator } = require("./schemas")
 
 const base = "/payments"

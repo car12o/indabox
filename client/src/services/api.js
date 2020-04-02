@@ -1,11 +1,13 @@
-import { compose, set } from "lodash/fp"
+import React, { createContext, useContext } from "react"
+import { withRouter } from "react-router-dom"
+import { compose, set, last } from "lodash/fp"
 
 const BASE_URL = process.env.REACT_APP_API_URL
 const OPTIONS = {
   headers: {
     "Content-Type": "application/json",
     "X-Requested-With": "XMLHttpRequest",
-    Token: localStorage.token
+    Authorization: `Bearer ${localStorage.token}`
   }
 }
 
@@ -26,7 +28,7 @@ const resolve = async (promise) => {
 
     if (status === 400) {
       const { payload } = body
-      const err = payload.reduce((accm, { path, err }) => set(path, err, accm), {})
+      const err = payload.reduce((accm, { path, message }) => set(path, message, accm), {})
       return { status, err }
     }
 
@@ -39,22 +41,55 @@ const resolve = async (promise) => {
   }
 }
 
-export const get = compose(
+const get = compose(
   resolve,
   (url) => fetch(`${BASE_URL}${url}`, { ...OPTIONS, method: "GET" })
 )
 
-export const post = compose(
+const post = compose(
   resolve,
   (url, body) => fetch(`${BASE_URL}${url}`, { ...OPTIONS, method: "POST", body: JSON.stringify(body) })
 )
 
-export const patch = compose(
+const patch = compose(
   resolve,
   (url, body) => fetch(`${BASE_URL}${url}`, { ...OPTIONS, method: "PATCH", body: JSON.stringify(body) })
 )
 
-export const del = compose(
+const del = compose(
   resolve,
   (url) => fetch(`${BASE_URL}${url}`, { ...OPTIONS, method: "DELETE" })
 )
+
+const ApiContext = createContext({})
+
+const _ApiProvider = ({ children, history }) => {
+  const wrap = (fn) => async (...args) => {
+    const opts = last(args)
+    try {
+      const result = await fn(...args)
+      return result
+    } catch (error) {
+      if (opts.throw) {
+        throw error
+      }
+
+      history.push("/500")
+      return {}
+    }
+  }
+
+  return (
+    <ApiContext.Provider value={{
+      get: wrap(get),
+      post: wrap(post),
+      patch: wrap(patch),
+      del: wrap(del)
+    }}>
+      {children}
+    </ApiContext.Provider >
+  )
+}
+
+export const ApiProvider = withRouter(_ApiProvider)
+export const useApi = () => useContext(ApiContext)

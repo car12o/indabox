@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react"
 import { makeStyles } from "@material-ui/core/styles"
 import { LinearProgress, Paper } from "@material-ui/core"
-import { get } from "../../services/api"
+import { useApi } from "../../services/api"
 import { Title } from "../../components/Title/Title"
 import { Table } from "../../components/Table/Table"
 
@@ -20,12 +20,19 @@ const columns = [
   { id: "role", numeric: false, disablePadding: false, label: "Tipo de sócio", width: "15%" }
 ]
 
+const roles = {
+  0: "Root",
+  10: "Admin",
+  20: "Sócio titular"
+}
+
 export const Partners = ({ history }) => {
   const [{ loading, partners }, setState] = useState({ loading: true, partners: [] })
   const classes = useStyles()
+  const api = useApi()
 
   const fetchPartners = async () => {
-    const { body: partners } = await get("/users")
+    const { body: partners } = await api.get("/users")
     setState({ partners, loading: false })
   }
 
@@ -40,7 +47,7 @@ export const Partners = ({ history }) => {
         < Title label="Sócios" />
         <Table
           columns={columns}
-          data={partners.map(({ _id: id, role: { label: role }, ...props }) => ({ _id: id, role, ...props }))}
+          data={partners.map(({ _id: id, role, ...props }) => ({ _id: id, role: roles[role], ...props }))}
           orderBy="firstName"
           onRowClick={(partner) => history.push(`/partners/${partner._id}`)}
           rowsPerPage={15}
