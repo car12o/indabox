@@ -1,14 +1,14 @@
-// const { create } = require("./handlers")
-// const { auth, role } = require("../middleware")
-// const { userRoles } = require("../user")
-// const { createValidator } = require("./schemas")
+const { get } = require("./handlers")
+const { auth, role } = require("../middleware")
+const { userRoles } = require("../constants")
+const { getValidator } = require("./schemas")
 
-// const base = "/quotas"
+const base = "/quotas"
 
-// const quotaRoutes = (router, wrap) => {
+const quotaRoutes = (router, wrap) => {
+  router.get(`${base}/`, wrap(auth), wrap(role(userRoles.admin)), getValidator, wrap(get))
+}
 
-// }
-
-// module.exports = {
-//   quotaRoutes
-// }
+module.exports = {
+  quotaRoutes
+}

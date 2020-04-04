@@ -10,6 +10,7 @@ const Quota = mongoose.Schema({
 })
 
 const populate = [
+  { path: "user", select: ["_id", "firstName", "lastName"] },
   {
     path: "payment",
     populate: [
@@ -26,7 +27,7 @@ Quota.static("get", async function get(filters) {
 })
 
 Quota.static("getMany", async function getMany(filters) {
-  const quotas = await this.find(filters).lean()
+  const quotas = await this.find(filters).populate(populate).lean()
   return quotas
 })
 

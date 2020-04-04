@@ -1,12 +1,11 @@
-// // const { Quota } = require("./model")
+const { Quota } = require("./model")
 
-// const create = async (req, res, next) => {
-//   // Quota.create()
-//   // User.update
+const get = async (req, res) => {
+  const { query } = req
+  const quotas = await Quota.getMany(query)
+  res.json(quotas)
+}
 
-//   res.json({ ok: "create" })
-// }
-
-// module.exports = {
-//   create
-// }
+module.exports = {
+  get
+}

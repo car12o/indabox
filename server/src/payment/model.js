@@ -24,7 +24,7 @@ const Payment = mongoose.Schema({
 })
 
 const populate = [
-  { path: "user", select: ["_id", "firstName"] },
+  { path: "user", select: ["_id", "firstName", "lastName"] },
   { path: "createdBy", select: ["_id", "firstName"] },
   { path: "updatedBy", select: ["_id", "firstName"] },
   { path: "deletedBy", select: ["_id", "firstName"] }

@@ -1,12 +1,10 @@
-// const Joi = require("@hapi/joi")
-// const { validator } = require("../middleware")
+const Joi = require("@hapi/joi")
+const { validator } = require("../middleware")
 
-// const createValidator = validator.body(Joi.object().keys({
-//   user: Joi.string().required(),
-//   year: Joi.number().required(),
-//   value: Joi.number().required()
-// }))
+const getValidator = validator.query(Joi.object().keys({
+  payment: Joi.string().custom((value) => (value === "null" ? null : value))
+}))
 
-// module.exports = {
-//   createValidator
-// }
+module.exports = {
+  getValidator
+}
