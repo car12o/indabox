@@ -134,7 +134,17 @@ workflows:
               only: /.*/
             tags:
               only: /.*/
-
+      - run:
+          name: server-tests
+          package: server
+          script: test
+          requires:
+            - setup
+          filters:
+            branches:
+              only: /.*/
+            tags:
+              only: /.*/
       - run:
           name: client-lint
           package: client
