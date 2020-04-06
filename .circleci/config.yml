@@ -64,7 +64,7 @@ jobs:
       - attach_workspace:
           at: .
       - run:
-          name: Running lint
+          name: Running << parameters.script >>
           command: cd << parameters.package >> && npm run << parameters.script >>
 
   docker-build:
