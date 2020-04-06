@@ -26,6 +26,7 @@ services:
         IFTHEN_ENTETY: ${IFTHEN_ENTETY}
         IFTHEN_SUBENTETY: ${IFTHEN_SUBENTETY}
         IFTHEN_KEY: ${IFTHEN_KEY}
+        IFTHEN_CALLBACK_KEY: ${IFTHEN_CALLBACK_KEY}
       networks:
         - indabox
       ports:

@@ -43,7 +43,7 @@ function getPaymentRef(id, valor) {
   const p2 = mid(right(`0000${id}`, 4), 0, 3)
   const p3 = mid(right(`0000${id}`, 4), 3, 1)
   const p4 = right(`00${iCHECKDIGITS.toString()}`, 2)
-  const reference = `${p1} ${p2} ${p3}${p4}`
+  const reference = `${p1}${p2}${p3}${p4}`
 
   return {
     id,

@@ -1,4 +1,5 @@
 const mongoose = require("mongoose")
+const { APIError } = require("../services/error")
 
 const Quota = mongoose.Schema({
   year: { type: Number, required: true },
@@ -41,6 +42,10 @@ Quota.static("store", async function store(doc) {
 
 Quota.static("update", async function update(filters, doc) {
   const quota = await this.findOneAndUpdate(filters, { ...doc }, { new: true }).populate(populate)
+
+  if (!quota) {
+    throw new APIError("Payment not found", 400)
+  }
 
   return quota.toObject()
 })

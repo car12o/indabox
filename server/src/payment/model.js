@@ -1,4 +1,5 @@
 const mongoose = require("mongoose")
+const { APIError } = require("../services/error")
 const { paymentStatus } = require("../constants")
 
 const Payment = mongoose.Schema({
@@ -17,7 +18,8 @@ const Payment = mongoose.Schema({
     id: { type: Number },
     ententy: { type: String },
     subEntety: { type: String },
-    reference: { type: String }
+    reference: { type: String },
+    terminal: { type: String, default: null }
   }
 }, {
   timestamps: true
@@ -58,6 +60,10 @@ Payment.static("update", async function update(filters, doc, user) {
     updatedBy: user
   }, { new: true }).populate(populate)
 
+  if (!payment) {
+    throw new APIError("Payment not found", 400)
+  }
+
   return payment.toObject()
 })
 
@@ -68,6 +74,10 @@ Payment.static("del", async function del(id, doc, user) {
     deletedAt: Date.now(),
     deletedBy: user
   }, { new: true })
+
+  if (!payment) {
+    throw new APIError("Payment not found", 400)
+  }
 
   await payment.populate(populate).execPopulate()
 

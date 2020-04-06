@@ -1,5 +1,6 @@
 const mongoose = require("mongoose")
 const config = require("../../config/default.json")
+const { APIError } = require("../services/error")
 const { log } = require("../services/logging")
 const { userRoles, userTitles, userCountries } = require("../constants")
 const { hashPassword } = require("../services/crypto")
@@ -112,6 +113,10 @@ _User.static("update", async function update(filters, doc, user) {
     updatedBy: user
   }, { new: true }).populate(populate)
 
+  if (!_user) {
+    throw new APIError("Payment not found", 400)
+  }
+
   return _user.toObject()
 })
 
@@ -122,6 +127,10 @@ _User.static("del", async function del(id, doc, user) {
     deletedAt: Date.now(),
     deletedBy: user
   }, { new: true })
+
+  if (!_user) {
+    throw new APIError("Payment not found", 400)
+  }
 
   await _user.populate(populate).execPopulate()
 

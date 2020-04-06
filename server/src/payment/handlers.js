@@ -70,9 +70,21 @@ const del = async (req, res) => {
   res.json({ payment, quotas })
 }
 
+const ifthen = async (req, res) => {
+  const { entidade, referencia, valor, datahorapag, terminal } = req.query
+
+  const payment = await Payment.update(
+    { "mb.ententy": entidade, "mb.reference": referencia, value: valor },
+    { paymentDate: new Date(datahorapag), "mb.terminal": terminal }
+  )
+
+  res.json(payment)
+}
+
 module.exports = {
   get,
   create,
   update,
-  del
+  del,
+  ifthen
 }
