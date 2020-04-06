@@ -135,7 +135,7 @@ workflows:
             tags:
               only: /.*/
       - run:
-          name: server-tests
+          name: server-test
           package: server
           script: test
           requires:
@@ -160,6 +160,7 @@ workflows:
       - docker-build:
           requires:
             - server-lint
+            - server-test
             - client-lint
           filters:
             branches:
