@@ -1,8 +1,9 @@
 import React, { useState, useCallback, useEffect } from "react"
-import { makeStyles } from "@material-ui/core/styles"
-import { Paper, Tabs, Tab, LinearProgress } from "@material-ui/core"
+import { compose } from "lodash/fp"
+import { makeStyles, Paper, Tabs, Tab, LinearProgress } from "@material-ui/core"
 import { useApi } from "../../services/api"
-import { Title } from "../../components/Title/Title"
+import { toQueryString } from "../../services/transform"
+import { Header } from "./Header"
 import { PaymentReceived } from "./PaymentReceived"
 import { PaymentWaiting } from "./PaymentWaiting"
 import { PaymentMissing } from "./PaymentMissing"
@@ -23,21 +24,36 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 export const Dashboard = ({ history }) => {
-  const [{ index, payments, quotas, loading }, setter] = useState({ index: 0, payments: [], quotas: [], loading: true })
+  const [{ index, totals, payments, quotas, filter, loading }, setter] = useState(
+    { index: 0, totals: {}, payments: [], quotas: [], filter: { year: 0 }, loading: true }
+  )
   const setState = useCallback((values) => setter((state) => ({ ...state, ...values })), [setter])
   const classes = useStyles()
   const api = useApi()
 
-  const fetch = async () => {
-    const [
-      { body: payments },
-      { body: quotas }
-    ] = await Promise.all([api.get("/payments"), api.get("/quotas?payment=null")])
+  const fetchTotals = async () => {
+    const { body: totals } = await compose(
+      (query) => api.get(`/totals${query}`),
+      toQueryString,
+      (filter) => (filter.year ? filter : {})
+    )(filter)
+    setState({ totals, loading: false })
+  }
+
+  const fetchTableData = async () => {
+    const [{ body: payments }, { body: quotas }] = await Promise.all([
+      api.get("/payments"),
+      api.get("/quotas?payment=null")
+    ])
     setState({ payments, quotas, loading: false })
   }
 
   useEffect(() => {
-    fetch()
+    fetchTotals()
+  }, [filter])
+
+  useEffect(() => {
+    fetchTableData()
   }, [])
 
   return (
@@ -45,11 +61,7 @@ export const Dashboard = ({ history }) => {
       ? <LinearProgress />
       : <>
         <Paper className={`${classes.root} ${classes.header}`} elevation={1}>
-          <Title label="Administração" />
-          {/* <p>Total socios: 0</p>
-          <p>Pagamentos recebidos: 0</p>
-          <p>Aguardar pagamento: 0</p>
-          <p>Quotas sem pagamento: 0</p> */}
+          <Header totals={totals} filter={filter} setState={setState} />
         </Paper>
         <Paper className={classes.root} elevation={1}>
           <Tabs

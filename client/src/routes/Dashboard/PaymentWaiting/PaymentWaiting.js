@@ -30,11 +30,11 @@ export const PaymentWaiting = ({ payments, history }) => {
     <Table
       columns={columns}
       data={_payments}
-      orderBy="paymentDate"
+      orderBy="createdAt"
       order="desc"
       onRowClick={({ userId }) => history.push(`/partners/${userId}`)}
-      rowsPerPage={7}
-      rowsPerPageOptions={[7, 14, 21]}
+      rowsPerPage={8}
+      rowsPerPageOptions={[8, 16, 24]}
       noDataLabel="Sem dados ..."
     />
   )

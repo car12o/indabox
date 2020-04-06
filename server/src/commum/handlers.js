@@ -1,6 +1,8 @@
 const { ValidationError } = require("../services/error")
 const { verifyHash } = require("../services/crypto")
 const { User } = require("../user")
+const { Quota } = require("../quota")
+const { Payment } = require("../payment")
 const { userRoles, userRolesText, userTitles, userCountries } = require("../constants")
 
 const login = async (req, res) => {
@@ -37,9 +39,25 @@ const metadata = async (req, res) => {
   })
 }
 
+const totals = async (req, res) => {
+  const { year } = req.query
+  const users = await User.find({ role: 20 }).count()
+
+  const paymentMissingFilter = (year && { payment: null, year }) || { payment: null }
+  const paymentMissing = await Quota.find(paymentMissingFilter).count()
+
+  const paymentsFilter = (year && { deletedAt: null, quotasYear: year }) || { deletedAt: null }
+  const payments = await Payment.find(paymentsFilter).lean()
+  const paymentReceived = payments.filter(({ paymentDate }) => paymentDate).length
+  const paymentWaiting = payments.filter(({ paymentDate }) => !paymentDate).length
+
+  res.json({ users, paymentReceived, paymentWaiting, paymentMissing })
+}
+
 module.exports = {
   login,
   logout,
   state,
-  metadata
+  metadata,
+  totals
 }
