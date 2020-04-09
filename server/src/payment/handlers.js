@@ -71,6 +71,7 @@ const del = async (req, res) => {
 }
 
 const ifthen = async (req, res) => {
+  console.log("query = ", req.query)
   const { entidade, referencia, valor, datahorapag, terminal } = req.query
 
   const payment = await Payment.update(
