@@ -11,11 +11,11 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     padding: "25px 0",
     "& > *": {
-      width: "180px"
+      width: "220px"
     }
   },
   logoShrink: {
-    paddingLeft: "96px"
+    paddingLeft: "115px"
   },
   drawerOpen: {
     width: drawerWidth,
