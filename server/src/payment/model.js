@@ -1,6 +1,7 @@
 const mongoose = require("mongoose")
 const { APIError } = require("../services/error")
-const { paymentStatus } = require("../constants")
+const { paymentStatus, paymentTypes } = require("../constants")
+const { sendMbGeneratedEmail, sendMbCanceledEmail } = require("../services/gmail")
 
 const Payment = mongoose.Schema({
   status: { type: Number, default: paymentStatus.unpaid },
@@ -49,9 +50,26 @@ Payment.static("store", async function store(doc, user) {
     updatedBy: user
   })
 
-  await payment.populate(populate).execPopulate()
+  await payment.populate([
+    { path: "user", populate: "quotas" },
+    { path: "createdBy", select: ["_id", "firstName"] },
+    { path: "updatedBy", select: ["_id", "firstName"] },
+    { path: "deletedBy", select: ["_id", "firstName"] }
+  ]).execPopulate()
+  const _payment = payment.toObject()
 
-  return payment.toObject()
+  if (_payment.type === paymentTypes.mb) {
+    sendMbGeneratedEmail(_payment)
+  }
+
+  return {
+    ..._payment,
+    user: {
+      _id: user._id,
+      firstName: user.firstName,
+      lastName: user.lastName
+    }
+  }
 })
 
 Payment.static("update", async function update(filters, doc, user) {
@@ -68,6 +86,7 @@ Payment.static("update", async function update(filters, doc, user) {
 })
 
 Payment.static("del", async function del(id, doc, user) {
+  const { mb } = await this.findById(id).lean()
   const payment = await this.findByIdAndUpdate(id, {
     ...doc,
     updatedBy: user,
@@ -79,9 +98,26 @@ Payment.static("del", async function del(id, doc, user) {
     throw new APIError("Payment not found", 400)
   }
 
-  await payment.populate(populate).execPopulate()
+  await payment.populate([
+    { path: "user", populate: "quotas" },
+    { path: "createdBy", select: ["_id", "firstName"] },
+    { path: "updatedBy", select: ["_id", "firstName"] },
+    { path: "deletedBy", select: ["_id", "firstName"] }
+  ]).execPopulate()
+  const _payment = payment.toObject()
 
-  return payment.toObject()
+  if (_payment.type === paymentTypes.mb) {
+    sendMbCanceledEmail({ ..._payment, mb })
+  }
+
+  return {
+    ..._payment,
+    user: {
+      _id: user._id,
+      firstName: user.firstName,
+      lastName: user.lastName
+    }
+  }
 })
 
 module.exports = {
