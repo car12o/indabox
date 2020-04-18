@@ -18,8 +18,8 @@ export const Partner = ({ match }) => {
     fetchPartner()
   }, [])
 
-  const updateUser = (partner) => {
-    setState({ partner, loading: false })
+  const updateUser = (_partner) => {
+    setState({ partner: { ...partner, ..._partner }, loading: false })
   }
 
   const updatePaymentAndQuotas = ({ payment, quotas: _quotas }) => {

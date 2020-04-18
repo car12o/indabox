@@ -151,7 +151,7 @@ export const Contact = ({ user, updateUser, countries }) => {
             </div>
             <Dropdown
               classes={{ formControl: classes.dropdown }}
-              value={state.address.country}
+              value={(countries.length && state.address.country) || ""}
               label="País"
               options={countries}
               onChange={(country) => setState({ address: { country } })}
@@ -221,7 +221,7 @@ export const Contact = ({ user, updateUser, countries }) => {
               />
             </div>
             <Dropdown
-              value={state.billing.address.country}
+              value={(countries.length && state.billing.address.country) || ""}
               label="País"
               options={countries}
               onChange={(country) => setState({ billing: { address: { country } } })}
@@ -268,5 +268,5 @@ export const Contact = ({ user, updateUser, countries }) => {
 }
 
 Contact.defaultProps = {
-  countries: []
+  countries: [""]
 }

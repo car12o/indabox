@@ -74,7 +74,7 @@ export const Identification = ({ user, updateUser, titles, roles }) => {
       <div className={classes.root}>
         <div className={classes.row}>
           <Dropdown
-            value={state.title}
+            value={(titles.length && state.title) || ""}
             label="Título"
             options={titles}
             onChange={(title) => setState({ title, errors: {} })}
@@ -99,7 +99,7 @@ export const Identification = ({ user, updateUser, titles, roles }) => {
         </div>
         <div className={classes.row}>
           <Dropdown
-            value={state.role}
+            value={(roles.length && state.role) || ""}
             label="Tipo de sócio"
             options={roles}
             onChange={(role) => setState({ role, errors: {} })}
@@ -226,6 +226,6 @@ export const Identification = ({ user, updateUser, titles, roles }) => {
 }
 
 Identification.defaultProps = {
-  titles: [],
-  roles: []
+  titles: [""],
+  roles: [""]
 }

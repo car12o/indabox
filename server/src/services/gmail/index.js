@@ -17,7 +17,7 @@ const sendMbGeneratedEmail = async ({ user, ...payment }) => {
 
     await api.sendEmail({ to, subject, message })
   } catch (error) {
-    log.error(error)
+    log.error("Error sending MB generated email: ", error)
   }
 }
 
@@ -33,7 +33,7 @@ const sendMbCanceledEmail = async ({ user, ...payment }) => {
 
     await api.sendEmail({ to, subject, message })
   } catch (error) {
-    log.error(error)
+    log.error("Error sending MB canceled email: ", error)
   }
 }
 

@@ -7,30 +7,22 @@ import { Chart } from "./Chart"
 const useStyles = makeStyles({
   section: {
     display: "flex",
+    flexDirection: "column",
     padding: "20px 35px"
   },
-  sectionLeft: {
-    width: "45%",
+  sectionBody: {
     display: "flex",
-    justifyContent: "space-between"
+    marginTop: "35px"
   },
-  sectionRight: {
-    width: "55%"
+  stampContainer: {
+    marginRight: "150px"
   },
   formControl: {
     width: "200px"
   },
-  stampContainer: {
-    display: "flex",
-    flexDirection: "column",
-    padding: "30px 100px 0 0"
-  },
   stampRoot: {
     display: "flex",
     marginBottom: "15px"
-  },
-  stampFirst: {
-    marginBottom: "35px"
   },
   stamp: {
     width: "auto",
@@ -44,13 +36,13 @@ export const Header = ({ totals, filter, setState }) => {
 
   return (
     <div className={classes.section}>
-      <div className={classes.sectionLeft}>
-        <Typography variant="h6" id="tableTitle">
-          Administração
-        </Typography>
+      <Typography variant="h6" id="tableTitle">
+        Administração
+      </Typography>
+      <div className={classes.sectionBody}>
         <div className={classes.stampContainer}>
           <Stamp
-            classes={{ root: `${classes.stampRoot} ${classes.stampFirst}`, label: classes.stamp, value: classes.stamp }}
+            classes={{ root: classes.stampRoot, label: classes.stamp, value: classes.stamp }}
             label="Total socios"
             value={totals.users}
           />
@@ -90,9 +82,9 @@ export const Header = ({ totals, filter, setState }) => {
             value={totals.paymentMissing}
           />
         </div>
-      </div>
-      <div className={classes.sectionRight}>
-        <Chart totals={totals} width="550" />
+        <div>
+          <Chart totals={totals} width="450" />
+        </div>
       </div>
     </div>
   )
