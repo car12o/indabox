@@ -6,10 +6,6 @@ const useStyles = makeStyles((theme) => ({
   tableRow: {
     cursor: "pointer"
   },
-  tableCell: {
-    whiteSpace: "nowrap",
-    overflow: "hidden"
-  },
   padStart: {
     paddingLeft: "35px"
   },
@@ -77,7 +73,7 @@ export const TableBody = ({
               selected={isSelected}
             >
               {selectable && (
-                <TableCell classes={{ root: classes.tableCell }} padding="checkbox">
+                <TableCell padding="checkbox">
                   {n.selectable(n) && (
                     <Checkbox
                       classes={{ root: classes.padStartCheckbox }}
@@ -92,8 +88,8 @@ export const TableBody = ({
                 <TableCell
                   key={`tableCell-${z}`}
                   classes={n.colored && n.colored(n)
-                    ? { root: `${classes.tableCell} ${!selectable && classes.padStart} ${classes.tableRowHighlight}` }
-                    : { root: `${classes.tableCell} ${!selectable && classes.padStart}` }
+                    ? { root: `${!selectable && classes.padStart} ${classes.tableRowHighlight}` }
+                    : { root: !selectable && classes.padStart }
                   }
                 >
                   {n[row.id]}

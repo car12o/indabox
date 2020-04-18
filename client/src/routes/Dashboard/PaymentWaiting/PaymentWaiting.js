@@ -7,8 +7,8 @@ const columns = [
   { id: "quotas", numeric: false, disablePadding: false, label: "Quotas" },
   { id: "status", numeric: false, disablePadding: false, label: "Estado" },
   { id: "value", numeric: false, disablePadding: false, label: "Total" },
-  { id: "userFirstName", numeric: false, disablePadding: false, label: "Socio Nome" },
-  { id: "userLastName", numeric: false, disablePadding: false, label: "Socio Apelido" },
+  { id: "userFirstName", numeric: false, disablePadding: false, label: "Nome" },
+  { id: "userLastName", numeric: false, disablePadding: false, label: "Apelido" },
   { id: "createdAt", numeric: false, disablePadding: false, label: "Data criação" }
 ]
 

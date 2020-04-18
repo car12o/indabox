@@ -4,8 +4,8 @@ import { Table } from "../../../components/Table/Table"
 
 const columns = [
   { id: "year", numeric: false, disablePadding: true, label: "Ano" },
-  { id: "userFirstName", numeric: false, disablePadding: false, label: "Socio Nome" },
-  { id: "userLastName", numeric: false, disablePadding: false, label: "Socio Apelido" },
+  { id: "userFirstName", numeric: false, disablePadding: false, label: "Nome" },
+  { id: "userLastName", numeric: false, disablePadding: false, label: "Apelido" },
   { id: "createdAt", numeric: false, disablePadding: false, label: "Data criacão" }
 ]
 
