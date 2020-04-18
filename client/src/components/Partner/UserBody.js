@@ -6,6 +6,7 @@ import { Payments } from "./Payments/Payments"
 import { Identification } from "./Identification/Identification"
 import { Contact } from "./Contact/Contact"
 import { Notes } from "./Notes/Notes"
+import { paymentStatus } from "../../constants"
 
 const useStyles = makeStyles((theme) => ({
   tab: {
@@ -15,12 +16,6 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: "bold"
   }
 }))
-
-const paymentStatus = {
-  0: "Pago",
-  10: "Pagamento gerado",
-  20: "Cancelado"
-}
 
 export const UserBody = ({ user, updateUser, updatePaymentAndQuotas, metadata }) => {
   const [tabIndex, setTabIndex] = useState(0)

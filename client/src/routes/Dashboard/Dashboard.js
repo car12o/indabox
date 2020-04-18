@@ -56,6 +56,11 @@ export const Dashboard = ({ history }) => {
     fetchTableData()
   }, [])
 
+  const onPaymentUpdate = ({ payment }) => {
+    const _payments = payments.filter(({ _id }) => _id !== payment._id)
+    setState({ payments: [..._payments, payment] })
+  }
+
   return (
     loading
       ? <LinearProgress />
@@ -84,7 +89,7 @@ export const Dashboard = ({ history }) => {
               label="Quotas sem pagamento"
             />
           </Tabs>
-          {index === 0 && <PaymentReceived payments={payments} history={history} />}
+          {index === 0 && <PaymentReceived payments={payments} onPaymentUpdate={onPaymentUpdate} history={history} />}
           {index === 1 && <PaymentWaiting payments={payments} history={history} />}
           {index === 2 && <PaymentMissing quotas={quotas} history={history} />}
         </Paper >
