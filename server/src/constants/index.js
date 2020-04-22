@@ -1,13 +1,15 @@
 const userRoles = {
   root: 0,
   admin: 10,
-  holder: 20
+  holder: 20,
+  adherent: 30
 }
 
 const userRolesText = {
   [userRoles.root]: "Root",
   [userRoles.admin]: "Admin",
-  [userRoles.holder]: "Sócio Titular"
+  [userRoles.holder]: "Titular",
+  [userRoles.adherent]: "Aderente"
 }
 
 const userTitles = {

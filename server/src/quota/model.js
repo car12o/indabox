@@ -15,9 +15,9 @@ const populate = [
   {
     path: "payment",
     populate: [
-      { path: "createdBy", select: ["_id", "firstName"] },
-      { path: "updatedBy", select: ["_id", "firstName"] },
-      { path: "deletedBy", select: ["_id", "firstName"] }
+      { path: "createdBy", select: ["_id", "firstName", "lastName"] },
+      { path: "updatedBy", select: ["_id", "firstName", "lastName"] },
+      { path: "deletedBy", select: ["_id", "firstName", "lastName"] }
     ]
   }
 ]

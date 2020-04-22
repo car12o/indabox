@@ -47,7 +47,6 @@ const updateValidator = validator.body(Joi.object().keys({
   specialty: Joi.string().allow(""),
   specialtySessions: Joi.string().allow(""),
   newsletter: Joi.boolean(),
-  alerts: Joi.boolean(),
   notes: Joi.string().allow("")
 }))
 

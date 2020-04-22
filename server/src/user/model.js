@@ -4,7 +4,6 @@ const { APIError } = require("../services/error")
 const { log } = require("../services/logging")
 const { userRoles, userTitles, userCountries } = require("../constants")
 const { hashPassword } = require("../services/crypto")
-const { Payment } = require("../payment")
 
 const _User = new mongoose.Schema({
   role: { type: Number, default: userRoles.holder },
@@ -19,7 +18,6 @@ const _User = new mongoose.Schema({
   specialty: { type: String, default: "" },
   specialtySessions: { type: String, default: "" },
   newsletter: { type: Boolean, default: false },
-  alerts: { type: Boolean, default: false },
   address: {
     road: { type: String, default: "" },
     postCode: { type: String, default: "" },
@@ -44,32 +42,29 @@ const _User = new mongoose.Schema({
   updatedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null },
   deletedAt: { type: Date, default: null },
   deletedBy: { type: String, default: null },
-  quotas: [{ type: mongoose.Schema.Types.ObjectId, ref: "Quota", default: null }]
+  quotas: [{ type: mongoose.Schema.Types.ObjectId, ref: "Quota", default: null }],
+  payments: [{ type: mongoose.Schema.Types.ObjectId, ref: "Payment", default: null }]
 }, {
   timestamps: true
 })
 
 const populate = [
+  { path: "quotas", populate: [{ path: "payment" }] },
   {
-    path: "quotas",
+    path: "payments",
     populate: [
-      {
-        path: "payment",
-        populate: [
-          { path: "createdBy", select: ["_id", "firstName"] },
-          { path: "updatedBy", select: ["_id", "firstName"] },
-          { path: "deletedBy", select: ["_id", "firstName"] }
-        ]
-      }
+      { path: "createdBy", select: ["_id", "firstName", "lastName"] },
+      { path: "updatedBy", select: ["_id", "firstName", "lastName"] },
+      { path: "deletedBy", select: ["_id", "firstName", "lastName"] }
     ]
   },
-  { path: "createdBy", select: ["_id", "firstName"] },
-  { path: "updatedBy", select: ["_id", "firstName"] },
-  { path: "deletedBy", select: ["_id", "firstName"] }
+  { path: "createdBy", select: ["_id", "firstName", "lastName"] },
+  { path: "updatedBy", select: ["_id", "firstName", "lastName"] },
+  { path: "deletedBy", select: ["_id", "firstName", "lastName"] }
 ]
 
-_User.static("get", async function get(filters, { password } = {}) {
-  const user = password
+_User.static("get", async function get(filters, options = {}) {
+  const user = options.password
     ? await this.findOne(filters).select("+password").populate(populate).lean()
     : await this.findOne(filters).populate(populate).lean()
 
@@ -77,9 +72,7 @@ _User.static("get", async function get(filters, { password } = {}) {
     return null
   }
 
-  const payments = await Payment.getMany({ user: user._id })
-
-  return { ...user, payments }
+  return user
 })
 
 _User.static("getMany", async function getMany(filters) {

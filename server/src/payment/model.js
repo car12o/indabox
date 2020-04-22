@@ -8,11 +8,6 @@ const Payment = mongoose.Schema({
   type: { type: String, required: true },
   value: { type: Number, required: true },
   quotasYear: [{ type: Number, required: true }],
-  user: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null },
-  createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null },
-  updatedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null },
-  deletedAt: { type: Date, default: null },
-  deletedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null },
   paymentDate: { type: Date, default: null },
   invoiceEmited: { type: Boolean, default: false },
   mb: {
@@ -20,17 +15,22 @@ const Payment = mongoose.Schema({
     ententy: { type: String },
     subEntety: { type: String },
     reference: { type: String },
-    terminal: { type: String, default: null }
-  }
+    terminal: { type: String }
+  },
+  createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null },
+  updatedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null },
+  deletedAt: { type: Date, default: null },
+  deletedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null },
+  user: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null }
 }, {
   timestamps: true
 })
 
 const populate = [
   { path: "user", select: ["_id", "firstName", "lastName"] },
-  { path: "createdBy", select: ["_id", "firstName"] },
-  { path: "updatedBy", select: ["_id", "firstName"] },
-  { path: "deletedBy", select: ["_id", "firstName"] }
+  { path: "createdBy", select: ["_id", "firstName", "lastName"] },
+  { path: "updatedBy", select: ["_id", "firstName", "lastName"] },
+  { path: "deletedBy", select: ["_id", "firstName", "lastName"] }
 ]
 
 Payment.static("get", async function get(filters) {
@@ -51,7 +51,7 @@ Payment.static("store", async function store(doc, user) {
   })
 
   await payment.populate([
-    { path: "user", populate: "quotas" },
+    { path: "user", populate: [{ path: "quotas" }] },
     { path: "createdBy", select: ["_id", "firstName"] },
     { path: "updatedBy", select: ["_id", "firstName"] },
     { path: "deletedBy", select: ["_id", "firstName"] }
@@ -99,7 +99,7 @@ Payment.static("del", async function del(id, doc, user) {
   }
 
   await payment.populate([
-    { path: "user", populate: "quotas" },
+    { path: "user", populate: [{ path: "quotas" }] },
     { path: "createdBy", select: ["_id", "firstName"] },
     { path: "updatedBy", select: ["_id", "firstName"] },
     { path: "deletedBy", select: ["_id", "firstName"] }
