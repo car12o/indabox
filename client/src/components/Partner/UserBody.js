@@ -57,6 +57,8 @@ export const UserBody = ({ user, updateUser, updatePaymentAndQuotas, metadata })
           paymentStatus={paymentStatus}
           updatePaymentAndQuotas={updatePaymentAndQuotas}
           setTabIndex={setTabIndex}
+          inactive={user.deletedAt}
+          blur={user.deletedAt}
         />
       )}
       {tabIndex === 1 && (
@@ -64,6 +66,8 @@ export const UserBody = ({ user, updateUser, updatePaymentAndQuotas, metadata })
           payments={user.payments}
           paymentStatus={paymentStatus}
           updatePaymentAndQuotas={updatePaymentAndQuotas}
+          inactive={user.deletedAt}
+          blur={user.deletedAt}
         />
       )}
       {tabIndex === 2 && (
@@ -72,6 +76,8 @@ export const UserBody = ({ user, updateUser, updatePaymentAndQuotas, metadata })
           updateUser={updateUser}
           titles={metadata.titles || []}
           roles={metadata.roles || []}
+          inactive={user.deletedAt}
+          blur={user.deletedAt}
         />
       )}
       {tabIndex === 3 && (
@@ -79,6 +85,8 @@ export const UserBody = ({ user, updateUser, updatePaymentAndQuotas, metadata })
           user={user}
           updateUser={updateUser}
           countries={metadata.countries || []}
+          inactive={user.deletedAt}
+          blur={user.deletedAt}
         />
       )}
       {tabIndex === 4 && (
@@ -86,6 +94,8 @@ export const UserBody = ({ user, updateUser, updatePaymentAndQuotas, metadata })
           notes={user.notes}
           userId={user._id}
           updateUser={updateUser}
+          inactive={user.deletedAt}
+          blur={user.deletedAt}
         />
       )}
     </Paper >

@@ -1,7 +1,6 @@
 import React, { useState, useCallback } from "react"
 import { compose } from "lodash/fp"
-import { Button } from "@material-ui/core"
-import { makeStyles } from "@material-ui/core/styles"
+import { makeStyles, Button } from "@material-ui/core"
 import { useApi } from "../../../services/api"
 import { UserTabHeader } from "../UserTabHeader"
 import { Input } from "../../Input/Input"
@@ -10,6 +9,9 @@ import { CheckBox } from "../../CheckBox/CheckBox"
 
 const useStyles = makeStyles({
   root: {
+    position: "relative"
+  },
+  container: {
     padding: "25px"
   },
   row: {
@@ -46,7 +48,7 @@ const initState = (user) => ({
   edit: false
 })
 
-export const Identification = ({ user, updateUser, titles, roles }) => {
+export const Identification = ({ user, updateUser, titles, roles, inactive, blur }) => {
   const [state, setter] = compose(
     useState,
     initState
@@ -68,9 +70,10 @@ export const Identification = ({ user, updateUser, titles, roles }) => {
   }
 
   return (
-    <>
+    <div className={classes.root}>
+      {blur && <div className="blur-content"></div>}
       <UserTabHeader title="DADOS PESSOAIS" />
-      <div className={classes.root}>
+      <div className={classes.container}>
         <div className={classes.row}>
           <Dropdown
             value={(titles.length && state.title) || ""}
@@ -180,41 +183,43 @@ export const Identification = ({ user, updateUser, titles, roles }) => {
             disabled={!state.edit}
           />
         </div>
-        <div className={classes.buttons}>
-          {state.edit
-            ? <>
-              <Button
+        {!inactive && (
+          <div className={classes.buttons}>
+            {state.edit
+              ? <>
+                <Button
+                  color="primary"
+                  size="large"
+                  variant="contained"
+                  onClick={() => compose(
+                    setter,
+                    initState
+                  )(user)}
+                >
+                  Cancelar
+                </Button>
+                <Button
+                  color="primary"
+                  size="large"
+                  variant="contained"
+                  onClick={submit}
+                >
+                  Gravar
+                </Button>
+              </>
+              : <Button
                 color="primary"
                 size="large"
                 variant="contained"
-                onClick={() => compose(
-                  setter,
-                  initState
-                )(user)}
+                onClick={() => setState({ edit: true })}
               >
-                Cancelar
+                Editar
               </Button>
-              <Button
-                color="primary"
-                size="large"
-                variant="contained"
-                onClick={submit}
-              >
-                Gravar
-              </Button>
-            </>
-            : <Button
-              color="primary"
-              size="large"
-              variant="contained"
-              onClick={() => setState({ edit: true })}
-            >
-              Editar
-            </Button>
-          }
-        </div>
+            }
+          </div>
+        )}
       </div>
-    </>
+    </div>
   )
 }
 

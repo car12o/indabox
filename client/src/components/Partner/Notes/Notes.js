@@ -7,6 +7,9 @@ import { UserTabHeader } from "../UserTabHeader"
 
 const useStyles = makeStyles((theme) => ({
   root: {
+    position: "relative"
+  },
+  main: {
     padding: "25px"
   },
   container: {
@@ -30,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
 
 const initState = (notes) => ({ notes, edit: false })
 
-export const Notes = ({ notes: _notes, userId, updateUser }) => {
+export const Notes = ({ notes: _notes, userId, updateUser, inactive, blur }) => {
   const [{ notes, edit }, setter] = compose(
     useState,
     initState
@@ -51,9 +54,10 @@ export const Notes = ({ notes: _notes, userId, updateUser }) => {
   }
 
   return (
-    <>
+    <div className={classes.root}>
+      {blur && <div className="blur-content"></div>}
       <UserTabHeader title="NOTAS" />
-      <div className={classes.root}>
+      <div className={classes.main}>
         <FormControl classes={{ root: classes.container }} variant="outlined" >
           <TextField
             multiline
@@ -75,40 +79,42 @@ export const Notes = ({ notes: _notes, userId, updateUser }) => {
             }}
           />
         </FormControl>
-        <div className={classes.buttons}>
-          {edit
-            ? <>
-              <Button
+        {!inactive && (
+          <div className={classes.buttons}>
+            {edit
+              ? <>
+                <Button
+                  color="primary"
+                  size="large"
+                  variant="contained"
+                  onClick={() => compose(
+                    setter,
+                    initState
+                  )(notes)}
+                >
+                  Cancelar
+                </Button>
+                <Button
+                  color="primary"
+                  size="large"
+                  variant="contained"
+                  onClick={submit}
+                >
+                  Gravar
+                </Button>
+              </>
+              : <Button
                 color="primary"
                 size="large"
                 variant="contained"
-                onClick={() => compose(
-                  setter,
-                  initState
-                )(notes)}
+                onClick={() => setState({ edit: true })}
               >
-                Cancelar
+                Editar
               </Button>
-              <Button
-                color="primary"
-                size="large"
-                variant="contained"
-                onClick={submit}
-              >
-                Gravar
-              </Button>
-            </>
-            : <Button
-              color="primary"
-              size="large"
-              variant="contained"
-              onClick={() => setState({ edit: true })}
-            >
-              Editar
-            </Button>
-          }
-        </div>
+            }
+          </div>
+        )}
       </div>
-    </>
+    </div>
   )
 }

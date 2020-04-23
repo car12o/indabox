@@ -21,6 +21,7 @@ export const User = ({ user, updateUser, updatePaymentAndQuotas }) => {
       <UserHeader
         user={user}
         breadcrumb={"Sócios"}
+        updateUser={updateUser}
       />
       <UserBody
         user={user}

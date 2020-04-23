@@ -1,8 +1,15 @@
 import React, { useState } from "react"
+import { makeStyles } from "@material-ui/core/styles"
 import { formatDate } from "../../../services/transform"
 import { Table } from "../../Table/Table"
 import { Invoice } from "../../Invoice"
 import { PaymentsModal } from "./PaymentsModal"
+
+const useStyles = makeStyles({
+  root: {
+    position: "relative"
+  }
+})
 
 const columns = [
   { id: "type", numeric: false, disablePadding: false, label: "TIPO" },
@@ -14,8 +21,9 @@ const columns = [
   { id: "invoice", numeric: false, disablePadding: false, label: "FATURA" }
 ]
 
-export const Payments = ({ payments, paymentStatus, updatePaymentAndQuotas }) => {
+export const Payments = ({ payments, paymentStatus, updatePaymentAndQuotas, inactive, blur }) => {
   const [{ open, content }, setModalState] = useState({ open: false, content: {} })
+  const classes = useStyles()
 
   const data = payments.map((payment) => ({
     ...payment,
@@ -37,14 +45,18 @@ export const Payments = ({ payments, paymentStatus, updatePaymentAndQuotas }) =>
   }))
 
   return (
-    <>
+    <div className={classes.root}>
+      {blur && <div className="blur-content"></div>}
       <Table
         columns={columns}
         data={data}
         order="desc"
         orderBy={"createdAt"}
         noDataLabel="Nao existem pagamentos ..."
-        onRowClick={(payment) => setModalState({ open: true, content: payment })}
+        onRowClick={!inactive
+          ? ((payment) => setModalState({ open: true, content: payment }))
+          : null
+        }
       />
       <PaymentsModal
         open={open}
@@ -52,7 +64,7 @@ export const Payments = ({ payments, paymentStatus, updatePaymentAndQuotas }) =>
         payment={content}
         updatePaymentAndQuotas={updatePaymentAndQuotas}
       />
-    </>
+    </div>
   )
 }
 
