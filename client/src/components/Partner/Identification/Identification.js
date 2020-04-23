@@ -41,7 +41,6 @@ const initState = (user) => ({
   ballotNumber: user.ballotNumber,
   specialty: user.specialty,
   specialtySessions: user.specialtySessions,
-  alerts: user.alerts,
   newsletter: user.newsletter,
   errors: {},
   edit: false
@@ -174,12 +173,6 @@ export const Identification = ({ user, updateUser, titles, roles }) => {
           />
         </div>
         <div className={classes.row}>
-          <CheckBox
-            value={state.alerts}
-            label="Receber alertas"
-            onChange={(alerts) => setState({ alerts, errors: {} })}
-            disabled={!state.edit}
-          />
           <CheckBox
             value={state.newsletter}
             label="Receber newsletters"

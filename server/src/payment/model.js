@@ -65,9 +65,9 @@ Payment.static("store", async function store(doc, user) {
   return {
     ..._payment,
     user: {
-      _id: user._id,
-      firstName: user.firstName,
-      lastName: user.lastName
+      _id: _payment.user._id,
+      firstName: _payment.user.firstName,
+      lastName: _payment.user.lastName
     }
   }
 })
@@ -113,9 +113,9 @@ Payment.static("del", async function del(id, doc, user) {
   return {
     ..._payment,
     user: {
-      _id: user._id,
-      firstName: user.firstName,
-      lastName: user.lastName
+      _id: _payment.user._id,
+      firstName: _payment.user.firstName,
+      lastName: _payment.user.lastName
     }
   }
 })

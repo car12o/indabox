@@ -35,7 +35,7 @@ const metadata = async (req, res) => {
   res.json({
     roles: Object.entries(userRolesText)
       .map(([value, label]) => ({ value: Number(value), label }))
-      .filter(({ value }) => value <= user.role),
+      .filter(({ value }) => value >= user.role),
     titles: Object.values(userTitles).map((label) => ({ label, value: label })),
     countries: Object.values(userCountries).map((label) => ({ label, value: label }))
   })

@@ -107,7 +107,7 @@ _User.static("update", async function update(filters, doc, user) {
   }, { new: true }).populate(populate)
 
   if (!_user) {
-    throw new APIError("Payment not found", 400)
+    throw new APIError("User not found", 400)
   }
 
   return _user.toObject()
@@ -122,7 +122,7 @@ _User.static("del", async function del(id, doc, user) {
   }, { new: true })
 
   if (!_user) {
-    throw new APIError("Payment not found", 400)
+    throw new APIError("User not found", 400)
   }
 
   await _user.populate(populate).execPopulate()

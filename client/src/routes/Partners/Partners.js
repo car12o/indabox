@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react"
 import { makeStyles } from "@material-ui/core/styles"
 import { LinearProgress, Paper } from "@material-ui/core"
 import { useApi } from "../../services/api"
+import { roles } from "../../constants"
 import { Title } from "../../components/Title/Title"
 import { Table } from "../../components/Table/Table"
 
@@ -19,12 +20,6 @@ const columns = [
   { id: "email", numeric: false, disablePadding: false, label: "Endereço de email", width: "25%" },
   { id: "role", numeric: false, disablePadding: false, label: "Tipo de sócio", width: "15%" }
 ]
-
-const roles = {
-  0: "Root",
-  10: "Admin",
-  20: "Sócio titular"
-}
 
 export const Partners = ({ history }) => {
   const [{ loading, partners }, setState] = useState({ loading: true, partners: [] })
@@ -47,7 +42,7 @@ export const Partners = ({ history }) => {
         < Title label="Sócios" />
         <Table
           columns={columns}
-          data={partners.map(({ _id: id, role, ...props }) => ({ _id: id, role: roles[role], ...props }))}
+          data={partners.map(({ role, ...props }) => ({ role: roles[role], ...props }))}
           orderBy="firstName"
           onRowClick={(partner) => history.push(`/partners/${partner._id}`)}
           rowsPerPage={15}

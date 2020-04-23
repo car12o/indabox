@@ -1,5 +1,6 @@
 const { APIError } = require("../services/error")
 const { Payment } = require("./model")
+const { User } = require("../user")
 const { Quota } = require("../quota")
 const { paymentTypes, paymentStatus } = require("../constants")
 const { canPaymentBeCreated, canPaymentBeDeleted } = require("./helpers")
@@ -36,6 +37,7 @@ const create = async (req, res) => {
   }
 
   const payment = await Payment.store(_payment, user._id)
+  await User.update({ _id: payment.user._id }, { $push: { payments: payment._id } }, user._id)
   const quotas = await Quota.batchUpdate(_quotas.map(({ _id }) => _id), { payment: payment._id })
 
   res.json({ payment, quotas })
