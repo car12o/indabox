@@ -1,5 +1,6 @@
 const { APIError } = require("../services/error")
 const { User } = require("./model")
+const { randomPassword, genQuota } = require("./helpers")
 const { userRoles } = require("../constants")
 
 const get = async (req, res) => {
@@ -20,12 +21,20 @@ const getById = async (req, res) => {
 }
 
 const create = async (req, res) => {
-  const { password, ...body } = req.body
-  const { user } = req.session
+  const { body, session: { user } } = req
 
-  const _user = await User.store(body, user._id)
-  const { password: _, ...rest } = _user
-  res.json(rest)
+  const { password, ...rest } = await User.store({ ...body, password: randomPassword() }, user)
+  let _user = rest
+  if (_user.role >= 20) {
+    const { number } = await User.findOne().sort({ number: "desc" }).lean()
+    const quota = await genQuota(_user)
+    _user = await User.update({ _id: _user._id }, {
+      number: number + 1,
+      $push: { quotas: quota._id }
+    }, user._id)
+  }
+
+  res.json(_user)
 }
 
 const update = async (req, res) => {

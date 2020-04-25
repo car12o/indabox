@@ -4,6 +4,7 @@ const { APIError } = require("../services/error")
 const { log } = require("../services/logging")
 const { userRoles, userTitles, userCountries } = require("../constants")
 const { hashPassword } = require("../services/crypto")
+const { sendCreatedUserEmail } = require("../services/gmail")
 
 const _User = new mongoose.Schema({
   role: { type: Number, default: userRoles.holder },
@@ -81,19 +82,21 @@ _User.static("getMany", async function getMany(filters) {
 })
 
 _User.static("store", async function store(doc, user) {
-  if (doc.password) {
-    doc.password = hashPassword(doc.password)
-  }
+  const { password: pw } = doc
+  const password = hashPassword(pw)
 
   const _user = await this.create({
     ...doc,
+    password,
     createdBy: user,
     updatedBy: user
   })
 
   await _user.populate(populate).execPopulate()
+  const u = _user.toObject()
 
-  return _user.toObject()
+  sendCreatedUserEmail({ user: { ...u, password: pw } })
+  return u
 })
 
 _User.static("update", async function update(filters, doc, user) {

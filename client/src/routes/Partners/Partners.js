@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react"
-import { makeStyles } from "@material-ui/core/styles"
-import { LinearProgress, Paper } from "@material-ui/core"
+import React, { useState, useEffect, useCallback } from "react"
+import { makeStyles, LinearProgress, Paper } from "@material-ui/core"
 import { useApi } from "../../services/api"
-import { roles } from "../../constants"
+import { roles as _Roles } from "../../constants"
 import { Title } from "../../components/Title/Title"
 import { Table } from "../../components/Table/Table"
+import { PartnerCreate } from "./PartnerCreate"
 
 const useStyles = makeStyles({
   root: {
@@ -22,32 +22,51 @@ const columns = [
 ]
 
 export const Partners = ({ history }) => {
-  const [{ loading, partners }, setState] = useState({ loading: true, partners: [] })
+  const [{ loading, partners, modalOpen, roles, titles }, setter] = useState({
+    loading: true,
+    partners: [],
+    modalOpen: false,
+    roles: [],
+    titles: []
+  })
+  const setState = useCallback((values) => setter((state) => ({ ...state, ...values })), [setter])
   const classes = useStyles()
   const api = useApi()
 
-  const fetchPartners = async () => {
-    const { body: partners } = await api.get("/users")
-    setState({ partners, loading: false })
+  const fetch = async () => {
+    const [{ body: partners }, { body: { roles, titles } }] = await Promise.all([
+      api.get("/users"),
+      api.get("/metadata")
+    ])
+    setState({ partners, roles, titles, loading: false })
   }
 
   useEffect(() => {
-    fetchPartners()
+    fetch()
   }, [])
 
   return (
     loading
       ? <LinearProgress />
       : <Paper className={classes.root} elevation={1}>
-        < Title label="Sócios" />
+        <Title label="Sócios" options={[
+          { label: "Novo sócio", onClick: () => setState({ modalOpen: true }) }
+        ]} />
         <Table
           columns={columns}
-          data={partners.map(({ role, ...props }) => ({ role: roles[role], ...props }))}
+          data={partners.map(({ role, ...props }) => ({ role: _Roles[role], ...props }))}
           orderBy="firstName"
           onRowClick={(partner) => history.push(`/partners/${partner._id}`)}
           rowsPerPage={15}
           rowsPerPageOptions={[15, 30, 60]}
           noDataLabel="Sem dados ..."
+        />
+        <PartnerCreate
+          open={modalOpen}
+          roles={roles}
+          titles={titles}
+          onClose={() => setState({ modalOpen: false })}
+          history={history}
         />
       </Paper >
   )

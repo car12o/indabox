@@ -1,6 +1,5 @@
 import React from "react"
-import { makeStyles, useTheme } from "@material-ui/core/styles"
-import { TextField, MenuItem, FormControl } from "@material-ui/core"
+import { makeStyles, useTheme, TextField, MenuItem, FormControl, FormHelperText } from "@material-ui/core"
 
 const useStyles = makeStyles({
   formControl: ({ classes }) => ({
@@ -11,7 +10,7 @@ const useStyles = makeStyles({
   input: {}
 })
 
-export const Dropdown = ({ classes, label, value, options, onChange, disabled, variant }) => {
+export const Dropdown = ({ classes, label, value, options, onChange, disabled, variant, error }) => {
   const _classes = useStyles({ classes })
   const theme = useTheme()
 
@@ -37,6 +36,7 @@ export const Dropdown = ({ classes, label, value, options, onChange, disabled, v
           </MenuItem>
         ))}
       </TextField>
+      <FormHelperText id="component-error-text">{error}</FormHelperText>
     </FormControl>
   )
 }

@@ -3,7 +3,8 @@ import { makeStyles, Paper, Typography } from "@material-ui/core"
 import ArrowForwardIcon from "@material-ui/icons/ArrowForward"
 import { formatDate } from "../../services/transform"
 import { Stamp } from "../Stamp/Stamp"
-import { Options } from "./Options/Options"
+import { MenuOptions } from "../MenuOptions/MenuOptions"
+import { useApi } from "../../services/api"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -45,6 +46,14 @@ const useStyles = makeStyles((theme) => ({
 export const UserHeader = ({ user, breadcrumb, updateUser }) => {
   const { firstName, lastName, createdBy, createdAt, updatedBy, updatedAt, deletedAt, deletedBy } = user
   const classes = useStyles()
+  const api = useApi()
+  const options = [{
+    label: "Inativar utilizador",
+    onClick: async () => {
+      const { body } = await api.del(`/users/${user._id}`)
+      updateUser(body)
+    }
+  }]
 
   return (
     <Paper className={classes.root} elevation={1}>
@@ -95,7 +104,7 @@ export const UserHeader = ({ user, breadcrumb, updateUser }) => {
         </div>
       </div>
       <div className={classes.deactivate}>
-        {!user.deletedAt && <Options user={user} updateUser={updateUser} />}
+        {!user.deletedAt && <MenuOptions options={options} />}
       </div>
     </Paper>
   )

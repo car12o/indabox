@@ -1,28 +1,17 @@
 import React, { useState } from "react"
 import { useTheme, IconButton, Menu, MenuItem } from "@material-ui/core"
 import { MoreVert } from "@material-ui/icons"
-import { useApi } from "../../../services/api"
-
-const options = [
-  "Inativar utilizador"
-]
 
 const ITEM_HEIGHT = 48
 
-export const Options = ({ user, updateUser }) => {
+export const MenuOptions = ({ classes = {}, options }) => {
   const [anchorEl, setAnchorEl] = useState(null)
   const theme = useTheme()
-  const api = useApi()
-
-  const submit = async () => {
-    const { body } = await api.del(`/users/${user._id}`)
-    setAnchorEl(null)
-    updateUser(body)
-  }
 
   return (
     <div>
       <IconButton
+        classes={{ root: classes.button }}
         color="secondary"
         onClick={({ currentTarget }) => setAnchorEl(currentTarget)}
       >
@@ -42,11 +31,14 @@ export const Options = ({ user, updateUser }) => {
           }
         }}
       >
-        {options.map((option) => (
+        {options.map(({ label, onClick }) => (
           <MenuItem
-            key={option}
-            onClick={() => submit()}>
-            {option}
+            key={`key-${label}`}
+            onClick={() => {
+              setAnchorEl(null)
+              onClick()
+            }}>
+            {label}
           </MenuItem>
         ))}
       </Menu>

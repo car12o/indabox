@@ -3,13 +3,12 @@ const { validator } = require("../middleware")
 const { userRoles, userTitles, userCountries } = require("../constants")
 
 const createValidator = validator.body(Joi.object().keys({
+  title: Joi.string().valid(...Object.values(userTitles)).allow(""),
   role: Joi.number().valid(...Object.values(userRoles)).required(),
+  firstName: Joi.string().required(),
+  lastName: Joi.string().allow(""),
   email: Joi.string().email({ minDomainSegments: 2 }).required(),
-  password: Joi.string().min(6, "UTF-8").required(),
-  rePassword: Joi.string().valid(Joi.ref("password")).required().messages({
-    "any.only": "password must match"
-  }),
-  firstName: Joi.string().required()
+  nif: Joi.string().min(9, "UTF-8").max(9, "UTF-8").allow("")
 }))
 
 const updateValidator = validator.body(Joi.object().keys({
