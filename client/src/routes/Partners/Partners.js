@@ -26,29 +26,24 @@ const columns = [
 const initState = {
   loading: true,
   partners: [],
-  search: "",
-  sort: "firstName,1",
-  limit: 14,
-  page: 0,
   count: 0,
   modalOpen: false,
   roles: [],
   titles: []
 }
 
-// eslint-disable-next-line no-unused-vars
-const _Partners = ({ store, history }) => {
-  // console.log(store)
+const _Partners = ({ store, setStore, history }) => {
   const [state, setter] = useState(initState)
   const setState = useCallback((values) => setter((state) => ({ ...state, ...values })), [setter])
   const classes = useStyles()
   const api = useApi()
-  const [orderBy, order] = state.sort.split(",")
+  const [orderBy, order] = store.sort.split(",")
 
   const fetchUsers = async (data) => {
-    const { search, sort, limit, page } = { ...state, ...data }
+    const { search, sort, limit, page } = { ...store, ...data }
     const { body: { users, count } } = await api.get(`/users?search=${search}&sort=${sort}&limit=${limit}&page=${page}`)
-    setState({ search, sort, limit, page, partners: users, count, loading: false })
+    setStore({ search, sort, limit, page })
+    setState({ partners: users, count, loading: false })
   }
 
   const fetchMetadata = async () => {
@@ -57,7 +52,7 @@ const _Partners = ({ store, history }) => {
   }
 
   useEffect(() => {
-    const { search, sort, limit, page } = state
+    const { search, sort, limit, page } = store
     fetchUsers({ search, sort, limit, page })
     fetchMetadata()
   }, [])
@@ -79,10 +74,10 @@ const _Partners = ({ store, history }) => {
     <Paper className={classes.root} elevation={1}>
       <Title
         label="Sócios"
-        search={state.search}
+        search={store.search}
         onSearch={(search) => {
-          const { sort, limit } = state
-          setState({ search })
+          const { sort, limit } = store
+          setStore({ search })
           debounceOnSearch({ search, sort, limit })
         }}
         options={[
@@ -96,12 +91,12 @@ const _Partners = ({ store, history }) => {
         onRequestSort={onRequestSort}
         onRowClick={(partner) => history.push(`/partners/${partner._id}`)}
         count={state.count}
-        page={state.page}
+        page={(state.partners.length > 0 && store.page) || 0}
         onChangePage={(_, page) => {
           setState({ loading: true })
           fetchUsers({ page })
         }}
-        rowsPerPage={state.limit}
+        rowsPerPage={store.limit}
         rowsPerPageOptions={[14, 30, 60]}
         onChangeRowsPerPage={({ target: { value: limit } }) => fetchUsers({ limit, loading: true })}
         noDataLabel="Sem dados ..."
@@ -119,4 +114,9 @@ const _Partners = ({ store, history }) => {
   )
 }
 
-export const Partners = connect((store) => ({ store }))(_Partners)
+export const Partners = connect(
+  ({ partners }) => ({ store: partners }),
+  (dispatch) => ({
+    setStore: (payload) => dispatch({ type: "SET_PARTNERS", payload })
+  })
+)(_Partners)

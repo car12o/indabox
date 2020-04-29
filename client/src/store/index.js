@@ -4,12 +4,13 @@ import { Provider as ReduxProvider } from "react-redux"
 import { compose } from "lodash/fp"
 import { useApi } from "../services/api"
 import { user } from "./user"
+import { partners } from "./partners"
 import { PageLoading } from "../components/PageLoading/PageLoading"
 
 const store = compose(
   createStore,
   combineReducers
-)({ user })
+)({ user, partners })
 
 export const StoreProvider = ({ children }) => {
   const [loading, setLoading] = useState(true)
