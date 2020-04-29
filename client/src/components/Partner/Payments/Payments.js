@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import { makeStyles } from "@material-ui/core/styles"
 import { formatDate } from "../../../services/transform"
-import { Table } from "../../Table/Table"
+import { Table } from "../../Table"
 import { Invoice } from "../../Invoice"
 import { PaymentsModal } from "./PaymentsModal"
 

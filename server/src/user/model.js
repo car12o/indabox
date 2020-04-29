@@ -8,7 +8,7 @@ const { sendCreatedUserEmail } = require("../services/gmail")
 
 const _User = new mongoose.Schema({
   role: { type: Number, default: userRoles.holder },
-  number: { type: Number, default: 0 },
+  number: { type: String, default: "0" },
   title: { type: String, default: userTitles.dr },
   firstName: { type: String, default: "" },
   lastName: { type: String, default: "" },
@@ -49,6 +49,38 @@ const _User = new mongoose.Schema({
   timestamps: true
 })
 
+const regex = (term) => {
+  const exp = term
+    .split(" ")
+    .filter((s) => s)
+    .join("|")
+  const regex = new RegExp(exp, "i")
+  return {
+    $or: [
+      { number: regex },
+      { firstName: regex },
+      { lastName: regex },
+      { nif: regex },
+      { email: regex },
+      { ballotNumber: regex },
+      { specialty: regex },
+      { specialtySessions: regex },
+      { "address.road": regex },
+      { "address.postCode": regex },
+      { "address.city": regex },
+      { "address.country": regex },
+      { phone: regex },
+      { mobile: regex },
+      { "billing.name": regex },
+      { "billing.nif": regex },
+      { "billing.address.road": regex },
+      { "billing.address.postCode": regex },
+      { "billing.address.address": regex },
+      { "billing.address.country": regex }
+    ]
+  }
+}
+
 const populate = [
   { path: "quotas", populate: [{ path: "payment" }] },
   {
@@ -76,9 +108,22 @@ _User.static("get", async function get(filters, options = {}) {
   return user
 })
 
-_User.static("getMany", async function getMany(filters) {
-  const users = await this.find(filters).lean()
-  return users
+_User.static("getMany", async function getMany(filters, { search = null, sort = "number,1", limit = 15, page = 0 }) {
+  const [sortBy, order] = sort.split(",")
+  const _skip = parseInt(limit * page || 0, 10)
+  const _limit = parseInt(limit * page || limit, 10)
+  const _filters = search ? { ...filters, ...regex(search) } : filters
+
+  const users = await this
+    .find(_filters)
+    .sort({ [sortBy]: parseInt(order, 10) })
+    .skip(_skip)
+    .limit(_limit)
+    .lean()
+
+  const count = await this.find(_filters).count()
+
+  return { users, count }
 })
 
 _User.static("store", async function store(doc, user) {

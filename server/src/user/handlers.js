@@ -4,7 +4,8 @@ const { randomPassword, genQuota } = require("./helpers")
 const { userRoles } = require("../constants")
 
 const get = async (req, res) => {
-  const users = await User.getMany()
+  const { user } = req.session
+  const users = await User.getMany({ role: { $gte: user.role } }, req.query)
   res.json(users)
 }
 
@@ -29,7 +30,7 @@ const create = async (req, res) => {
     const { number } = await User.findOne().sort({ number: "desc" }).lean()
     const quota = await genQuota(_user)
     _user = await User.update({ _id: _user._id }, {
-      number: number + 1,
+      number: parseInt(number, 10) + 1,
       $push: { quotas: quota._id }
     }, user._id)
   }

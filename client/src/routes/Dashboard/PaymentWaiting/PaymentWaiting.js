@@ -1,6 +1,6 @@
 import React, { useMemo } from "react"
 import { formatDate } from "../../../services/transform"
-import { Table } from "../../../components/Table/Table"
+import { Table } from "../../../components/Table"
 
 const columns = [
   { id: "type", numeric: false, disablePadding: true, label: "Topo" },

@@ -1,6 +1,6 @@
 import React, { useMemo } from "react"
 import { formatDate } from "../../../services/transform"
-import { Table } from "../../../components/Table/Table"
+import { Table } from "../../../components/Table"
 import { Invoice } from "../../../components/Invoice"
 
 const columns = [

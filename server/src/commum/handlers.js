@@ -3,12 +3,12 @@ const { verifyHash } = require("../services/crypto")
 const { User } = require("../user")
 const { Quota } = require("../quota")
 const { Payment } = require("../payment")
-const { userRolesText, userTitles, userCountries } = require("../constants")
+const { userRoles, userRolesText, userTitles, userCountries } = require("../constants")
 
 const login = async (req, res) => {
   const { email, password } = req.body
   const _user = await User.get({ email }, { password })
-  if (!_user || !verifyHash(password, _user.password)) {
+  if (!_user || !verifyHash(password, _user.password) || _user.role > userRoles.admin) {
     req.session.set({ logged: false })
     throw new ValidationError([{ message: "Invalid credentials", path: ["email"] }])
   }

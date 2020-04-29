@@ -20,14 +20,14 @@ const useStyles = makeStyles({
 })
 
 export const TableHead = ({
+  data,
   columns,
-  rowCount,
   order,
   orderBy,
   onRequestSort,
   selectable,
   numSelected,
-  onleSelectAll
+  onSelectAll
 }) => {
   const classes = useStyles()
 
@@ -35,11 +35,11 @@ export const TableHead = ({
     <MatTableHead classes={{ root: "gradient-background" }}>
       <TableRow classes={{ root: classes.row }}>
         {selectable && (
-          <TableCell style={{ width: "8%" }} padding="checkbox">
+          <TableCell padding="checkbox">
             <Checkbox
               classes={{ root: `${classes.cell} ${classes.padStartCheckbox}` }}
-              checked={numSelected === rowCount}
-              onChange={onleSelectAll}
+              checked={numSelected === data.filter((n) => n.selectable(n)).length}
+              onChange={onSelectAll}
             />
           </TableCell>)
         }

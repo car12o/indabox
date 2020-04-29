@@ -3,7 +3,7 @@ const model = require("./model")
 const { api } = require("./api")
 const { template } = require("./templates")
 
-const TEST_EMAIL = "car12o.joao@gmail.com"
+const TEST_EMAIL = "anapaletafernandes@gmail.com"
 
 const sendMbGeneratedEmail = async ({ user, ...payment }) => {
   try {
@@ -46,6 +46,8 @@ const sendCreatedUserEmail = async ({ user }) => {
     if (!user.email) {
       throw new Error("Invalid user email")
     }
+
+    console.log("password", user.password)
 
     // const to = user.email
     const to = TEST_EMAIL

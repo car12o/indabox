@@ -1,6 +1,6 @@
 import React from "react"
 import { formatDate } from "../../../services/transform"
-import { Table } from "../../../components/Table/Table"
+import { Table } from "../../../components/Table"
 
 const columns = [
   { id: "year", numeric: false, disablePadding: true, label: "Ano" },

@@ -18,11 +18,11 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-export const Input = ({ label, type, value, onChange, error, disabled }) => {
+export const Input = ({ classes: _classes = {}, label, type, value, onChange, error, disabled }) => {
   const classes = useStyles()
 
   return (
-    <div className={`${classes.root} ${classes.container}`}>
+    <div className={`${classes.root} ${_classes.container}`}>
       <FormControl
         classes={{ root: classes.root }}
         variant="standard"
@@ -30,7 +30,7 @@ export const Input = ({ label, type, value, onChange, error, disabled }) => {
         <TextField
           label={label}
           value={value}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={({ target: { value } }) => onChange(value)}
           variant="standard"
           placeholder=""
           disabled={disabled}

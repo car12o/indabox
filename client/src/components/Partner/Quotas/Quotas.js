@@ -2,7 +2,7 @@ import React from "react"
 import { makeStyles } from "@material-ui/core/styles"
 import { formatDate } from "../../../services/transform"
 import { useApi } from "../../../services/api"
-import { Table } from "../../Table/Table"
+import { Table } from "../../Table"
 
 const useStyles = makeStyles({
   root: {
