@@ -47,8 +47,6 @@ const sendCreatedUserEmail = async ({ user }) => {
       throw new Error("Invalid user email")
     }
 
-    console.log("password", user.password)
-
     // const to = user.email
     const to = TEST_EMAIL
     const subject = "Novo utilizador."
