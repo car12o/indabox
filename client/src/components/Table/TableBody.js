@@ -30,7 +30,8 @@ export const TableBody = ({
   selected,
   onSelect,
   onRowClick,
-  loading
+  loading,
+  rowLoadingHeight
 }) => {
   const classes = useStyles()
 
@@ -42,7 +43,9 @@ export const TableBody = ({
   return (
     <MatTableBody>
       {loading
-        ? times(String, rowsPerPage).map((_, i) => <RowLoading key={`key-${i}`} height="49px" />)
+        ? times(String, rowsPerPage).map((_, i) => (
+          <RowLoading key={`key-${i}`} height={rowLoadingHeight || "49px"} />
+        ))
         : data.map((n, i) => {
           const isSelected = selected.includes(n.id)
           return (

@@ -1,7 +1,7 @@
 import React, { useMemo } from "react"
-import { formatDate } from "../../../services/transform"
-import { Table } from "../../../components/Table"
-import { Invoice } from "../../../components/Invoice"
+import { formatDate } from "../../../../services/transform"
+import { Table } from "../../../../components/Table"
+import { Invoice } from "../../../../components/Invoice"
 
 const columns = [
   { id: "type", numeric: false, disablePadding: true, label: "Tipo" },
@@ -13,9 +13,19 @@ const columns = [
   { id: "invoice", numeric: false, disablePadding: false, label: "Fatura" }
 ]
 
-export const PaymentReceived = ({ payments, onPaymentUpdate, history }) => {
+export const PaymentReceived = ({
+  payments,
+  count,
+  orderBy,
+  order,
+  page,
+  limit,
+  history,
+  loading,
+  fetchData,
+  onRequestSort
+}) => {
   const _payments = useMemo(() => payments
-    .filter(({ paymentDate, deletedBy }) => paymentDate && !deletedBy)
     .map(({ _id, type, quotasYear, value, user, paymentDate, invoiceEmited }) => ({
       type,
       quotas: quotasYear.join(","),
@@ -28,7 +38,7 @@ export const PaymentReceived = ({ payments, onPaymentUpdate, history }) => {
         <Invoice
           id={_id}
           status={invoiceEmited}
-          onPaymentUpdate={onPaymentUpdate}
+          onPaymentUpdate={() => fetchData({}, { loading: false })}
         />
       )
     })), [payments])
@@ -37,12 +47,20 @@ export const PaymentReceived = ({ payments, onPaymentUpdate, history }) => {
     <Table
       columns={columns}
       data={_payments}
-      orderBy="paymentDate"
-      order="desc"
+      orderBy={orderBy}
+      order={order}
+      onRequestSort={onRequestSort}
       onRowClick={({ userId }) => history.push(`/partners/${userId}`)}
-      rowsPerPage={8}
+      count={count}
+      page={(_payments.length > 0 && page) || 0}
+      onChangePage={(_, page) => fetchData({ page })}
+      rowsPerPage={limit}
       rowsPerPageOptions={[8, 16, 24]}
+      onChangeRowsPerPage={({ target: { value: limit } }) => fetchData({ limit })}
       noDataLabel="Sem dados ..."
+      loading={loading}
+      dynamic
+      rowLoadingHeight="55px"
     />
   )
 }

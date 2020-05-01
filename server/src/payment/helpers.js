@@ -10,8 +10,6 @@ const canPaymentBeDeleted = (payment) => payment
   && payment.type === paymentTypes.mb
 
 module.exports = {
-  paymentStatus,
-  paymentTypes,
   canPaymentBeCreated,
   canPaymentBeDeleted
 }

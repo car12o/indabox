@@ -7,7 +7,8 @@ const { canPaymentBeCreated, canPaymentBeDeleted } = require("./helpers")
 const { createMb, deleteMb } = require("./mb")
 
 const get = async (req, res) => {
-  const payments = await Payment.getMany()
+  const { dateStart, dateEnd, field, sort, limit, page, ...filters } = req.query
+  const payments = await Payment.getMany(filters, { dateStart, dateEnd, field, sort, limit, page })
   res.json(payments)
 }
 

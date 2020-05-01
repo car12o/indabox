@@ -4,8 +4,9 @@ const { randomPassword, genQuota } = require("./helpers")
 const { userRoles } = require("../constants")
 
 const get = async (req, res) => {
+  const { search, sort, limit, page, ...filters } = req.query
   const { user } = req.session
-  const users = await User.getMany({ role: { $gte: user.role } }, req.query)
+  const users = await User.getMany({ role: { $gte: user.role }, ...filters }, { search, sort, limit, page, ...filters })
   res.json(users)
 }
 
