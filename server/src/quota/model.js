@@ -1,5 +1,6 @@
 const mongoose = require("mongoose")
 const { APIError } = require("../services/error")
+const { filterByDates } = require("../services/dates")
 
 const Quota = mongoose.Schema({
   year: { type: Number, required: true },
@@ -27,9 +28,26 @@ Quota.static("get", async function get(filters) {
   return quota
 })
 
-Quota.static("getMany", async function getMany(filters) {
-  const quotas = await this.find(filters).populate(populate).lean()
-  return quotas
+Quota.static("getMany", async function getMany(
+  filters,
+  { dateStart, dateEnd, field, sort = "createdAt,-1", limit = 15, page = 0 }
+) {
+  const [sortBy, order] = sort.split(",")
+  const _skip = parseInt(limit * page || 0, 10)
+  const _limit = parseInt(limit * page || limit, 10)
+  const _filters = { ...filters, ...filterByDates({ dateStart, dateEnd, field }) }
+
+  const quotas = await this
+    .find(_filters)
+    .populate(populate)
+    .sort({ [sortBy]: parseInt(order, 10) })
+    .skip(_skip)
+    .limit(_limit)
+    .lean()
+
+  const count = await this.find(_filters).count()
+
+  return { quotas, count }
 })
 
 Quota.static("store", async function store(doc) {

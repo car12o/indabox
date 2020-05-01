@@ -40,6 +40,7 @@ const _Partners = ({ store, setStore, history }) => {
   const [orderBy, order] = store.sort.split(",")
 
   const fetchUsers = async (data) => {
+    setState({ loading: true })
     const { search, sort, limit, page } = { ...store, ...data }
     const { body: { users, count } } = await api.get(`/users?search=${search}&sort=${sort}&limit=${limit}&page=${page}`)
     setStore({ search, sort, limit, page })
@@ -65,10 +66,10 @@ const _Partners = ({ store, setStore, history }) => {
     fetchUsers({ sort: `${_orderBy},1`, page: 0, loading: true })
   }
 
-  const debounceOnSearch = useCallback(debounce(({ search, sort, limit }) => {
-    setState({ loading: true })
-    fetchUsers({ search, sort, limit, page: 0 })
-  }, 500), [])
+  const debounceOnSearch = useCallback(debounce(
+    ({ search, sort, limit }) => fetchUsers({ search, sort, limit, page: 0 }),
+    500
+  ), [])
 
   return (
     <Paper className={classes.root} elevation={1}>
@@ -92,13 +93,10 @@ const _Partners = ({ store, setStore, history }) => {
         onRowClick={(partner) => history.push(`/partners/${partner._id}`)}
         count={state.count}
         page={(state.partners.length > 0 && store.page) || 0}
-        onChangePage={(_, page) => {
-          setState({ loading: true })
-          fetchUsers({ page })
-        }}
+        onChangePage={(_, page) => fetchUsers({ page })}
         rowsPerPage={store.limit}
         rowsPerPageOptions={[14, 30, 60]}
-        onChangeRowsPerPage={({ target: { value: limit } }) => fetchUsers({ limit, loading: true })}
+        onChangeRowsPerPage={({ target: { value: limit } }) => fetchUsers({ limit })}
         noDataLabel="Sem dados ..."
         loading={state.loading}
         dynamic

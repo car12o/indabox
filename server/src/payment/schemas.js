@@ -3,6 +3,10 @@ const config = require("../../config/default.json")
 const { validator } = require("../middleware")
 const { paymentTypes } = require("../constants")
 
+const getValidator = validator.query(Joi.object().keys({
+  paymentDate: (value) => (value === "null" ? null : value)
+}).unknown(true))
+
 const createValidator = validator.body(Joi.object().keys({
   type: Joi.string().valid(...Object.values(paymentTypes)).required(),
   quotas: Joi.array().items(Joi.string().length(24)).required()
@@ -26,5 +30,6 @@ const ifthenValidator = validator.query(Joi.object().keys({
 module.exports = {
   createValidator,
   updateValidator,
-  ifthenValidator
+  ifthenValidator,
+  getValidator
 }

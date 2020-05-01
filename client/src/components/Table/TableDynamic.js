@@ -68,6 +68,7 @@ export const TableDynamic = ({
           onSelect={handleSelectClick({ selected, setState })}
           onRowClick={onRowClick}
           loading={loading}
+          {...props}
         />
       </MatTable>
       <TablePagination
