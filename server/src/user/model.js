@@ -1,4 +1,5 @@
 const mongoose = require("mongoose")
+const { compose, map, toNumber, filter, isNaN } = require("lodash/fp")
 const config = require("../../config/default.json")
 const { APIError } = require("../services/error")
 const { log } = require("../services/logging")
@@ -8,7 +9,7 @@ const { sendCreatedUserEmail } = require("../services/gmail")
 
 const _User = new mongoose.Schema({
   role: { type: Number, default: userRoles.holder },
-  number: { type: String, default: "0" },
+  number: { type: Number, default: null },
   title: { type: String, default: userTitles.dr },
   firstName: { type: String, default: "" },
   lastName: { type: String, default: "" },
@@ -50,14 +51,22 @@ const _User = new mongoose.Schema({
 })
 
 const regex = (term) => {
-  const exp = term
+  const terms = term
     .split(" ")
     .filter((s) => s)
-    .join("|")
+
+  const numbers = compose(
+    map((n) => ({ number: n })),
+    filter((n) => !isNaN(n)),
+    map(toNumber)
+  )(terms)
+
+  const exp = terms.join("|")
   const regex = new RegExp(exp, "i")
+
   return {
     $or: [
-      { number: regex },
+      ...numbers,
       { firstName: regex },
       { lastName: regex },
       { nif: regex },

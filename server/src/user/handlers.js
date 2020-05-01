@@ -30,7 +30,7 @@ const create = async (req, res) => {
     const { number } = await User.findOne().sort({ number: "desc" }).lean()
     const quota = await genQuota(_user)
     _user = await User.update({ _id: _user._id }, {
-      number: parseInt(number, 10) + 1,
+      number: number + 1,
       $push: { quotas: quota._id }
     }, user._id)
   }
