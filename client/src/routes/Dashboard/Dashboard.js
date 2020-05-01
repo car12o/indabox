@@ -8,6 +8,8 @@ import { PaymentReceived } from "./PaymentReceived"
 import { PaymentWaiting } from "./PaymentWaiting"
 import { PaymentMissing } from "./PaymentMissing"
 
+import { DatePicker } from "../../components/DatePicker"
+
 const useStyles = makeStyles((theme) => ({
   root: {
     background: "#fff"
@@ -68,7 +70,8 @@ export const Dashboard = ({ history }) => {
         <Paper className={`${classes.root} ${classes.header}`} elevation={1}>
           <Header totals={totals} filter={filter} setState={setState} />
         </Paper>
-        <Paper className={classes.root} elevation={1}>
+        <DatePicker />
+        {/* <Paper className={classes.root} elevation={1}>
           <Tabs
             value={index}
             indicatorColor="primary"
@@ -92,7 +95,7 @@ export const Dashboard = ({ history }) => {
           {index === 0 && <PaymentReceived payments={payments} onPaymentUpdate={onPaymentUpdate} history={history} />}
           {index === 1 && <PaymentWaiting payments={payments} history={history} />}
           {index === 2 && <PaymentMissing quotas={quotas} history={history} />}
-        </Paper >
+        </Paper > */}
       </>
   )
 }

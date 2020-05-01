@@ -2,6 +2,7 @@ const mongoose = require("mongoose")
 const { APIError } = require("../services/error")
 const { paymentStatus, paymentTypes } = require("../constants")
 const { sendMbGeneratedEmail, sendMbCanceledEmail } = require("../services/gmail")
+const { filterByDates } = require("./helpers")
 
 const Payment = mongoose.Schema({
   status: { type: Number, default: paymentStatus.unpaid },
@@ -38,9 +39,26 @@ Payment.static("get", async function get(filters) {
   return payment
 })
 
-Payment.static("getMany", async function getMany(filters) {
-  const payments = await this.find(filters).populate(populate).lean()
-  return payments
+Payment.static("getMany", async function getMany(
+  filters,
+  { startDate, endDate, field, sort = "number,1", limit = 15, page = 0 }
+) {
+  const [sortBy, order] = sort.split(",")
+  const _skip = parseInt(limit * page || 0, 10)
+  const _limit = parseInt(limit * page || limit, 10)
+  const _filters = { ...filters, ...filterByDates({ startDate, endDate, field }) }
+
+  const payments = await this
+    .find(_filters)
+    .populate(populate)
+    .sort({ [sortBy]: parseInt(order, 10) })
+    .skip(_skip)
+    .limit(_limit)
+    .lean()
+
+  const count = await this.find(_filters).count()
+
+  return { payments, count }
 })
 
 Payment.static("store", async function store(doc, user) {
