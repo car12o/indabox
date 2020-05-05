@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useCallback } from "react"
+import { connect } from "react-redux"
 import { useApi } from "../../services/api"
 import { UserHeader } from "./UserHeader"
 import { UserBody } from "./UserBody"
 
-export const User = ({ user, updateUser, updatePaymentAndQuotas }) => {
+const _User = ({ user, updateUser, updatePaymentAndQuotas, loggedUser }) => {
   const [metadata, setMetadata] = useState({})
   const api = useApi()
 
@@ -22,13 +23,17 @@ export const User = ({ user, updateUser, updatePaymentAndQuotas }) => {
         user={user}
         breadcrumb={"Sócios"}
         updateUser={updateUser}
+        loggedUser={loggedUser}
       />
       <UserBody
         user={user}
         updateUser={updateUser}
         updatePaymentAndQuotas={updatePaymentAndQuotas}
         metadata={metadata}
+        loggedUser={loggedUser}
       />
     </>
   )
 }
+
+export const User = connect(({ user }) => ({ loggedUser: user }))(_User)

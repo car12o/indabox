@@ -20,7 +20,7 @@ const updateValidator = validator.body(Joi.object().keys({
   }),
   firstName: Joi.string(),
   lastName: Joi.string().allow(""),
-  number: Joi.number(),
+  number: Joi.number().allow(null),
   title: Joi.string().valid(...Object.values(userTitles)),
   nif: Joi.string().min(9, "UTF-8").max(9, "UTF-8").allow(""),
   phone: Joi.string().min(9, "UTF-8").max(15, "UTF-8").allow(""),

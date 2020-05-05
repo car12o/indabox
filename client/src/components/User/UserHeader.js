@@ -5,6 +5,7 @@ import { formatDate } from "../../services/transform"
 import { Stamp } from "../Stamp/Stamp"
 import { MenuOptions } from "../MenuOptions/MenuOptions"
 import { useApi } from "../../services/api"
+import { userRoles } from "../../constants"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -43,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-export const UserHeader = ({ user, breadcrumb, updateUser }) => {
+export const UserHeader = ({ user, breadcrumb, updateUser, loggedUser }) => {
   const { firstName, lastName, createdBy, createdAt, updatedBy, updatedAt, deletedAt, deletedBy } = user
   const classes = useStyles()
   const api = useApi()
@@ -104,7 +105,7 @@ export const UserHeader = ({ user, breadcrumb, updateUser }) => {
         </div>
       </div>
       <div className={classes.deactivate}>
-        {!user.deletedAt && <MenuOptions options={options} />}
+        {loggedUser.role <= userRoles.admin && !user.deletedAt && <MenuOptions options={options} />}
       </div>
     </Paper>
   )

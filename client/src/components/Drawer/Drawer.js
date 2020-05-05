@@ -1,8 +1,10 @@
 import React, { useState } from "react"
 import { Link, withRouter } from "react-router-dom"
+import { connect } from "react-redux"
 import { Drawer as DrawerMat, List, ListItem, ListItemIcon, ListItemText } from "@material-ui/core"
 import { makeStyles } from "@material-ui/core/styles"
 import { Home, People, Person, ExitToApp, ArrowBack, ArrowForward } from "@material-ui/icons"
+import { userRoles } from "../../constants"
 
 const drawerWidth = 240
 const useStyles = makeStyles((theme) => ({
@@ -73,13 +75,13 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const menus = [
-  { label: "Início", icon: <Home />, link: "/" },
-  { label: "Sócios", icon: <People />, link: "/partners" },
+  { label: "Início", icon: <Home />, link: "/", role: userRoles.admin },
+  { label: "Sócios", icon: <People />, link: "/partners", role: userRoles.admin },
   { label: "A minha conta", icon: <Person />, link: "/profile" },
   { label: "Sair", icon: <ExitToApp />, link: "/logout" }
 ]
 
-export const _Drawer = ({ children, location: { pathname } }) => {
+export const _Drawer = ({ user, children, location: { pathname } }) => {
   const [open, setOpen] = useState(true)
   const classes = useStyles()
 
@@ -94,16 +96,17 @@ export const _Drawer = ({ children, location: { pathname } }) => {
           <img src="/assets/logo.png" alt="" />
         </div>
         <List>
-          {menus.map(({ link, label, icon }) => (
-            <Link className={classes.link} to={link} key={label}>
-              <ListItem classes={{ root: classes.listItem }} alignItems="center" selected={link === pathname} button>
-                <ListItemIcon>
-                  {icon}
-                </ListItemIcon>
-                <ListItemText primary={open && label} />
-              </ListItem>
-            </Link>
-          ))}
+          {menus.filter(({ role }) => !role || role >= user.role)
+            .map(({ link, label, icon }) => (
+              <Link className={classes.link} to={link} key={label}>
+                <ListItem classes={{ root: classes.listItem }} alignItems="center" selected={link === pathname} button>
+                  <ListItemIcon>
+                    {icon}
+                  </ListItemIcon>
+                  <ListItemText primary={open && label} />
+                </ListItem>
+              </Link>
+            ))}
         </List>
         <div className={classes.arrow}>
           {open
@@ -118,4 +121,6 @@ export const _Drawer = ({ children, location: { pathname } }) => {
   )
 }
 
-export const Drawer = withRouter(_Drawer)
+export const Drawer = connect(
+  ({ user }) => ({ user })
+)(withRouter(_Drawer))

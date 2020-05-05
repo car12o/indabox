@@ -16,7 +16,7 @@ const create = async (req, res) => {
   const { body } = req
   const { user } = req.session
 
-  const _quotas = await Quota.getMany({ _id: { $in: body.quotas } })
+  const { quotas: _quotas } = await Quota.getMany({ _id: { $in: body.quotas } })
   if (!canPaymentBeCreated(_quotas, body.quotas)) {
     throw new APIError("Invalid payment IDs", 500)
   }
@@ -67,7 +67,7 @@ const del = async (req, res) => {
     mb: null
   }, user._id)
 
-  const _quotas = await Quota.getMany({ payment: _payment._id })
+  const { quotas: _quotas } = await Quota.getMany({ payment: _payment._id })
   const quotas = await Quota.batchUpdate(_quotas.map(({ _id }) => _id), { payment: null })
 
   res.json({ payment, quotas })

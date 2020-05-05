@@ -117,7 +117,10 @@ _User.static("get", async function get(filters, options = {}) {
   return user
 })
 
-_User.static("getMany", async function getMany(filters, { search = null, sort = "number,1", limit = 15, page = 0 }) {
+_User.static("getMany", async function getMany(
+  filters,
+  { search = null, sort = "number,1", limit = 1000, page = 0 } = {}
+) {
   const [sortBy, order] = sort.split(",")
   const _skip = parseInt(limit * page || 0, 10)
   const _limit = parseInt(limit * page || limit, 10)

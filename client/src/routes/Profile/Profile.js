@@ -1,6 +1,6 @@
 import React from "react"
 import { connect } from "react-redux"
-import { User } from "../../components/Partner/User"
+import { User } from "../../components/User/User"
 
 const _Profile = ({ partner, updateUser, updatePaymentAndQuotas }) => (
   <User user={partner} updateUser={updateUser} updatePaymentAndQuotas={updatePaymentAndQuotas} />

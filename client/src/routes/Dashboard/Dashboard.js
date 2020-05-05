@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 export const Dashboard = ({ history }) => {
-  const [{ year, totals, loading }, setter] = useState({ year: 0, totals: [], loading: true })
+  const [{ year, totals, loading }, setter] = useState({ year: 0, totals: {}, loading: true })
   const setState = useCallback((values) => setter((state) => ({ ...state, ...values })), [setter])
   const classes = useStyles()
   const api = useApi()

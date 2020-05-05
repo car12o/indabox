@@ -4,9 +4,16 @@ export const paymentStatus = {
   20: "Cancelado"
 }
 
-export const roles = {
-  0: "Root",
-  10: "Admin",
-  20: "Titular",
-  30: "Aderente"
+export const userRoles = {
+  root: 0,
+  admin: 10,
+  holder: 20,
+  adherent: 30
+}
+
+export const userRolesText = {
+  [userRoles.root]: "Root",
+  [userRoles.admin]: "Admin",
+  [userRoles.holder]: "Titular",
+  [userRoles.adherent]: "Aderente"
 }

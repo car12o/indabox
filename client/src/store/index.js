@@ -15,8 +15,7 @@ const store = compose(
 export const StoreProvider = ({ children }) => {
   const [loading, setLoading] = useState(true)
   const api = useApi()
-  const { dispatch, getState } = store
-  const { user } = getState()
+  const { dispatch } = store
 
   const fetchUser = async () => {
     try {
@@ -34,7 +33,7 @@ export const StoreProvider = ({ children }) => {
 
   return (
     <ReduxProvider store={store}>
-      {loading ? <PageLoading /> : children({ logged: user.logged })}
+      {loading ? <PageLoading /> : children}
     </ReduxProvider>
   )
 }

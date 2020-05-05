@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react"
 import { uniqBy } from "lodash/fp"
 import { LinearProgress } from "@material-ui/core"
 import { useApi } from "../../services/api"
-import { User } from "../../components/Partner/User"
+import { User } from "../../components/User/User"
 
 export const Partner = ({ match }) => {
   const [{ partner, loading }, setState] = useState({ partner: {}, loading: true })

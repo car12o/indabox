@@ -41,7 +41,7 @@ Payment.static("get", async function get(filters) {
 
 Payment.static("getMany", async function getMany(
   filters,
-  { dateStart, dateEnd, field, sort = "createdAt,-1", limit = 15, page = 0 }
+  { dateStart, dateEnd, field, sort = "createdAt,-1", limit = 1000, page = 0 } = {}
 ) {
   const [sortBy, order] = sort.split(",")
   const _skip = parseInt(limit * page || 0, 10)

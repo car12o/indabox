@@ -3,7 +3,7 @@ import { connect } from "react-redux"
 import { debounce } from "lodash"
 import { makeStyles, Paper } from "@material-ui/core"
 import { useApi } from "../../services/api"
-import { roles as _Roles } from "../../constants"
+import { userRolesText } from "../../constants"
 import { Title } from "../../components/Title/Title"
 import { Table } from "../../components/Table"
 import { PartnerCreate } from "./PartnerCreate"
@@ -86,7 +86,7 @@ const _Partners = ({ store, setStore, history }) => {
         ]} />
       <Table
         columns={columns}
-        data={state.partners.map(({ role, ...props }) => ({ role: _Roles[role], ...props }))}
+        data={state.partners.map(({ role, ...props }) => ({ role: userRolesText[role], ...props }))}
         orderBy={orderBy}
         order={order === "1" ? "asc" : "desc"}
         onRequestSort={onRequestSort}
