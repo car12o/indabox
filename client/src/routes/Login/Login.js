@@ -3,7 +3,7 @@ import { connect } from "react-redux"
 import { compose } from "lodash/fp"
 import { Paper, Typography, Button } from "@material-ui/core"
 import { makeStyles } from "@material-ui/core/styles"
-import { useApi } from "../../services/api"
+import { useApi } from "../../services/Api"
 import { Input } from "../../components/Input/Input"
 
 const useStyles = makeStyles({

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react"
 import { uniqBy } from "lodash/fp"
 import { LinearProgress } from "@material-ui/core"
-import { useApi } from "../../services/api"
+import { useApi } from "../../services/Api"
 import { User } from "../../components/User/User"
 
 export const Partner = ({ match }) => {

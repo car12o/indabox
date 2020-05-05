@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from "react"
 import { compose } from "lodash/fp"
 import { makeStyles, Button } from "@material-ui/core"
-import { useApi } from "../../../services/api"
+import { useApi } from "../../../services/Api"
 import { UserTabHeader } from "../UserTabHeader"
 import { Input } from "../../Input/Input"
 import { Dropdown } from "../../Dropdown/Dropdown"

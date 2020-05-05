@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from "react"
 import { compose } from "lodash/fp"
 import { makeStyles, Paper, LinearProgress } from "@material-ui/core"
-import { useApi } from "../../services/api"
+import { useApi } from "../../services/Api"
 import { toQueryString } from "../../services/transform"
 import { Header } from "./Header"
 import { Tables } from "./Tables"

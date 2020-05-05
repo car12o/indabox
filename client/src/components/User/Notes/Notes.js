@@ -2,7 +2,7 @@ import React, { useState, useCallback } from "react"
 import { compose } from "lodash/fp"
 import { FormControl, TextField, Button } from "@material-ui/core"
 import { makeStyles } from "@material-ui/core/styles"
-import { useApi } from "../../../services/api"
+import { useApi } from "../../../services/Api"
 import { UserTabHeader } from "../UserTabHeader"
 
 const useStyles = makeStyles((theme) => ({

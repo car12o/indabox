@@ -1,6 +1,6 @@
 import React, { useEffect } from "react"
 import { connect } from "react-redux"
-import { useApi } from "../../services/api"
+import { useApi } from "../../services/Api"
 import { PageLoading } from "../../components/PageLoading/PageLoading"
 
 const _Logout = ({ history, dispatch }) => {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react"
 import { connect } from "react-redux"
-import { useApi } from "../../services/api"
+import { useApi } from "../../services/Api"
 import { UserHeader } from "./UserHeader"
 import { UserBody } from "./UserBody"
 

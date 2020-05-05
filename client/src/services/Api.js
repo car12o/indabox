@@ -1,6 +1,6 @@
 import React, { createContext, useContext } from "react"
-import { withRouter } from "react-router-dom"
-import { compose, set, last } from "lodash/fp"
+import { compose, set } from "lodash/fp"
+import { useSnackbar } from "./SnackBar"
 
 const BASE_URL = process.env.REACT_APP_API_URL
 const OPTIONS = {
@@ -12,33 +12,26 @@ const OPTIONS = {
 }
 
 const resolve = async (promise) => {
-  try {
-    const res = await promise
-    const { status, headers } = res
-    const body = await res.json()
+  const res = await promise
+  const { status, headers } = res
+  const body = await res.json()
 
-    const token = headers.get("Token")
-    if (token) {
-      localStorage.setItem("token", token)
-    }
-
-    if (status < 300) {
-      return { status, body }
-    }
-
-    if (status === 400) {
-      const { payload } = body
-      const err = payload.reduce((accm, { path, message }) => set(path, message, accm), {})
-      return { status, err }
-    }
-
-    throw (new Error(`Status: ${status}`))
-  } catch (error) {
-    if (!error.stack) {
-      throw new Error(error)
-    }
-    throw error
+  const token = headers.get("Token")
+  if (token) {
+    localStorage.setItem("token", token)
   }
+
+  if (status < 300) {
+    return { status, body }
+  }
+
+  if (status === 400) {
+    const { payload } = body
+    const err = payload.reduce((accm, { path, message }) => set(path, message, accm), {})
+    return { status, err }
+  }
+
+  throw (new Error(`Status: ${status} \n ${JSON.stringify(body)}`))
 }
 
 const get = compose(
@@ -63,19 +56,16 @@ const del = compose(
 
 const ApiContext = createContext({})
 
-const _ApiProvider = ({ children, history }) => {
+export const ApiProvider = ({ children }) => {
+  const { notify } = useSnackbar()
+
   const wrap = (fn) => async (...args) => {
-    const opts = last(args)
     try {
       const result = await fn(...args)
       return result
     } catch (error) {
-      if (opts.throw) {
-        throw error
-      }
-
-      history.push("/500")
-      return {}
+      notify(error.message)
+      throw error
     }
   }
 
@@ -91,5 +81,4 @@ const _ApiProvider = ({ children, history }) => {
   )
 }
 
-export const ApiProvider = withRouter(_ApiProvider)
 export const useApi = () => useContext(ApiContext)

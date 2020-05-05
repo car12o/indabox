@@ -1,6 +1,6 @@
 import React, { useState, useCallback } from "react"
 import { makeStyles, Dialog, DialogTitle, DialogContent, Button } from "@material-ui/core"
-import { useApi } from "../../../services/api"
+import { useApi } from "../../../services/Api"
 import { Input } from "../../../components/Input/Input"
 import { Dropdown } from "../../../components/Dropdown/Dropdown"
 

@@ -1,7 +1,7 @@
 import React from "react"
 import { makeStyles } from "@material-ui/core/styles"
 import { Button } from "@material-ui/core"
-import { useApi } from "../../../services/api"
+import { useApi } from "../../../services/Api"
 import { Stamp } from "../../Stamp/Stamp"
 
 const useStyles = makeStyles({

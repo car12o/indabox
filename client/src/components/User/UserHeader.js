@@ -4,7 +4,7 @@ import ArrowForwardIcon from "@material-ui/icons/ArrowForward"
 import { formatDate } from "../../services/transform"
 import { Stamp } from "../Stamp/Stamp"
 import { MenuOptions } from "../MenuOptions/MenuOptions"
-import { useApi } from "../../services/api"
+import { useApi } from "../../services/Api"
 import { userRoles } from "../../constants"
 
 const useStyles = makeStyles((theme) => ({
