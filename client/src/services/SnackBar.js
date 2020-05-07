@@ -18,7 +18,7 @@ const SnackbarContent = ({ message }) => {
         {title}
       </Typography>
       {body.map((msg) => (
-        <Typography variant="body2">
+        <Typography key={msg} variant="body2">
           {msg}
         </Typography>
       ))}

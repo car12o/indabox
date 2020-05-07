@@ -1,4 +1,4 @@
-const uuidv4 = require("uuid/v1")
+const uuidv4 = require("uuid/v4")
 const { merge } = require("lodash/fp")
 const { redis } = require("./database")
 

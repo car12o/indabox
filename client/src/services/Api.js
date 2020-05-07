@@ -16,7 +16,7 @@ const resolve = async (promise) => {
   const { status, headers } = res
   const body = await res.json()
 
-  const token = headers.get("Token")
+  const token = headers.get("Authorization")
   if (token) {
     localStorage.setItem("token", token)
   }
