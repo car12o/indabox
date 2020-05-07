@@ -27,7 +27,7 @@ const errorHandler = (err, req, res, next) => {
     error.payload = payload
   }
 
-  slack.send(error)
+  slack.send(error, { log })
   res.status(status || 500).json(error)
 }
 
