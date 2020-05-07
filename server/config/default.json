@@ -13,5 +13,6 @@
     "IFTHEN_CALLBACK_KEY": "",
     "GMAIL_CLIENT_ID": "",
     "GMAIL_CLIENT_SECRET": "",
-    "GMAIL_USER_ID": ""
+    "GMAIL_USER_ID": "",
+    "SLACK_URL": ""
 }

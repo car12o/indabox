@@ -1,4 +1,5 @@
 const { log } = require("../services/logging")
+const { slack } = require("../services/slack")
 
 const handleValidationError = ({ error: { details } }) => {
   const type = "ValidationError"
@@ -26,6 +27,7 @@ const errorHandler = (err, req, res, next) => {
     error.payload = payload
   }
 
+  slack.send(error)
   res.status(status || 500).json(error)
 }
 
