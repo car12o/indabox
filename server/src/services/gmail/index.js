@@ -47,8 +47,7 @@ const sendCreatedUserEmail = async ({ user }) => {
       throw new Error("Invalid user email")
     }
 
-    // const to = user.email
-    const to = TEST_EMAIL
+    const to = user.email
     const subject = "Novo utilizador."
     const message = template.userCreated({ user })
 

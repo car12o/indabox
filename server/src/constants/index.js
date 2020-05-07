@@ -12,6 +12,11 @@ const userRolesText = {
   [userRoles.adherent]: "Aderente"
 }
 
+const userRolesQuotaValue = {
+  [userRoles.holder]: 60,
+  [userRoles.adherent]: 30
+}
+
 const userTitles = {
   dr: "Dr.",
   dra: "Dra."
@@ -40,6 +45,7 @@ const paymentTypes = {
 module.exports = {
   userRoles,
   userRolesText,
+  userRolesQuotaValue,
   userTitles,
   userCountries,
   paymentStatus,

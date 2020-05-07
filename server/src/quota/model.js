@@ -62,7 +62,7 @@ Quota.static("update", async function update(filters, doc) {
   const quota = await this.findOneAndUpdate(filters, { ...doc }, { new: true }).populate(populate)
 
   if (!quota) {
-    throw new APIError("Payment not found", 400)
+    throw new APIError("Quota not found", 400)
   }
 
   return quota.toObject()
