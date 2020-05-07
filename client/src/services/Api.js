@@ -1,5 +1,5 @@
 import React, { createContext, useContext } from "react"
-import { compose, set } from "lodash/fp"
+import { compose, set, last } from "lodash/fp"
 import { useSnackbar } from "./SnackBar"
 
 const BASE_URL = process.env.REACT_APP_API_URL
@@ -60,11 +60,14 @@ export const ApiProvider = ({ children }) => {
   const { notify } = useSnackbar()
 
   const wrap = (fn) => async (...args) => {
+    const opts = { notify: true, ...last(args) }
     try {
       const result = await fn(...args)
       return result
     } catch (error) {
-      notify(error.message)
+      if (opts.notify) {
+        notify(error.message)
+      }
       throw error
     }
   }

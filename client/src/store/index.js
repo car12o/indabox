@@ -19,7 +19,7 @@ export const StoreProvider = ({ children }) => {
 
   const fetchUser = async () => {
     try {
-      const { body: payload } = await api.get("/state", { throw: true })
+      const { body: payload } = await api.get("/state", { throw: true }, { notify: false })
       dispatch({ type: "UPDATE_USER", payload })
       setLoading(false)
     } catch {
