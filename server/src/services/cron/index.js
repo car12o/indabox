@@ -4,7 +4,7 @@ const { genQuotas } = require("./quotas")
 
 const crons = []
 const jobs = [
-  ["0 0 10 8 4 *", genQuotas, null, false, "Europe/Lisbon"]
+  ["0 0 20 8 4 *", genQuotas, null, false, "Europe/Lisbon"]
 ]
 
 const init = () => {
