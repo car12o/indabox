@@ -158,10 +158,6 @@ workflows:
               ignore: /.*/
 
       - docker-build:
-          requires:
-            - server-lint
-            - server-test
-            - client-lint
           filters:
             branches:
               ignore: /.*/
