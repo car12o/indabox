@@ -21,14 +21,15 @@ const errorHandler = (err, req, res, next) => {
     return
   }
 
-  const { message, status, payload, type = "Error" } = err
+  slack.send(err, { log })
+
+  const { status = 500, message, type = "Error", payload } = err
   const error = { message, type }
   if (payload) {
     error.payload = payload
   }
 
-  slack.send(error, { log })
-  res.status(status || 500).json(error)
+  res.status(status).json(error)
 }
 
 module.exports = {
