@@ -4,7 +4,7 @@ const config = require("../../../config/default.json")
 const url = process.env.SLACK_URL || config.SLACK_URL || null
 
 const send = async (err, { log }) => {
-  if (url) {
+  if (url && ![400, 401].includes(err.status)) {
     try {
       const res = await fetch(url, {
         headers: { "Content-type": "application/json" },
