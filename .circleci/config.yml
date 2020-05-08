@@ -121,7 +121,7 @@ workflows:
             branches:
               only: /.*/
             tags:
-              ignore: /.*/
+              only: /.*/
 
       - run:
           name: server-lint
@@ -158,6 +158,8 @@ workflows:
               ignore: /.*/
 
       - docker-build:
+          requires:
+            - setup
           filters:
             branches:
               ignore: /.*/
