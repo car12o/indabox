@@ -121,7 +121,7 @@ workflows:
             branches:
               only: /.*/
             tags:
-              only: /.*/
+              ignore: /.*/
 
       - run:
           name: server-lint
@@ -133,7 +133,7 @@ workflows:
             branches:
               only: /.*/
             tags:
-              only: /.*/
+              ignore: /.*/
       - run:
           name: server-test
           package: server
@@ -144,7 +144,7 @@ workflows:
             branches:
               only: /.*/
             tags:
-              only: /.*/
+              ignore: /.*/
       - run:
           name: client-lint
           package: client
@@ -155,7 +155,7 @@ workflows:
             branches:
               only: /.*/
             tags:
-              only: /.*/
+              ignore: /.*/
 
       - docker-build:
           requires:
