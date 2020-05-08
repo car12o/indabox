@@ -9,7 +9,7 @@ const send = async (err, { log }) => {
       const res = await fetch(url, {
         headers: { "Content-type": "application/json" },
         method: "POST",
-        body: JSON.stringify({ text: `${err.status || 500} | ${err.stack} || ""` })
+        body: JSON.stringify({ text: `${err.status || 500} | ${err.stack || ""}` })
       })
 
       if (res.status !== 200) {
