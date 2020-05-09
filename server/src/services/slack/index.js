@@ -3,13 +3,15 @@ const config = require("../../../config/default.json")
 
 const url = process.env.SLACK_URL || config.SLACK_URL || null
 
-const send = async (err, { log }) => {
-  if (url && ![400, 401].includes(err.status)) {
+const send = async ({ status, message }, { log }) => {
+  if (url && ![400, 401, 404].includes(status)) {
     try {
       const res = await fetch(url, {
         headers: { "Content-type": "application/json" },
         method: "POST",
-        body: JSON.stringify({ text: `${err.status || 500} | ${err.stack || ""}` })
+        body: JSON.stringify({
+          text: `${new Date().toISOString()} | ${status || 500} | ${message || ""}`
+        })
       })
 
       if (res.status !== 200) {

@@ -21,14 +21,17 @@ const create = async (req, res) => {
     throw new APIError("Invalid payment IDs", 500)
   }
 
-  const _payment = {
+  const { value, quotasYear } = _quotas.reduce((acc, { year, value }) => ({
+    value: acc.value + value,
+    quotasYear: [...acc.quotasYear, year]
+  }), { value: 0, quotasYear: [] })
+
+  const _payment = new Payment({
     ...body,
-    ..._quotas.reduce((acc, { year, value }) => ({
-      value: acc.value + value,
-      quotasYear: [...acc.quotasYear, year]
-    }), { value: 0, quotasYear: [] }),
+    value,
+    quotasYear: quotasYear.sort((a, b) => b - a),
     user: _quotas[0].user
-  }
+  })
 
   if (_payment.type === paymentTypes.mb) {
     _payment.mb = await createMb(_payment.value)
@@ -37,7 +40,7 @@ const create = async (req, res) => {
     _payment.paymentDate = Date.now()
   }
 
-  const payment = await Payment.store(_payment, user._id)
+  const payment = await Payment.store(_payment.toObject(), user._id)
   await User.update({ _id: payment.user._id }, { $push: { payments: payment._id } }, user._id)
   const quotas = await Quota.batchUpdate(_quotas.map(({ _id }) => _id), { payment: payment._id })
 

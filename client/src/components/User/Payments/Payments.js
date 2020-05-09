@@ -4,6 +4,7 @@ import { formatDate } from "../../../services/transform"
 import { Table } from "../../Table"
 import { Invoice } from "../../Invoice"
 import { PaymentsModal } from "./PaymentsModal"
+import { QuotasYear } from "../../QuotasYear"
 
 const useStyles = makeStyles({
   root: {
@@ -27,7 +28,7 @@ export const Payments = ({ payments, paymentStatus, updatePaymentAndQuotas, inac
 
   const data = payments.map((payment) => ({
     ...payment,
-    quotas: payment.quotasYear.join(","),
+    quotas: <QuotasYear data={payment.quotasYear} />,
     statusText: paymentStatus[payment.status],
     value: `${payment.value}€`,
     createdBy: (payment.createdBy && payment.createdBy.firstName) || "Importado",
