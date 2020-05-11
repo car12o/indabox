@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from "react"
-import { compose } from "lodash/fp"
+import { compose, merge } from "lodash/fp"
 import { Typography, Button } from "@material-ui/core"
 import { makeStyles } from "@material-ui/core/styles"
 import { useApi } from "../../../services/Api"
@@ -70,7 +70,7 @@ const initState = (user) => ({
     },
     active: user.billing.active
   },
-  errors: { billing: {} },
+  errors: { address: {}, billing: { address: {} } },
   edit: false
 })
 
@@ -80,13 +80,10 @@ export const Contact = ({ user, updateUser, countries, blur }) => {
     initState
   )(user)
   const setState = useCallback((v) => {
-    const { errors, address, billing, ...values } = v
+    const { errors, ...values } = v
     return setter((state) => ({
-      ...state,
-      ...values,
-      address: { ...state.address, ...address || {} },
-      billing: { ...state.billing, ...billing || {} },
-      errors: errors || { address: {}, billing: {} }
+      ...merge(state, values),
+      errors: errors || { address: {}, billing: { address: {} } }
     }))
   }, [setter])
   const classes = useStyles()
@@ -98,7 +95,7 @@ export const Contact = ({ user, updateUser, countries, blur }) => {
 
     const { body, err } = await api.put(`/users/${user._id}`, data)
     if (err) {
-      setState({ errors: err })
+      setState({ errors: merge(errors, err) })
       return
     }
 
@@ -133,7 +130,7 @@ export const Contact = ({ user, updateUser, countries, blur }) => {
               label="Morada"
               onChange={(road) => setState({ address: { road } })}
               disabled={!state.edit}
-              error={state.errors.road}
+              error={state.errors.address.road}
             />
             <div className={classes.row}>
               <Input
@@ -142,7 +139,7 @@ export const Contact = ({ user, updateUser, countries, blur }) => {
                 label="Código de Postal"
                 onChange={(postCode) => setState({ address: { postCode } })}
                 disabled={!state.edit}
-                error={state.errors.postCode}
+                error={state.errors.address.postCode}
               />
               <Input
                 type="text"
@@ -150,7 +147,7 @@ export const Contact = ({ user, updateUser, countries, blur }) => {
                 label="Localidade"
                 onChange={(city) => setState({ address: { city } })}
                 disabled={!state.edit}
-                error={state.errors.city}
+                error={state.errors.address.city}
               />
             </div>
             <Dropdown
@@ -204,7 +201,7 @@ export const Contact = ({ user, updateUser, countries, blur }) => {
               label="Morada"
               onChange={(road) => setState({ billing: { address: { road } } })}
               disabled={!state.edit}
-              error={state.errors.billing.road}
+              error={state.errors.billing.address.road}
             />
             <div className={classes.row}>
               <Input
@@ -213,7 +210,7 @@ export const Contact = ({ user, updateUser, countries, blur }) => {
                 label="Código de Postal"
                 onChange={(postCode) => setState({ billing: { address: { postCode } } })}
                 disabled={!state.edit}
-                error={state.errors.billing.postCode}
+                error={state.errors.billing.address.postCode}
               />
               <Input
                 type="text"
@@ -221,7 +218,7 @@ export const Contact = ({ user, updateUser, countries, blur }) => {
                 label="Localidade"
                 onChange={(city) => setState({ billing: { address: { city } } })}
                 disabled={!state.edit}
-                error={state.errors.billing.city}
+                error={state.errors.billing.address.city}
               />
             </div>
             <Dropdown

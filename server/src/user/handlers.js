@@ -43,6 +43,10 @@ const update = async (req, res) => {
   const { body, params: { _id } } = req
   const { user } = req.session
 
+  if (user.role > userRoles.admin && _id !== user._id) {
+    throw new APIError("Forbidden", 403)
+  }
+
   const _user = await User.update({ _id }, body, user._id)
   res.json(_user)
 }

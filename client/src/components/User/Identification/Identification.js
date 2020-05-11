@@ -39,8 +39,8 @@ const initState = (user) => ({
   number: user.number,
   nif: user.nif,
   email: user.email,
-  password: user.password,
-  rePassword: user.rePassword,
+  password: "",
+  rePassword: "",
   ballotNumber: user.ballotNumber,
   specialty: user.specialty,
   specialtySessions: user.specialtySessions,
@@ -69,7 +69,7 @@ export const Identification = ({ user, updateUser, titles, roles, loggedUser, bl
     }
 
     updateUser(body)
-    setState({ edit: false })
+    setState({ password: "", rePassword: "", edit: false })
   }
 
   return (
@@ -150,6 +150,7 @@ export const Identification = ({ user, updateUser, titles, roles, loggedUser, bl
             label="Repetir senha"
             onChange={(rePassword) => setState({ rePassword, errors: {} })}
             disabled={!state.edit}
+            error={state.errors.rePassword}
           />
         </div>
         <div className={classes.row}>
