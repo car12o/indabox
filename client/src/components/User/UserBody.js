@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react"
+import React, { useState } from "react"
 import { makeStyles } from "@material-ui/core/styles"
 import { Paper, Tabs, Tab } from "@material-ui/core"
 import { Quotas } from "./Quotas/Quotas"
@@ -6,7 +6,7 @@ import { Payments } from "./Payments/Payments"
 import { Identification } from "./Identification/Identification"
 import { Contact } from "./Contact/Contact"
 import { Notes } from "./Notes/Notes"
-import { paymentStatus, userRoles } from "../../constants"
+import { paymentStatus } from "../../constants"
 
 const useStyles = makeStyles((theme) => ({
   tab: {
@@ -20,10 +20,6 @@ const useStyles = makeStyles((theme) => ({
 export const UserBody = ({ user, updateUser, updatePaymentAndQuotas, metadata, loggedUser }) => {
   const [tabIndex, setTabIndex] = useState(0)
   const classes = useStyles()
-  const inactive = useMemo(
-    () => loggedUser.role > userRoles.admin || user.deletedAt,
-    [loggedUser.role, user.deletedAt]
-  )
 
   return (
     <Paper elevation={1}>
@@ -61,7 +57,7 @@ export const UserBody = ({ user, updateUser, updatePaymentAndQuotas, metadata, l
           paymentStatus={paymentStatus}
           updatePaymentAndQuotas={updatePaymentAndQuotas}
           setTabIndex={setTabIndex}
-          inactive={inactive}
+          loggedUser={loggedUser}
           blur={user.deletedAt}
         />
       )}
@@ -70,7 +66,7 @@ export const UserBody = ({ user, updateUser, updatePaymentAndQuotas, metadata, l
           payments={user.payments}
           paymentStatus={paymentStatus}
           updatePaymentAndQuotas={updatePaymentAndQuotas}
-          inactive={inactive}
+          loggedUser={loggedUser}
           blur={user.deletedAt}
         />
       )}
@@ -80,7 +76,7 @@ export const UserBody = ({ user, updateUser, updatePaymentAndQuotas, metadata, l
           updateUser={updateUser}
           titles={metadata.titles || []}
           roles={metadata.roles || []}
-          inactive={inactive}
+          loggedUser={loggedUser}
           blur={user.deletedAt}
         />
       )}
@@ -89,7 +85,6 @@ export const UserBody = ({ user, updateUser, updatePaymentAndQuotas, metadata, l
           user={user}
           updateUser={updateUser}
           countries={metadata.countries || []}
-          inactive={inactive}
           blur={user.deletedAt}
         />
       )}
@@ -98,7 +93,6 @@ export const UserBody = ({ user, updateUser, updatePaymentAndQuotas, metadata, l
           notes={user.notes}
           userId={user._id}
           updateUser={updateUser}
-          inactive={inactive}
           blur={user.deletedAt}
         />
       )}

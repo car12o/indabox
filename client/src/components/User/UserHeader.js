@@ -1,11 +1,11 @@
-import React from "react"
+import React, { useMemo } from "react"
 import { makeStyles, Paper, Typography } from "@material-ui/core"
 import ArrowForwardIcon from "@material-ui/icons/ArrowForward"
+import { userRoles } from "../../constants"
 import { formatDate } from "../../services/transform"
 import { Stamp } from "../Stamp/Stamp"
 import { MenuOptions } from "../MenuOptions/MenuOptions"
 import { useApi } from "../../services/Api"
-import { userRoles } from "../../constants"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -48,6 +48,7 @@ export const UserHeader = ({ user, breadcrumb, updateUser, loggedUser }) => {
   const { firstName, lastName, createdBy, createdAt, updatedBy, updatedAt, deletedAt, deletedBy } = user
   const classes = useStyles()
   const api = useApi()
+  const disableByRole = useMemo(() => loggedUser.role > userRoles.admin, [loggedUser])
   const options = [{
     label: "Inativar utilizador",
     onClick: async () => {
@@ -105,7 +106,7 @@ export const UserHeader = ({ user, breadcrumb, updateUser, loggedUser }) => {
         </div>
       </div>
       <div className={classes.deactivate}>
-        {loggedUser.role <= userRoles.admin && !user.deletedAt && <MenuOptions options={options} />}
+        {!(disableByRole || user.deletedAt) && <MenuOptions options={options} />}
       </div>
     </Paper>
   )

@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
 
 const initState = (notes) => ({ notes, edit: false })
 
-export const Notes = ({ notes: _notes, userId, updateUser, inactive, blur }) => {
+export const Notes = ({ notes: _notes, userId, updateUser, blur }) => {
   const [{ notes, edit }, setter] = compose(
     useState,
     initState
@@ -79,7 +79,7 @@ export const Notes = ({ notes: _notes, userId, updateUser, inactive, blur }) => 
             }}
           />
         </FormControl>
-        {!inactive && (
+        {!blur && (
           <div className={classes.buttons}>
             {edit
               ? <>

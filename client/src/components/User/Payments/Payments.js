@@ -1,5 +1,6 @@
-import React, { useState } from "react"
+import React, { useState, useMemo } from "react"
 import { makeStyles } from "@material-ui/core/styles"
+import { userRoles } from "../../../constants"
 import { formatDate } from "../../../services/transform"
 import { Table } from "../../Table"
 import { Invoice } from "../../Invoice"
@@ -22,9 +23,10 @@ const columns = [
   { id: "invoice", numeric: false, disablePadding: false, label: "FATURA" }
 ]
 
-export const Payments = ({ payments, paymentStatus, updatePaymentAndQuotas, inactive, blur }) => {
+export const Payments = ({ payments, paymentStatus, updatePaymentAndQuotas, loggedUser, blur }) => {
   const [{ open, content }, setModalState] = useState({ open: false, content: {} })
   const classes = useStyles()
+  const disableByRole = useMemo(() => loggedUser.role > userRoles.admin, [loggedUser])
 
   const data = payments.map((payment) => ({
     ...payment,
@@ -40,6 +42,7 @@ export const Payments = ({ payments, paymentStatus, updatePaymentAndQuotas, inac
         id={payment._id}
         status={payment.invoiceEmited}
         onPaymentUpdate={updatePaymentAndQuotas}
+        disabled={disableByRole}
       />
     ),
     colored: ({ status }) => status === 20
@@ -54,7 +57,7 @@ export const Payments = ({ payments, paymentStatus, updatePaymentAndQuotas, inac
         order="desc"
         orderBy={"createdAt"}
         noDataLabel="Nao existem pagamentos ..."
-        onRowClick={!inactive
+        onRowClick={!(disableByRole || blur)
           ? ((payment) => setModalState({ open: true, content: payment }))
           : null
         }

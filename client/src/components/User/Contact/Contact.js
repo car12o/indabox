@@ -74,7 +74,7 @@ const initState = (user) => ({
   edit: false
 })
 
-export const Contact = ({ user, updateUser, countries, inactive, blur }) => {
+export const Contact = ({ user, updateUser, countries, blur }) => {
   const [state, setter] = compose(
     useState,
     initState
@@ -233,7 +233,7 @@ export const Contact = ({ user, updateUser, countries, inactive, blur }) => {
             />
           </div>}
         </div>
-        {!inactive && (
+        {!blur && (
           <div className={classes.buttons}>
             {state.edit
               ? <>

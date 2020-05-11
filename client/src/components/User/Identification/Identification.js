@@ -1,6 +1,7 @@
-import React, { useState, useCallback } from "react"
-import { compose } from "lodash/fp"
+import React, { useState, useCallback, useMemo } from "react"
+import { compose, omit } from "lodash/fp"
 import { makeStyles, Button } from "@material-ui/core"
+import { userRoles } from "../../../constants"
 import { useApi } from "../../../services/Api"
 import { UserTabHeader } from "../UserTabHeader"
 import { Input } from "../../Input/Input"
@@ -48,7 +49,7 @@ const initState = (user) => ({
   edit: false
 })
 
-export const Identification = ({ user, updateUser, titles, roles, inactive, blur }) => {
+export const Identification = ({ user, updateUser, titles, roles, loggedUser, blur }) => {
   const [state, setter] = compose(
     useState,
     initState
@@ -56,9 +57,11 @@ export const Identification = ({ user, updateUser, titles, roles, inactive, blur
   const setState = useCallback((values) => setter((state) => ({ ...state, ...values })), [setter])
   const classes = useStyles()
   const api = useApi()
+  const disableByRole = useMemo(() => loggedUser.role > userRoles.admin, [loggedUser])
 
   const submit = async () => {
-    const { edit, errors, ...data } = state
+    const { edit, errors, ..._data } = state
+    const data = disableByRole ? omit(["role", "number"], _data) : _data
     const { body, err } = await api.put(`/users/${user._id}`, data)
     if (err) {
       setState({ errors: err })
@@ -105,20 +108,20 @@ export const Identification = ({ user, updateUser, titles, roles, inactive, blur
             label="Tipo de sócio"
             options={roles}
             onChange={(role) => setState({ role, errors: {} })}
-            disabled={!state.edit}
+            disabled={!state.edit || disableByRole}
           />
           <Input
             type="text"
             value={state.number}
             label="Nº de sócio"
             onChange={(number) => setState({ number, errors: {} })}
-            disabled={!state.edit}
+            disabled={!state.edit || disableByRole}
             error={state.errors.number}
           />
           <Input
             type="text"
             value={state.nif}
-            label="NIF"
+            label="NIF pessoal"
             onChange={(nif) => setState({ nif, errors: {} })}
             disabled={!state.edit}
             error={state.errors.nif}
@@ -144,7 +147,7 @@ export const Identification = ({ user, updateUser, titles, roles, inactive, blur
           <Input
             type="password"
             value={state.rePassword}
-            label="Repetir Senha"
+            label="Repetir senha"
             onChange={(rePassword) => setState({ rePassword, errors: {} })}
             disabled={!state.edit}
           />
@@ -183,7 +186,7 @@ export const Identification = ({ user, updateUser, titles, roles, inactive, blur
             disabled={!state.edit}
           />
         </div>
-        {!inactive && (
+        {!blur && (
           <div className={classes.buttons}>
             {state.edit
               ? <>

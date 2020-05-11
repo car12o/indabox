@@ -20,7 +20,7 @@ const useStyles = makeStyles({
   }
 })
 
-export const Invoice = ({ id, status, onPaymentUpdate }) => {
+export const Invoice = ({ id, status, onPaymentUpdate, disabled }) => {
   const classes = useStyles()
   const api = useApi()
 
@@ -38,6 +38,7 @@ export const Invoice = ({ id, status, onPaymentUpdate }) => {
         { label: "Emitida", value: true },
         { label: "Não emitida", value: false }
       ]}
+      disabled={disabled}
     />
   )
 }

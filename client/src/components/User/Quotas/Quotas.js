@@ -1,5 +1,6 @@
-import React from "react"
+import React, { useMemo } from "react"
 import { makeStyles } from "@material-ui/core/styles"
+import { userRoles } from "../../../constants"
 import { formatDate } from "../../../services/transform"
 import { useApi } from "../../../services/Api"
 import { Table } from "../../Table"
@@ -18,9 +19,10 @@ const columns = [
   { id: "paymentDate", numeric: false, disablePadding: false, label: "DATA DE PAGAMENTO" }
 ]
 
-export const Quotas = ({ quotas, paymentStatus, updatePaymentAndQuotas, setTabIndex, inactive, blur }) => {
+export const Quotas = ({ quotas, paymentStatus, updatePaymentAndQuotas, setTabIndex, loggedUser, blur }) => {
   const classes = useStyles()
   const api = useApi()
+  const disableByRole = useMemo(() => loggedUser.role > userRoles.admin, [loggedUser])
 
   const data = quotas.map((quota) => ({
     ...quota,
@@ -47,7 +49,7 @@ export const Quotas = ({ quotas, paymentStatus, updatePaymentAndQuotas, setTabIn
         data={data}
         order="desc"
         orderBy={"year"}
-        actions={!inactive && [
+        actions={!(disableByRole || blur) && [
           {
             id: "manual",
             label: "Pagar manualmente",

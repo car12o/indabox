@@ -13,7 +13,7 @@ export const QuotasYear = ({ data }) => {
   const classes = useStyles()
 
   return compose(
-    (result) => <div className={classes.root}>{result}</div>,
+    (result) => <span className={classes.root}>{result}</span>,
     map((values) => {
       const value = values.join(",")
       return <span key={value}>{value}</span>
