@@ -4,7 +4,7 @@ const { User } = require("../../user")
 const { Quota } = require("../../quota")
 const { Payment } = require("../../payment")
 const { createMb, deleteMb } = require("../../payment/mb")
-const { userRolesQuotaValue, paymentStatus, paymentTypes } = require("../../constants")
+const { userRoles, userRolesQuotaValue, paymentStatus, paymentTypes } = require("../../constants")
 const { slack } = require("../slack")
 
 const generateNewQuota = async (user) => {
@@ -89,26 +89,22 @@ const genQuotas = async () => {
     log.info("Cron generate quotas started")
     slack.send({ status: "INFO", message: "Cron generate quotas started" }, { log })
 
-    const user1 = await User.findOne({ _id: "5eab2a660289680035bca8bc" })
-    const user2 = await User.findOne({ _id: "5eab2a650289680035bca4da" })
-    await genQuotaByUser([user1, user2])
+    const limit = 200
+    let page = 0
+    const query = { role: { $gte: userRoles.holder }, deletedAt: null }
+    const count = await User.find(query).count()
+    const pages = Math.floor(count / limit)
 
-    // const limit = 200
-    // let page = 0
-    // const query = { role: { $gte: userRoles.holder }, deletedAt: null }
-    // const count = await User.find(query).count()
-    // const pages = Math.floor(count / limit)
+    const promises = []
+    while (page <= pages) {
+      promises.push(User.getMany(query, { limit, page }))
+      page += 1
+    }
 
-    // const promises = []
-    // while (page <= pages) {
-    //   promises.push(User.getMany(query, { limit, page }))
-    //   page += 1
-    // }logs.
-
-    // await Promise.all(promises.map(async (promise) => {
-    //   const { users } = await promise
-    //   await genQuotaByUser(users)
-    // }))
+    await Promise.all(promises.map(async (promise) => {
+      const { users } = await promise
+      await genQuotaByUser(users)
+    }))
 
     log.info("Cron generate quotas ended")
     slack.send({ status: "INFO", message: "Cron generate quotas ended" }, { log })
