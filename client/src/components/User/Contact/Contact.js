@@ -36,10 +36,6 @@ const useStyles = makeStyles({
       paddingRight: 0
     }
   },
-  dropdown: {
-    width: "100%",
-    marginBottom: "34px"
-  },
   buttons: {
     display: "flex",
     justifyContent: "center",
@@ -151,7 +147,6 @@ export const Contact = ({ user, updateUser, countries, blur }) => {
               />
             </div>
             <Dropdown
-              classes={{ formControl: classes.dropdown }}
               value={(countries.length && state.address.country) || ""}
               label="País"
               options={countries}

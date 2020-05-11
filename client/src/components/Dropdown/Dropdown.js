@@ -4,6 +4,7 @@ import { makeStyles, useTheme, TextField, MenuItem, FormControl, FormHelperText 
 const useStyles = makeStyles({
   formControl: ({ classes }) => ({
     width: "100%",
+    height: "76px",
     marginBottom: "15px",
     ...classes.formControl
   }),
