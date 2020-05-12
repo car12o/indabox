@@ -1,11 +1,12 @@
-import React, { useMemo } from "react"
+import React, { useState, useMemo } from "react"
 import { makeStyles, Paper, Typography } from "@material-ui/core"
 import ArrowForwardIcon from "@material-ui/icons/ArrowForward"
 import { userRoles } from "../../constants"
 import { formatDate } from "../../services/transform"
+import { useApi } from "../../services/Api"
 import { Stamp } from "../Stamp/Stamp"
 import { MenuOptions } from "../MenuOptions/MenuOptions"
-import { useApi } from "../../services/Api"
+import { HeaderModal } from "./HeaderModal"
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -31,31 +32,29 @@ const useStyles = makeStyles((theme) => ({
     width: "300px",
     marginRight: "25px"
   },
-  stampsLast: {
-    marginLeft: "100px"
-  },
   deactivate: {
     width: "100%",
     display: "flex",
     justifyContent: "flex-end"
-  },
-  button: {
-    height: "35px"
   }
 }))
 
 export const UserHeader = ({ user, breadcrumb, updateUser, loggedUser }) => {
   const { firstName, lastName, createdBy, createdAt, updatedBy, updatedAt, deletedAt, deletedBy } = user
+  const [open, setOpen] = useState(false)
   const classes = useStyles()
   const api = useApi()
   const disableByRole = useMemo(() => loggedUser.role > userRoles.admin, [loggedUser])
   const options = [{
     label: "Inativar utilizador",
-    onClick: async () => {
-      const { body } = await api.del(`/users/${user._id}`)
-      updateUser(body)
-    }
+    onClick: () => setOpen(true)
   }]
+
+  const deletedUser = async () => {
+    const { body } = await api.del(`/users/${user._id}`)
+    updateUser(body)
+    setOpen(false)
+  }
 
   return (
     <Paper className={classes.root} elevation={1}>
@@ -108,6 +107,11 @@ export const UserHeader = ({ user, breadcrumb, updateUser, loggedUser }) => {
       <div className={classes.deactivate}>
         {!(disableByRole || user.deletedAt) && <MenuOptions options={options} />}
       </div>
+      <HeaderModal
+        open={open}
+        setOpen={setOpen}
+        deletedUser={deletedUser}
+      />
     </Paper>
   )
 }
