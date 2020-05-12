@@ -19,7 +19,7 @@ const _User = new mongoose.Schema({
   ballotNumber: { type: String, default: "" },
   specialty: { type: String, default: "" },
   specialtySessions: { type: String, default: "" },
-  newsletter: { type: Boolean, default: false },
+  termsAndConditions: { type: Boolean, default: false },
   address: {
     road: { type: String, default: "" },
     postCode: { type: String, default: "" },

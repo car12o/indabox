@@ -73,8 +73,8 @@ const parseUser = (rawUser) => {
         return { ...acc, address: { ...acc.address, [createDeepProp("address", key)]: value } }
       case "billing":
         return { ...acc, billing: { ...acc.blling, [createDeepProp("billing", key)]: value } }
-      case "newsletter":
-        return { ...acc, newsletter: !!prop.newsletter }
+      case "termsAndConditions":
+        return { ...acc, termsAndConditions: !!prop.termsAndConditions }
       case "deletedAt":
         return { ...acc, deletedAt: value ? Date.now() : null }
       default:
@@ -98,7 +98,7 @@ const save = async ({ user, quotas, payments }) => {
 
 const COLUMNS = [
   "number", "title", "firstName", "lastName", "nif", "email", "ballotNumber", "specialty", "specialtySessions",
-  "addressRoad", "addressCity", "addressPostCode", "addressCountry", "phone", "mobile", "newsletter", "notes",
+  "addressRoad", "addressCity", "addressPostCode", "addressCountry", "phone", "mobile", "termsAndConditions", "notes",
   "billingName", "billingNif", "billingRoad", "billingCity", "billingPostCode", "billingCountry", "deletedAt",
   "type", "initYear", "2014", "status", "2015", "status", "2016", "status", "2017", "status",
   "2018", "status", "2019", "status", "2020", "status", "2021", "status"
