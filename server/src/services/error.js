@@ -10,9 +10,11 @@ class APIError extends Error {
 }
 
 class ValidationError extends Error {
-  constructor(details) {
+  constructor(message, details) {
     super()
     this.type = "ValidationError"
+    this.message = message
+    this.status = 400
     this.error = { details }
   }
 }

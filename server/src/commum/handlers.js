@@ -10,7 +10,7 @@ const login = async (req, res) => {
   const _user = await User.get({ email }, { password })
   if (!_user || !verifyHash(password, _user.password)) {
     req.session.set({ logged: false })
-    throw new ValidationError([{ message: "Invalid credentials", path: ["email"] }])
+    throw new ValidationError("Invalid credentials", [{ message: "Invalid credentials", path: ["email"] }])
   }
 
   const { password: _, ...user } = _user
