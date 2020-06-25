@@ -7,6 +7,7 @@ import { UserTabHeader } from "../UserTabHeader"
 import { Input } from "../../Input/Input"
 import { Dropdown } from "../../Dropdown/Dropdown"
 import { CheckBox } from "../../CheckBox/CheckBox"
+import { TermAndConditions } from "../../TermAndConditions"
 
 const useStyles = makeStyles({
   root: {
@@ -28,6 +29,9 @@ const useStyles = makeStyles({
     "& > *": {
       margin: "0 20px"
     }
+  },
+  pointer: {
+    cursor: "pointer !important"
   }
 })
 
@@ -46,7 +50,8 @@ const initState = (user) => ({
   specialtySessions: user.specialtySessions,
   termsAndConditions: user.termsAndConditions,
   errors: {},
-  edit: false
+  edit: false,
+  termsAndConditionsModal: false
 })
 
 export const Identification = ({ user, updateUser, titles, roles, loggedUser, blur }) => {
@@ -60,7 +65,7 @@ export const Identification = ({ user, updateUser, titles, roles, loggedUser, bl
   const disableByRole = useMemo(() => loggedUser.role > userRoles.admin, [loggedUser])
 
   const submit = async () => {
-    const { edit, errors, ..._data } = state
+    const { edit, termsAndConditionsModal, errors, ..._data } = state
     const data = disableByRole ? omit(["role", "number"], _data) : _data
     const { body, err } = await api.put(`/users/${user._id}`, data)
     if (err) {
@@ -181,9 +186,11 @@ export const Identification = ({ user, updateUser, titles, roles, loggedUser, bl
         </div>
         <div className={classes.row}>
           <CheckBox
+            classes={{ root: classes.pointer }}
             value={state.termsAndConditions}
             label="Termos e Condições"
             disabled={true}
+            onClick={() => setState({ termsAndConditionsModal: true })}
           />
         </div>
         {!blur && (
@@ -222,6 +229,11 @@ export const Identification = ({ user, updateUser, titles, roles, loggedUser, bl
           </div>
         )}
       </div>
+      <TermAndConditions
+        open={state.termsAndConditionsModal}
+        label={"Fechar"}
+        onClick={() => setState({ termsAndConditionsModal: false })}
+      />
     </div>
   )
 }

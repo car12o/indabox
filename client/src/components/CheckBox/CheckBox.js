@@ -14,11 +14,11 @@ const useStyles = makeStyles(({ palette }) => ({
   }
 }))
 
-export const CheckBox = ({ label, onChange, value, disabled }) => {
+export const CheckBox = ({ classes: c, label, value, onChange, onClick, disabled }) => {
   const classes = useStyles({ disabled })
 
   return (
-    <FormControlLabel classes={{ root: classes.root }}
+    <FormControlLabel classes={{ root: `${classes.root} ${c.root}` }} onClick={onClick}
       control={
         <Checkbox
           classes={{ root: classes.checkBox }}

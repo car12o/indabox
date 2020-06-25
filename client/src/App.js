@@ -1,7 +1,7 @@
 import React from "react"
 import { BrowserRouter as Router, Route, Switch, Redirect } from "react-router-dom"
 import { Dashboard, Login, Logout, Partners, Partner, Profile } from "./routes"
-import { TermAndConditions } from "./components/TermAndConditions"
+import { TermAndConditionsProvider } from "./components/TermAndConditions"
 import { PrivateRoute } from "./components/PrivateRoute/PrivateRoute"
 import { Drawer } from "./components/Drawer/Drawer"
 import { ApiProvider } from "./services/Api"
@@ -18,7 +18,7 @@ export const App = () => (
           <Switch>
             <Route exact path="/login" component={Login} />
             <PrivateRoute exact path="/logout" component={Logout} />
-            <TermAndConditions>
+            <TermAndConditionsProvider>
               <Drawer>
                 <Switch>
                   <PrivateRoute exact path="/" component={Dashboard} role={userRoles.admin} />
@@ -28,7 +28,7 @@ export const App = () => (
                   <Redirect to="/" />
                 </Switch>
               </Drawer>
-            </TermAndConditions>
+            </TermAndConditionsProvider>
           </Switch>
         </StoreProvider>
       </ApiProvider>
