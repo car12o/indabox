@@ -4,17 +4,18 @@ const { genQuotas } = require("./quotas")
 
 const crons = []
 const jobs = [
-  ["0 0 5 1 11 *", genQuotas, null, false, "Europe/Lisbon"]
+  // ["Generate next year quotas", "0 0 5 1 11 *", genQuotas, null, false, "Europe/Lisbon"]
+  ["Generate next year quotas", "0 35 19 * * *", genQuotas, null, false, "Europe/Lisbon"]
 ]
 
 const init = () => {
   jobs.forEach((args) => {
-    const [cronTime] = args
-    const cron = job(...args)
+    const [cronName, ...cronArgs] = args
+    const cron = job(...cronArgs)
     cron.start()
     crons.push(cron)
 
-    log.info(`Cron job registered "${cronTime}"`)
+    log.info(`Cron job registered "${cronName}"`)
   })
 }
 
