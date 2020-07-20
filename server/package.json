@@ -33,7 +33,7 @@
     "express-joi-validation": "^4.0.3",
     "googleapis": "^48.0.0",
     "helmet": "^3.23.3",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "mongoose": "^5.9.21",
     "morgan": "^1.9.1",
     "node-fetch": "^2.6.0",
