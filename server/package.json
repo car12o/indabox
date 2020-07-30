@@ -45,10 +45,13 @@
     "eslint": "^5.12.1",
     "eslint-config-car12o": "github:car12o/eslint-config-car12o",
     "jest": "^25.5.4",
-    "nodemon": "^1.18.9"
+    "nodemon": "^2.0.4"
   },
   "eslintConfig": {
     "extends": "car12o",
+    "parserOptions": {
+      "ecmaVersion": 2019
+    },
     "env": {
       "jest": true
     }
