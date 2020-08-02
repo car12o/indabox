@@ -61,7 +61,7 @@ Payment.static("getMany", async function getMany(
   return { payments, count }
 })
 
-Payment.static("store", async function store(doc, user) {
+Payment.static("store", async function store(doc, quotas, user) {
   const payment = await this.create({
     ...doc,
     createdBy: user,
@@ -77,17 +77,10 @@ Payment.static("store", async function store(doc, user) {
   const _payment = payment.toObject()
 
   if (_payment.type === paymentTypes.mb) {
-    sendMbGeneratedEmail(_payment)
+    sendMbGeneratedEmail({ ..._payment, quotas })
   }
 
-  return {
-    ..._payment,
-    user: {
-      _id: _payment.user._id,
-      firstName: _payment.user.firstName,
-      lastName: _payment.user.lastName
-    }
-  }
+  return _payment
 })
 
 Payment.static("update", async function update(filters, doc, user) {

@@ -40,7 +40,7 @@ const create = async (req, res) => {
     _payment.paymentDate = Date.now()
   }
 
-  const payment = await Payment.store(_payment.toObject(), user._id)
+  const payment = await Payment.store(_payment.toObject(), _quotas, user._id)
   await User.update({ _id: payment.user._id }, { $push: { payments: payment._id } }, user._id)
   const quotas = await Quota.batchUpdate(_quotas.map(({ _id }) => _id), { payment: payment._id })
 

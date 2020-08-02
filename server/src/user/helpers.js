@@ -1,5 +1,5 @@
+const { Payment } = require("../payment/model")
 const { Quota } = require("../quota")
-const { Payment } = require("../payment")
 const { createMb } = require("../payment/mb")
 const { userRoles, paymentTypes } = require("../constants")
 
@@ -22,7 +22,7 @@ const genQuota = async (user) => {
     mb: await createMb(quota.value),
     quotasYear: [quota.year],
     user: user._id
-  })
+  }, [quota])
 
   const _quota = await Quota.store({ ...quota.toObject(), payment: payment._id })
 

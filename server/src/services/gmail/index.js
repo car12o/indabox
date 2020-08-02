@@ -4,13 +4,11 @@ const { api } = require("./api")
 const { template } = require("./templates")
 const { slack } = require("../slack")
 
-const sendMbGeneratedEmail = async ({ user, ...payment }) => {
+const sendMbGeneratedEmail = async ({ user, quotas, ...payment }) => {
   try {
     if (!user.email) {
       throw new Error("Invalid user email")
     }
-
-    const quotas = user.quotas.filter(({ year }) => payment.quotasYear.includes(year))
 
     const to = user.email
     const subject = "Referencia de pagamento gerada."
