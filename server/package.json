@@ -49,9 +49,6 @@
   },
   "eslintConfig": {
     "extends": "car12o",
-    "parserOptions": {
-      "ecmaVersion": 2019
-    },
     "env": {
       "jest": true
     }
