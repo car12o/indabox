@@ -3,13 +3,13 @@ import { compose, set, last } from "lodash/fp"
 import { useSnackbar } from "./SnackBar"
 
 const BASE_URL = process.env.REACT_APP_API_URL
-const OPTIONS = {
+const options = () => ({
   headers: {
     "Content-Type": "application/json",
     "X-Requested-With": "XMLHttpRequest",
     Authorization: `Bearer ${localStorage.token}`
   }
-}
+})
 
 const resolve = async (promise) => {
   const res = await promise
@@ -36,22 +36,22 @@ const resolve = async (promise) => {
 
 const get = compose(
   resolve,
-  (url) => fetch(`${BASE_URL}${url}`, { ...OPTIONS, method: "GET" })
+  (url) => fetch(`${BASE_URL}${url}`, { ...options(), method: "GET" })
 )
 
 const post = compose(
   resolve,
-  (url, body) => fetch(`${BASE_URL}${url}`, { ...OPTIONS, method: "POST", body: JSON.stringify(body) })
+  (url, body) => fetch(`${BASE_URL}${url}`, { ...options(), method: "POST", body: JSON.stringify(body) })
 )
 
 const put = compose(
   resolve,
-  (url, body) => fetch(`${BASE_URL}${url}`, { ...OPTIONS, method: "PUT", body: JSON.stringify(body) })
+  (url, body) => fetch(`${BASE_URL}${url}`, { ...options(), method: "PUT", body: JSON.stringify(body) })
 )
 
 const del = compose(
   resolve,
-  (url) => fetch(`${BASE_URL}${url}`, { ...OPTIONS, method: "DELETE" })
+  (url) => fetch(`${BASE_URL}${url}`, { ...options(), method: "DELETE" })
 )
 
 const ApiContext = createContext({})
