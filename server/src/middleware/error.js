@@ -14,14 +14,13 @@ const handleValidationError = ({ error: { details } }) => {
 // eslint-disable-next-line no-unused-vars
 const errorHandler = (err, req, res, next) => {
   log.error(err)
-  slack.send(err)
-
   if (err.error) {
     const error = handleValidationError(err)
     res.status(400).json(error)
     return
   }
 
+  slack.send(err)
   const { status = 500, message, type = "Error", payload } = err
   const error = { message, type }
   if (payload) {
