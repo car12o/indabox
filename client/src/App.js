@@ -9,7 +9,6 @@ import { SnackbarProvider } from "./services/SnackBar"
 import { StoreProvider } from "./store"
 import { userRoles } from "./constants"
 
-
 export const App = () => (
   <Router>
     <SnackbarProvider>

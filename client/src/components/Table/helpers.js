@@ -6,7 +6,6 @@ export const handleRequestSort = ({ orderBy, order, setState }) => (_orderBy) =>
   setState({ orderBy: _orderBy, order: "asc" })
 }
 
-
 export const handleSelectAllClick = ({ data, selected, setState }) => () => {
   const selectable = data.filter((n) => n.selectable(n))
   if (selectable.length === selected.length) {
