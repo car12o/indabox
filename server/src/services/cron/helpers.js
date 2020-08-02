@@ -52,7 +52,7 @@ const generatePayment = async (userID, quotas) => {
     user: userID
   })
 
-  const _payment = await Payment.store(payment.toObject(), null)
+  const _payment = await Payment.store(payment.toObject())
   return _payment
 }
 
