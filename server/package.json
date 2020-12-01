@@ -45,6 +45,7 @@
   "devDependencies": {
     "eslint": "^5.12.1",
     "eslint-config-car12o": "github:car12o/eslint-config-car12o",
+    "eslint-plugin-import": "^2.22.1",
     "jest": "^25.5.4",
     "nodemon": "^2.0.4"
   },
