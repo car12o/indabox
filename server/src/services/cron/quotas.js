@@ -1,3 +1,5 @@
+/* eslint-disable no-await-in-loop */
+/* eslint-disable no-restricted-syntax */
 const { log } = require("../logging")
 const { User } = require("../../user")
 const { Quota } = require("../../quota")
@@ -41,10 +43,11 @@ const genQuotas = async () => {
       page += 1
     }
 
-    await Promise.all(promises.map(async (promise) => {
+    for (const promise of promises) {
       const { users } = await promise
       await genQuotaByUser(users)
-    }))
+      await new Promise((res) => setTimeout(res, 100))
+    }
 
     log.info("Cron generate next year quotas ended")
     slack.send({ status: "INFO", message: "Cron generate next year quotas ended" })
