@@ -1,3 +1,5 @@
+/* eslint-disable no-restricted-syntax */
+/* eslint-disable no-await-in-loop */
 const { connect } = require("../database/mongo")
 const { User } = require("../../user/model")
 const { randomPassword } = require("../../user/helpers")
@@ -7,12 +9,13 @@ const { log } = require("../logging")
 
 const genPassword = async () => {
   const users = await User.find({ role: { $gt: 0 } })
-  await Promise.all(users.map(async (user) => {
+  for (const user of users) {
     const password = randomPassword()
     user.password = hashPassword(password)
     await user.save()
     await sendCreatedUserEmail({ user: { ...user.toJSON(), password } })
-  }))
+    await new Promise((res) => setTimeout(res, 100))
+  }
 }
 
 connect()
