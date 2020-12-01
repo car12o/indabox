@@ -34,7 +34,10 @@
     "extends": [
       "react-app",
       "car12o"
-    ]
+    ],
+    "rules": {
+      "import/prefer-default-export": 0
+    }
   },
   "browserslist": [
     ">0.2%",
