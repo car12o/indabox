@@ -1,5 +1,5 @@
-/* eslint-disable no-await-in-loop */
 /* eslint-disable no-restricted-syntax */
+/* eslint-disable no-await-in-loop */
 const { log } = require("../logging")
 const { User } = require("../../user")
 const { Quota } = require("../../quota")
@@ -8,7 +8,7 @@ const { slack } = require("../slack")
 const { generateQuota, generatePayment, getMissingPaymentQuotas, resetQuotasPayment } = require("./helpers")
 
 const genQuotaByUser = async (users) => {
-  await Promise.all(users.map(async (user) => {
+  for (const user of users) {
     try {
       const year = new Date().getFullYear() + 1
       const quota = await generateQuota(user, year)
@@ -23,7 +23,7 @@ const genQuotaByUser = async (users) => {
       log.error(error)
       slack.send(error)
     }
-  }))
+  }
 }
 
 const genQuotas = async () => {
@@ -46,7 +46,6 @@ const genQuotas = async () => {
     for (const promise of promises) {
       const { users } = await promise
       await genQuotaByUser(users)
-      await new Promise((res) => setTimeout(res, 100))
     }
 
     log.info("Cron generate next year quotas ended")
