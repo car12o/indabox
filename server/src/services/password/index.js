@@ -14,6 +14,7 @@ const genPassword = async () => {
     user.password = hashPassword(password)
     await user.save()
     await sendCreatedUserEmail({ user: { ...user.toJSON(), password } })
+    await new Promise((res) => setTimeout(res, 2500))
   }
 }
 
