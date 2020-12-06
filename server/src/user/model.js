@@ -5,7 +5,7 @@ const { APIError } = require("../services/error")
 const { log } = require("../services/logging")
 const { userRoles, userTitles, userCountries } = require("../constants")
 const { hashPassword } = require("../services/crypto")
-const { sendCreatedUserEmail } = require("../services/gmail")
+const { sendCreatedUserEmail } = require("../services/email")
 
 const _User = new mongoose.Schema({
   role: { type: Number, default: userRoles.holder },

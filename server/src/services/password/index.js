@@ -4,7 +4,7 @@ const { connect } = require("../database/mongo")
 const { User } = require("../../user/model")
 const { randomPassword } = require("../../user/helpers")
 const { hashPassword } = require("../crypto")
-const { sendCreatedUserEmail } = require("../gmail")
+const { sendCreatedUserEmail } = require("../email")
 const { log } = require("../logging")
 
 const genPassword = async () => {

@@ -1,8 +1,8 @@
 const readline = require("readline")
 const { google } = require("googleapis")
-const config = require("../../../config/default.json")
-const { log } = require("../logging")
-const { mongo } = require("../database")
+const config = require("../../../../../config/default.json")
+const { log } = require("../../../logging")
+const { mongo } = require("../../../database")
 const { Token } = require("./model")
 
 const oAuth2 = new google.auth.OAuth2({

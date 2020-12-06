@@ -1,7 +1,7 @@
 const mongoose = require("mongoose")
 const { APIError } = require("../services/error")
 const { paymentStatus, paymentTypes } = require("../constants")
-const { sendMbGeneratedEmail, sendMbCanceledEmail } = require("../services/gmail")
+const { sendMbGeneratedEmail, sendMbCanceledEmail } = require("../services/email")
 const { filterByDates } = require("../services/dates")
 
 const Payment = mongoose.Schema({

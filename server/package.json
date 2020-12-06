@@ -6,7 +6,7 @@
     "start": "node src/index.js",
     "dev": "nodemon --inspect=0.0.0.0:9229 src/index.js",
     "import": "node src/services/database/utils/import.js",
-    "gen:gmail": "node src/services/gmail/generate.js",
+    "gen:gmail": "node src/services/email/providers/gmail/generate.js",
     "gen:pw": "node src/services/password/index.js",
     "test": "jest",
     "test:watch": "jest --watch",

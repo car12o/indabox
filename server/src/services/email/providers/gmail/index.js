@@ -1,8 +1,8 @@
-const { log } = require("../logging")
+const { log } = require("../../../logging")
 const model = require("./model")
 const { api } = require("./api")
-const { template } = require("./templates")
-const { slack } = require("../slack")
+const { template } = require("../../templates")
+const { slack } = require("../../../slack")
 
 const sendMbGeneratedEmail = async ({ user, quotas, ...payment }) => {
   try {

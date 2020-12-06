@@ -1,6 +1,6 @@
 const { google } = require("googleapis")
-const config = require("../../../config/default.json")
-const { log } = require("../logging")
+const config = require("../../../../../config/default.json")
+const { log } = require("../../../logging")
 const { Token } = require("./model")
 
 const gmail = google.gmail({ version: "v1" })
