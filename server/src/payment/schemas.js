@@ -17,7 +17,7 @@ const updateValidator = validator.body(Joi.object().keys({
 }))
 
 const ifthenValidator = validator.query(Joi.object().keys({
-  chave: Joi.string().valid(config.IFTHEN_CALLBACK_KEY).messages({
+  chave: Joi.string().valid(process.env.IFTHEN_CALLBACK_KEY || config.IFTHEN_CALLBACK_KEY).messages({
     "any.only": "Invalid chave"
   }).required(),
   entidade: Joi.string().required(),
