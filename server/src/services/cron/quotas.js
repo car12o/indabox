@@ -19,6 +19,7 @@ const genQuotaByUser = async (users) => {
       await User.update({ _id: user._id }, { $push: { payments: payment._id, quotas: quota._id } }, null)
 
       await Quota.batchUpdate(quotas.map(({ _id }) => _id), { payment: payment._id })
+      await new Promise((res) => setTimeout(res, 2000))
     } catch (error) {
       log.error(error)
       slack.send(error)
