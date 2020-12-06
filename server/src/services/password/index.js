@@ -8,7 +8,7 @@ const { sendCreatedUserEmail } = require("../email")
 const { log } = require("../logging")
 
 const genPassword = async () => {
-  const users = await User.find({ role: { $gt: 0 } })
+  const users = await User.find()
   for (const user of users) {
     const password = randomPassword()
     user.password = hashPassword(password)
