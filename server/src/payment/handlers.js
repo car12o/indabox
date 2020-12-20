@@ -77,12 +77,14 @@ const del = async (req, res) => {
 }
 
 const ifthen = async (req, res) => {
-  console.log("query = ", req.query)
   const { entidade, referencia, valor, datahorapag, terminal } = req.query
+
+  const [dateString, time] = datahorapag.split(" ")
+  const formatedDateString = dateString.split("-").reverse().join("-")
 
   const payment = await Payment.update(
     { "mb.ententy": entidade, "mb.reference": referencia, value: valor },
-    { paymentDate: new Date(datahorapag), "mb.terminal": terminal }
+    { paymentDate: new Date(`${formatedDateString} ${time}`), "mb.terminal": terminal }
   )
 
   res.json(payment)

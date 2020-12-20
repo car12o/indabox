@@ -9,8 +9,7 @@ const hashPassword = (password) => {
 }
 
 const verifyHash = (password, original) => {
-  const originalHash = original.split("$")[1]
-  const salt = original.split("$")[0]
+  const [salt, originalHash] = original.split("$")
   const hash = crypto
     .pbkdf2Sync(password, salt, 2048, 32, "sha512")
     .toString("hex")
