@@ -29,10 +29,10 @@ const create = async (req, res) => {
   let _user = rest
   if (_user.role >= 20) {
     const { number } = await User.findOne().sort({ number: "desc" }).lean()
-    const { quota, payment } = await genQuota(_user)
+    const quota = await genQuota(_user)
     _user = await User.update({ _id: _user._id }, {
       number: number + 1,
-      $push: { quotas: quota._id, payments: payment._id }
+      $push: { quotas: quota._id }
     }, user._id)
   }
 
