@@ -4,7 +4,7 @@ const { connect } = require("../database/mongo")
 const { User } = require("../../user/model")
 const { randomPassword } = require("../../user/helpers")
 const { hashPassword } = require("../crypto")
-const { sendCreatedUserEmail } = require("../email")
+const { sendUserPwChangeEmail } = require("../email")
 const { log } = require("../logging")
 
 const genPassword = async () => {
@@ -13,7 +13,7 @@ const genPassword = async () => {
     const password = randomPassword()
     user.password = hashPassword(password)
     await user.save()
-    await sendCreatedUserEmail({ user: { ...user.toJSON(), password } })
+    await sendUserPwChangeEmail({ user: { ...user.toJSON(), password } })
     await new Promise((res) => setTimeout(res, 2000))
   }
 }

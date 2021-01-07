@@ -4,7 +4,7 @@ const { log } = require("../../../logging")
 const { template } = require("../../templates")
 const { slack } = require("../../../slack")
 
-const { sendMail } = nodemailer.createTransport({
+const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST || config.SMTP_HOST,
   port: 465,
   secure: true,
@@ -24,7 +24,7 @@ const sendMbGeneratedEmail = async ({ user, quotas, ...payment }) => {
     const subject = "Referencia de pagamento gerada."
     const html = template.mbGenerated({ quotas, mb: { ...payment.mb, value: payment.value } })
 
-    await sendMail({
+    await transporter.sendMail({
       from: "noreply@coms.sppsm.org",
       to,
       subject,
@@ -53,7 +53,7 @@ const sendMbCanceledEmail = async ({ user, ...payment }) => {
     const subject = "Referencia de pagamento cancelada."
     const html = template.mbCanceled({ mb: { ...payment.mb, value: payment.value } })
 
-    await sendMail({
+    await transporter.sendMail({
       from: "noreply@coms.sppsm.org",
       to,
       subject,
@@ -82,7 +82,36 @@ const sendCreatedUserEmail = async ({ user }) => {
     const subject = "Novo utilizador."
     const html = template.userCreated({ user })
 
-    await sendMail({
+    await transporter.sendMail({
+      from: "noreply@coms.sppsm.org",
+      to,
+      subject,
+      html
+    })
+  } catch (error) {
+    log.error("Error sending user created email: ", error)
+    slack.send({
+      status: "INFO",
+      message: `Error sending user created email \n
+      emai: ${user.email} \n
+      name: ${user.firstName} \n
+      userId: ${user._id} \n
+      ${error.message}`
+    })
+  }
+}
+
+const sendUserPwChangeEmail = async ({ user }, ) => {
+  try {
+    if (!user.email) {
+      throw new Error("Invalid user email")
+    }
+
+    const { email: to } = user
+    const subject = "Novo utilizador."
+    const html = template.userPwChange({ user })
+
+    await transporter.sendMail({
       from: "noreply@coms.sppsm.org",
       to,
       subject,
@@ -104,5 +133,6 @@ const sendCreatedUserEmail = async ({ user }) => {
 module.exports = {
   sendMbGeneratedEmail,
   sendMbCanceledEmail,
-  sendCreatedUserEmail
+  sendCreatedUserEmail,
+  sendUserPwChangeEmail
 }

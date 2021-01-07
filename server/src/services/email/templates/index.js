@@ -37,10 +37,21 @@ const userCreated = ({ user }) => {
   return message
 }
 
+const userPwChange = ({ user }) => {
+  const template = readFileSync(`${__dirname}/userPwChange.html`).toString()
+  const message = template
+    .replace("{firstName}", user.firstName)
+    .replace("{email}", user.email)
+    .replace("{password}", user.password)
+
+  return message
+}
+
 module.exports = {
   template: {
     mbGenerated,
     mbCanceled,
-    userCreated
+    userCreated,
+    userPwChange
   }
 }

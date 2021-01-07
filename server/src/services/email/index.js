@@ -1,11 +1,13 @@
 const {
   sendCreatedUserEmail,
   sendMbCanceledEmail,
-  sendMbGeneratedEmail
+  sendMbGeneratedEmail,
+  sendUserPwChangeEmail
 } = require("./providers/smtp")
 
 module.exports = {
   sendCreatedUserEmail,
   sendMbCanceledEmail,
-  sendMbGeneratedEmail
+  sendMbGeneratedEmail,
+  sendUserPwChangeEmail
 }
