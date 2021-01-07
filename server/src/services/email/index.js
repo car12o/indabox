@@ -2,7 +2,7 @@ const {
   sendCreatedUserEmail,
   sendMbCanceledEmail,
   sendMbGeneratedEmail
-} = require("./providers/mailgun")
+} = require("./providers/smtp")
 
 module.exports = {
   sendCreatedUserEmail,
