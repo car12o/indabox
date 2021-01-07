@@ -8,7 +8,6 @@ const {
   map,
   entries,
   filter,
-  remove,
   find,
   head
 } = require("lodash/fp")
@@ -34,7 +33,6 @@ const parseQuotasAndPayments = (rawQuotas, user) => {
   const [iy, ...rest] = rawQuotas
   const initYear = get("initYear", iy)
   const _quotas = compose(
-    remove(({ year, status }) => year === 2021 && !status),
     filter(null),
     map(([values, { status }]) => {
       const [year, value] = entries(values).pop()
