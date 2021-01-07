@@ -101,7 +101,7 @@ const sendCreatedUserEmail = async ({ user }) => {
   }
 }
 
-const sendUserPwChangeEmail = async ({ user }, ) => {
+const sendUserPwChangeEmail = async ({ user }) => {
   try {
     if (!user.email) {
       throw new Error("Invalid user email")
