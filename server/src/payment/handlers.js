@@ -65,7 +65,7 @@ const del = async (req, res) => {
   }
 
   await deleteMb(_payment.mb.id)
-  const payment = await Payment.del({ _id: _payment._id }, {
+  const payment = await Payment.delAndSendEmail({ _id: _payment._id }, {
     status: paymentStatus.canceled,
     mb: null
   }, user._id)

@@ -97,7 +97,6 @@ Payment.static("update", async function update(filters, doc, user) {
 })
 
 Payment.static("del", async function del(id, doc, user) {
-  const { mb } = await this.findById(id).lean()
   const payment = await this.findByIdAndUpdate(id, {
     ...doc,
     updatedBy: user,
@@ -117,18 +116,26 @@ Payment.static("del", async function del(id, doc, user) {
   ]).execPopulate()
   const _payment = payment.toObject()
 
-  if (_payment.type === paymentTypes.mb) {
-    sendMbCanceledEmail({ ..._payment, mb })
-  }
-
   return {
     ..._payment,
     user: {
       _id: _payment.user._id,
       firstName: _payment.user.firstName,
-      lastName: _payment.user.lastName
+      lastName: _payment.user.lastName,
+      email: _payment.user.email
     }
   }
+})
+
+Payment.static("delAndSendEmail", async function delAndSendEmail(id, doc, user) {
+  const { mb } = await this.findById(id).lean()
+  const payment = await this.del(id, doc, user)
+
+  if (payment.type === paymentTypes.mb) {
+    sendMbCanceledEmail({ ...payment, mb })
+  }
+
+  return payment
 })
 
 module.exports = {

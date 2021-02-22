@@ -5,7 +5,7 @@ const { User } = require("../../user")
 const { Quota } = require("../../quota")
 const { userRoles } = require("../../constants")
 const { slack } = require("../slack")
-const { generateQuota, generatePayment, getMissingPaymentQuotas, resetQuotasPayment } = require("./helpers")
+const { generateQuota, generatePayment, getMissingPaymentQuotas, resetQuotasPayment } = require("../scripts/helpers")
 
 const genQuotaByUser = async (users) => {
   for (const user of users) {

@@ -1,7 +1,10 @@
+/* eslint-disable no-await-in-loop */
+/* eslint-disable no-restricted-syntax */
 const { Quota } = require("../../quota")
 const { Payment } = require("../../payment")
 const { createMb, deleteMb } = require("../../payment/mb")
 const { userRolesQuotaValue, paymentStatus, paymentTypes } = require("../../constants")
+const { sendMbCanceledEmail } = require("../email")
 
 const generateQuota = async (user, year) => {
   const quota = new Quota({
@@ -25,15 +28,21 @@ const getMissingPaymentQuotas = async (userID) => {
 }
 
 const resetQuotasPayment = async (quotas) => {
-  await Promise.all(quotas.map(async ({ payment }) => {
+  const emailSent = []
+  for (const { payment } of quotas) {
     if (payment) {
-      await deleteMb(payment.mb.id)
-      await Payment.del({ _id: payment._id }, {
+      const _payment = await Payment.del({ _id: payment._id }, {
         status: paymentStatus.canceled,
         mb: null
       }, null)
+
+      if (!emailSent.includes(payment._id)) {
+        await deleteMb(payment.mb.id)
+        await sendMbCanceledEmail({ ..._payment, mb: payment.mb })
+        emailSent.push(payment._id)
+      }
     }
-  }))
+  }
 
   await Quota.batchUpdate(quotas.map(({ _id }) => _id), { payment: null })
 }
