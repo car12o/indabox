@@ -156,9 +156,9 @@ _User.static("store", async function store(doc, user) {
   return u
 })
 
-_User.static("update", async function update(filters, doc, user) {
-  if (doc.password) {
-    doc.password = hashPassword(doc.password)
+_User.static("update", async function update(filters, { password, ...doc }, user) {
+  if (password) {
+    doc.password = hashPassword(password)
   }
 
   const _user = await this.findOneAndUpdate(filters, {
