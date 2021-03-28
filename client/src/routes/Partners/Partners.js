@@ -7,6 +7,7 @@ import { userRolesText } from "../../constants"
 import { Title } from "../../components/Title/Title"
 import { Table } from "../../components/Table"
 import { PartnerCreate } from "./PartnerCreate"
+import { ExcelExport } from "./ExcelExport"
 
 const useStyles = makeStyles({
   root: {
@@ -27,7 +28,8 @@ const initState = {
   loading: true,
   partners: [],
   count: 0,
-  modalOpen: false,
+  modalPartnerCreateOpen: false,
+  modalExcelExportOpen: false,
   roles: [],
   titles: []
 }
@@ -82,7 +84,8 @@ const _Partners = ({ store, setStore, history }) => {
           debounceOnSearch({ search, sort, limit })
         }}
         options={[
-          { label: "Novo sócio", onClick: () => setState({ modalOpen: true }) }
+          { label: "Novo sócio", onClick: () => setState({ modalPartnerCreateOpen: true }) },
+          { label: "Exportar para Excel", onClick: () => setState({ modalExcelExportOpen: true }) }
         ]} />
       <Table
         columns={columns}
@@ -102,11 +105,15 @@ const _Partners = ({ store, setStore, history }) => {
         dynamic
       />
       <PartnerCreate
-        open={state.modalOpen}
+        open={state.modalPartnerCreateOpen}
         roles={state.roles}
         titles={state.titles}
-        onClose={() => setState({ modalOpen: false })}
+        onClose={() => setState({ modalPartnerCreateOpen: false })}
         history={history}
+      />
+      <ExcelExport
+        open={state.modalExcelExportOpen}
+        onClose={() => setState({ modalExcelExportOpen: false })}
       />
     </Paper >
   )

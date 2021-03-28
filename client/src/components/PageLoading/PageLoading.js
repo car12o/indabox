@@ -11,11 +11,11 @@ const useStyles = makeStyles({
   }
 })
 
-export const PageLoading = () => {
+export const PageLoading = ({ className }) => {
   const classes = useStyles()
 
   return (
-    <div className={classes.root}>
+    <div className={`${classes.root} ${className || ""}`}>
       <CircularProgress color="primary" size={150} />
     </div>
   )

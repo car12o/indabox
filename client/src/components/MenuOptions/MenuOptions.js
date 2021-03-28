@@ -26,7 +26,7 @@ export const MenuOptions = ({ classes = {}, options }) => {
         PaperProps={{
           style: {
             maxHeight: ITEM_HEIGHT * 4.5,
-            width: "20ch",
+            width: "25ch",
             color: theme.palette.secondary.main
           }
         }}

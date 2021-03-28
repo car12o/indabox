@@ -1,5 +1,7 @@
+const fs = require("fs")
 const { ValidationError } = require("../services/error")
 const { verifyHash } = require("../services/crypto")
+const { excelExport } = require("../services/excel")
 const { User } = require("../user")
 const { Quota } = require("../quota")
 const { Payment } = require("../payment")
@@ -56,10 +58,19 @@ const totals = async (req, res) => {
   res.json({ users, paymentReceived, paymentWaiting, paymentMissing })
 }
 
+const excel = async (req, res) => {
+  const { user } = req.session
+  const { filename, filePath } = await excelExport(user.role)
+  res.download(filePath, filename, () => {
+    fs.unlinkSync(filePath)
+  })
+}
+
 module.exports = {
   login,
   logout,
   state,
   metadata,
-  totals
+  totals,
+  excel
 }

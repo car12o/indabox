@@ -11,10 +11,15 @@ const options = () => ({
   }
 })
 
-const resolve = async (promise) => {
+const resolve = async (promise, file = false) => {
   const res = await promise
   const { status, headers } = res
-  const body = await res.json()
+  let body
+  if (file) {
+    body = await res.blob()
+  } else {
+    body = await res.json()
+  }
 
   const token = headers.get("Authorization")
   if (token) {
@@ -36,6 +41,11 @@ const resolve = async (promise) => {
 
 const get = compose(
   resolve,
+  (url) => fetch(`${BASE_URL}${url}`, { ...options(), method: "GET" })
+)
+
+const getFile = compose(
+  (promise) => resolve(promise, true),
   (url) => fetch(`${BASE_URL}${url}`, { ...options(), method: "GET" })
 )
 
@@ -75,6 +85,7 @@ export const ApiProvider = ({ children }) => {
   return (
     <ApiContext.Provider value={{
       get: wrap(get),
+      getFile: wrap(getFile),
       post: wrap(post),
       put: wrap(put),
       del: wrap(del)
