@@ -31,14 +31,15 @@ const sendMbGeneratedEmail = async ({ user, quotas, ...payment }) => {
       html
     })
   } catch (error) {
-    log.error("Error sending MB generated email: ", error)
-    slack.send({
-      status: "INFO",
-      message: `Error sending MB generated email \n
+    const message = `Error sending MB generated email \n
       emai: ${user.email} \n
       name: ${user.firstName} \n
       userId: ${user._id} \n
       ${error.message}`
+    log.error(message, error)
+    slack.send({
+      status: "INFO",
+      message
     })
   }
 }
@@ -60,14 +61,15 @@ const sendMbCanceledEmail = async ({ user, ...payment }) => {
       html
     })
   } catch (error) {
-    log.error("Error sending MB canceled email: ", error)
-    slack.send({
-      status: "INFO",
-      message: `Error sending MB canceled email \n
+    const message = `Error sending MB canceled email \n
       emai: ${user.email} \n
       name: ${user.firstName} \n
       userId: ${user._id} \n
       ${error.message}`
+    log.error(message, error)
+    slack.send({
+      status: "INFO",
+      message
     })
   }
 }
@@ -89,14 +91,15 @@ const sendCreatedUserEmail = async ({ user }) => {
       html
     })
   } catch (error) {
-    log.error("Error sending user created email: ", error)
-    slack.send({
-      status: "INFO",
-      message: `Error sending user created email \n
+    const message = `Error sending user created email \n
       emai: ${user.email} \n
       name: ${user.firstName} \n
       userId: ${user._id} \n
       ${error.message}`
+    log.error(message, error)
+    slack.send({
+      status: "INFO",
+      message
     })
   }
 }
@@ -118,14 +121,15 @@ const sendUserPwChangeEmail = async ({ user }) => {
       html
     })
   } catch (error) {
-    log.error("Error sending user created email: ", error)
-    slack.send({
-      status: "INFO",
-      message: `Error sending user created email \n
+    const message = `Error sending user created email \n
       emai: ${user.email} \n
       name: ${user.firstName} \n
       userId: ${user._id} \n
       ${error.message}`
+    log.error(message, error)
+    slack.send({
+      status: "INFO",
+      message
     })
   }
 }
