@@ -11,13 +11,15 @@ const genMbRefs = async () => {
   const users = await User.find({ role: { $gte: userRoles.holder } })
   for (const user of users) {
     const quotas = await getMissingPaymentQuotas(user._id)
-    await resetQuotasPayment(quotas)
-    const payment = await generatePayment(user._id, quotas)
+    if (quotas.length !== 0) {
+      await resetQuotasPayment(quotas)
+      const payment = await generatePayment(user._id, quotas)
 
-    await User.update({ _id: user._id }, { $push: { payments: payment._id } }, null)
+      await User.update({ _id: user._id }, { $push: { payments: payment._id } }, null)
 
-    await Quota.batchUpdate(quotas.map(({ _id }) => _id), { payment: payment._id })
-    await new Promise((res) => setTimeout(res, 2000))
+      await Quota.batchUpdate(quotas.map(({ _id }) => _id), { payment: payment._id })
+      await new Promise((res) => setTimeout(res, 2000))
+    }
   }
 }
 

@@ -83,8 +83,16 @@ const ifthen = async (req, res) => {
   const formatedDateString = dateString.split("-").reverse().join("-")
 
   const payment = await Payment.update(
-    { "mb.ententy": entidade, "mb.reference": referencia, value: valor },
-    { paymentDate: new Date(`${formatedDateString} ${time}`), "mb.terminal": terminal }
+    {
+      "mb.ententy": entidade,
+      "mb.reference": referencia,
+      value: valor
+    },
+    {
+      status: paymentStatus.paid,
+      paymentDate: new Date(`${formatedDateString} ${time}`),
+      "mb.terminal": terminal
+    }
   )
 
   res.json(payment)
