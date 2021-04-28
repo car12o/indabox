@@ -1,4 +1,5 @@
 import React, { useMemo } from "react"
+import { paymentStatus } from "../../../../constants"
 import { formatDate } from "../../../../services/transform"
 import { Table } from "../../../../components/Table"
 import { QuotasYear } from "../../../../components/QuotasYear"
@@ -28,7 +29,7 @@ export const PaymentWaiting = ({
   const _payments = useMemo(() => payments
     .map(({ type, quotasYear, status, value, user, createdAt }) => ({
       type,
-      status,
+      status: paymentStatus[status],
       quotas: <QuotasYear data={quotasYear} />,
       value: `${value}€`,
       userId: user._id,

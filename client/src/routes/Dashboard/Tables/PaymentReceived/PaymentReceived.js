@@ -10,7 +10,7 @@ const columns = [
   { id: "userFirstName", numeric: false, disablePadding: false, label: "Nome" },
   { id: "userLastName", numeric: false, disablePadding: false, label: "Apelido" },
   { id: "paymentDate", numeric: false, disablePadding: false, label: "Data pagamento" },
-  { id: "invoice", numeric: false, disablePadding: false, label: "Fatura" }
+  { id: "invoiceEmited", numeric: false, disablePadding: false, label: "Fatura" }
 ]
 
 export const PaymentReceived = ({
@@ -34,7 +34,7 @@ export const PaymentReceived = ({
       userFirstName: user.firstName,
       userLastName: user.lastName,
       paymentDate: formatDate(paymentDate),
-      invoice: (
+      invoiceEmited: (
         <Invoice
           id={_id}
           status={invoiceEmited}
